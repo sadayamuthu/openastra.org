@@ -10,7 +10,7 @@ export default function Home() {
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-subtle text-text-muted text-xs tracking-widest uppercase">
           <span className="text-accent-cyan">✦</span> Open Source Security Tools
         </div>
-        <h1 className="text-5xl sm:text-6xl font-bold text-text-primary leading-tight max-w-3xl text-accent-cyan">
+        <h1 className="text-5xl sm:text-6xl font-bold leading-tight max-w-3xl text-accent-cyan">
           The North Star for Autonomous Systems
         </h1>
         <p className="text-text-muted text-lg max-w-xl leading-relaxed">
