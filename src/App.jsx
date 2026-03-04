@@ -4,6 +4,7 @@ import Footer from './components/Footer'
 import Home from './pages/Home'
 import ControlGate from './pages/ControlGate'
 import NCSB from './pages/NCSB'
+import OpenGPL from './pages/OpenGPL'
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/controlgate" element={<ControlGate />} />
             <Route path="/ncsb" element={<NCSB />} />
+            <Route path="/opengpl" element={<OpenGPL />} />
           </Routes>
         </main>
         <Footer />
