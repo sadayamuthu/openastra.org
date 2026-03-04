@@ -30,13 +30,19 @@ export default function Home() {
           >
             Explore NCSB
           </Link>
+          <Link
+            to="/opengpl"
+            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
+          >
+            Explore OpenGPL
+          </Link>
         </div>
       </section>
 
       {/* Products */}
       <section className="flex flex-col gap-8">
         <h2 className="text-2xl font-semibold text-text-primary text-center">Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <ProductCard
             icon="🛡️"
             name="ControlGate"
@@ -50,6 +56,13 @@ export default function Home() {
             tagline="NIST Cloud Security Baseline"
             description="Merges NIST SP 800-53 Rev. 5, SP 800-53B, and FedRAMP OSCAL baselines into a single enriched JSON file. Zero configuration. CI-ready. Feed it directly into your policy engines."
             href="/ncsb"
+          />
+          <ProductCard
+            icon="📜"
+            name="OpenGPL"
+            tagline="Generative Policy Language for AI Systems"
+            description="An open, declarative policy language for AI agents. Define behavior, resource access, and output constraints — with compliance evidence at runtime and at rest."
+            href="/opengpl"
           />
         </div>
       </section>

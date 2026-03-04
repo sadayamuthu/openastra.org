@@ -26,4 +26,22 @@ describe('Home page', () => {
     expect(screen.getByRole('link', { name: /explore controlgate/i })).toHaveAttribute('href', '/controlgate')
     expect(screen.getByRole('link', { name: /explore ncsb/i })).toHaveAttribute('href', '/ncsb')
   })
+
+  it('renders OpenGPL product card', () => {
+    render(
+      <MemoryRouter>
+        <Home />
+      </MemoryRouter>
+    )
+    expect(screen.getByText('OpenGPL')).toBeInTheDocument()
+  })
+
+  it('renders Explore OpenGPL hero button', () => {
+    render(
+      <MemoryRouter>
+        <Home />
+      </MemoryRouter>
+    )
+    expect(screen.getByRole('link', { name: /explore opengpl/i })).toBeInTheDocument()
+  })
 })
