@@ -15,7 +15,7 @@ export default function Home() {
         </h1>
         <p className="text-text-muted text-lg max-w-xl leading-relaxed">
           OpenAstra builds open source tools that bring NIST-grade security compliance
-          into every developer's workflow — automatically, at commit time.
+          into every developer's workflow.
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
           <Link
@@ -58,7 +58,7 @@ export default function Home() {
       <section className="flex flex-col items-center text-center gap-4 pb-8">
         <h2 className="text-2xl font-semibold text-text-primary">About OpenAstra</h2>
         <p className="text-text-muted text-base max-w-2xl leading-relaxed">
-          OpenAstra is a research services company focused on autonomous systems security.
+          OpenAstra is a independent research services focused on autonomous systems security.
           We build open source tools that make NIST compliance traceable, automated, and
           accessible to every engineering team — from solo developers to enterprise cloud teams.
         </p>
