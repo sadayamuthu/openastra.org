@@ -38,7 +38,7 @@ jobs:
         run: echo "openastra.com" > dist/CNAME
 
       - name: Deploy to gh-pages branch
-        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d231e62369c1bc400 # v4.0.0
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
