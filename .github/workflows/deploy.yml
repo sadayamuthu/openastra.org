@@ -35,7 +35,7 @@ jobs:
         run: cp dist/index.html dist/404.html
 
       - name: Write CNAME file
-        run: echo "openastra.com" > dist/CNAME
+        run: echo "openastra.org" > dist/CNAME
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
