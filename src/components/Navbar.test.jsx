@@ -24,11 +24,7 @@ describe('Navbar', () => {
   })
 
   it('renders OpenGPL nav link', () => {
-    render(
-      <MemoryRouter>
-        <Navbar />
-      </MemoryRouter>
-    )
+    renderNavbar()
     expect(screen.getByRole('link', { name: /opengpl/i })).toBeInTheDocument()
   })
 })
