@@ -22,4 +22,13 @@ describe('Navbar', () => {
     expect(screen.getByRole('link', { name: /ncsb/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /github/i })).toBeInTheDocument()
   })
+
+  it('renders OpenGPL nav link', () => {
+    render(
+      <MemoryRouter>
+        <Navbar />
+      </MemoryRouter>
+    )
+    expect(screen.getByRole('link', { name: /opengpl/i })).toBeInTheDocument()
+  })
 })

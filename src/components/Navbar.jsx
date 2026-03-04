@@ -17,6 +17,7 @@ export default function Navbar() {
           <NavLink to="/" end className={linkClass}>Home</NavLink>
           <NavLink to="/controlgate" className={linkClass}>ControlGate</NavLink>
           <NavLink to="/ncsb" className={linkClass}>NCSB</NavLink>
+          <NavLink to="/opengpl" className={linkClass}>OpenGPL</NavLink>
           <a
             href="https://github.com/sadayamuthu"
             target="_blank"
