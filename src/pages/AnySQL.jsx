@@ -32,7 +32,7 @@ export default function AnySQL() {
         <h2 className="text-2xl font-semibold text-text-primary">How it works</h2>
         <div className="flex flex-col sm:flex-row items-center gap-4">
           {steps.map((step, i) => (
-            <div key={i} className="flex items-center gap-4">
+            <div key={step.label} className="flex items-center gap-4">
               <div className="bg-surface border border-subtle rounded-xl px-6 py-4 text-center flex-1 min-w-[160px]">
                 <div className="text-2xl mb-2">{step.icon}</div>
                 <p className="text-text-muted text-sm">{step.label}</p>

@@ -15,7 +15,7 @@ describe('Home page', () => {
     expect(screen.getByText(/The North Star for Autonomous Systems/i)).toBeInTheDocument()
   })
 
-  it('renders all product cards', () => {
+  it('renders ControlGate and NCSB product cards', () => {
     renderHome()
     expect(screen.getByText('ControlGate')).toBeInTheDocument()
     expect(screen.getByText('NCSB')).toBeInTheDocument()
