@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import ControlGate from './pages/ControlGate'
 import NCSB from './pages/NCSB'
 import OpenGPL from './pages/OpenGPL'
+import AnySQL from './pages/AnySQL'
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
             <Route path="/controlgate" element={<ControlGate />} />
             <Route path="/ncsb" element={<NCSB />} />
             <Route path="/opengpl" element={<OpenGPL />} />
+            <Route path="/anysql" element={<AnySQL />} />
           </Routes>
         </main>
         <Footer />
