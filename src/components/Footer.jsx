@@ -30,6 +30,14 @@ export default function Footer() {
           >
             OpenGPL ↗
           </a>
+          <a
+            href="https://github.com/sadayamuthu/anySQL"
+            target="_blank"
+            rel="noreferrer"
+            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
+          >
+            anySQL ↗
+          </a>
         </div>
       </div>
     </footer>
