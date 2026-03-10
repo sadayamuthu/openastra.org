@@ -17,7 +17,7 @@ export default function OpenGPL() {
           OpenGPL
         </h1>
         <p className="text-accent-cyan text-lg">
-          Generative Policy Language for AI Systems
+          Governance Policy Language for AI Systems
         </p>
         <p className="text-text-muted text-base max-w-2xl leading-relaxed">
           An open, declarative policy language purpose-built for generative AI systems.
@@ -62,7 +62,7 @@ export default function OpenGPL() {
       </section>
 
       {/* CTA */}
-      <section>
+      <section className="flex gap-4 flex-wrap">
         <a
           href="https://github.com/sadayamuthu/opengpl"
           target="_blank"
@@ -70,6 +70,14 @@ export default function OpenGPL() {
           className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-accent-blue text-space font-semibold text-sm hover:opacity-90 transition-opacity glow-blue"
         >
           View on GitHub ↗
+        </a>
+        <a
+          href="https://opengpl.org"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
+        >
+          Website ↗
         </a>
       </section>
 

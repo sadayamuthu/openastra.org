@@ -22,4 +22,15 @@ describe('OpenGPL page', () => {
     const link = screen.getByRole('link', { name: /view on github/i })
     expect(link).toHaveAttribute('href', 'https://github.com/sadayamuthu/opengpl')
   })
+
+  it('renders Governance Policy Language subtitle', () => {
+    render(<OpenGPL />)
+    expect(screen.getByText(/governance policy language/i)).toBeInTheDocument()
+  })
+
+  it('renders Website CTA link', () => {
+    render(<OpenGPL />)
+    const link = screen.getByRole('link', { name: /website/i })
+    expect(link).toHaveAttribute('href', 'https://opengpl.org')
+  })
 })
