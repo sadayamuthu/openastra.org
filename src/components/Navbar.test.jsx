@@ -27,4 +27,9 @@ describe('Navbar', () => {
     renderNavbar()
     expect(screen.getByRole('link', { name: /opengpl/i })).toBeInTheDocument()
   })
+
+  it('renders anySQL nav link', () => {
+    renderNavbar()
+    expect(screen.getByRole('link', { name: /anysql/i })).toBeInTheDocument()
+  })
 })

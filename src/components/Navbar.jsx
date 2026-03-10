@@ -18,6 +18,7 @@ export default function Navbar() {
           <NavLink to="/controlgate" className={linkClass}>ControlGate</NavLink>
           <NavLink to="/ncsb" className={linkClass}>NCSB</NavLink>
           <NavLink to="/opengpl" className={linkClass}>OpenGPL</NavLink>
+          <NavLink to="/anysql" className={linkClass}>anySQL</NavLink>
           <a
             href="https://github.com/sadayamuthu"
             target="_blank"
