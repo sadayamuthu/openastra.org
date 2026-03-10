@@ -36,13 +36,19 @@ export default function Home() {
           >
             Explore OpenGPL
           </Link>
+          <Link
+            to="/anysql"
+            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
+          >
+            Explore anySQL
+          </Link>
         </div>
       </section>
 
       {/* Products */}
       <section className="flex flex-col gap-8">
         <h2 className="text-2xl font-semibold text-text-primary text-center">Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <ProductCard
             icon="🛡️"
             name="ControlGate"
@@ -60,9 +66,16 @@ export default function Home() {
           <ProductCard
             icon="📜"
             name="OpenGPL"
-            tagline="Generative Policy Language for AI Systems"
+            tagline="Governance Policy Language for AI Systems"
             description="An open, declarative policy language for AI agents. Define behavior, resource access, and output constraints — with compliance evidence at runtime and at rest."
             href="/opengpl"
+          />
+          <ProductCard
+            icon="🗄️"
+            name="anySQL"
+            tagline="SQL Analytics for AI Systems"
+            description="Query LLM responses, agent traces, and RAG pipelines using standard SQL. Auto-logs every AI API call into six canonical tables with zero configuration. From vibes to queries."
+            href="/anysql"
           />
         </div>
       </section>

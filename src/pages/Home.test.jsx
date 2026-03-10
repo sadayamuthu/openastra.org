@@ -37,4 +37,19 @@ describe('Home page', () => {
     renderHome()
     expect(screen.getByRole('link', { name: /explore opengpl/i })).toBeInTheDocument()
   })
+
+  it('renders anySQL product card', () => {
+    renderHome()
+    expect(screen.getByText('anySQL')).toBeInTheDocument()
+  })
+
+  it('renders Explore anySQL hero button', () => {
+    renderHome()
+    expect(screen.getByRole('link', { name: /explore anysql/i })).toHaveAttribute('href', '/anysql')
+  })
+
+  it('renders OpenGPL with Governance Policy Language tagline', () => {
+    renderHome()
+    expect(screen.getByText(/governance policy language/i)).toBeInTheDocument()
+  })
 })
