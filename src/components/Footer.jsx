@@ -15,12 +15,28 @@ export default function Footer() {
             ControlGate ↗
           </a>
           <a
+            href="https://github.com/sadayamuthu/exposuregate"
+            target="_blank"
+            rel="noreferrer"
+            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
+          >
+            ExposureGate ↗
+          </a>
+          <a
             href="https://github.com/sadayamuthu/ocbc"
             target="_blank"
             rel="noreferrer"
             className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
           >
             OCBC ↗
+          </a>
+          <a
+            href="https://github.com/sadayamuthu/oebc"
+            target="_blank"
+            rel="noreferrer"
+            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
+          >
+            OEBC ↗
           </a>
           <a
             href="https://github.com/sadayamuthu/opengpl"
@@ -37,22 +53,6 @@ export default function Footer() {
             className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
           >
             anySQL ↗
-          </a>
-          <a
-            href="https://github.com/sadayamuthu/exposuregate"
-            target="_blank"
-            rel="noreferrer"
-            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
-          >
-            ExposureGate ↗
-          </a>
-          <a
-            href="https://github.com/sadayamuthu/oebc"
-            target="_blank"
-            rel="noreferrer"
-            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
-          >
-            OEBC ↗
           </a>
         </div>
       </div>

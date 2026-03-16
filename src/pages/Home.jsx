@@ -25,10 +25,22 @@ export default function Home() {
             Explore ControlGate
           </Link>
           <Link
+            to="/exposuregate"
+            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
+          >
+            Explore ExposureGate
+          </Link>
+          <Link
             to="/ocbc"
             className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
           >
             Explore OCBC
+          </Link>
+          <Link
+            to="/oebc"
+            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
+          >
+            Explore OEBC
           </Link>
           <Link
             to="/opengpl"
@@ -41,18 +53,6 @@ export default function Home() {
             className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
           >
             Explore anySQL
-          </Link>
-          <Link
-            to="/exposuregate"
-            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
-          >
-            Explore ExposureGate
-          </Link>
-          <Link
-            to="/oebc"
-            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
-          >
-            Explore OEBC
           </Link>
         </div>
       </section>
@@ -69,11 +69,25 @@ export default function Home() {
             href="/controlgate"
           />
           <ProductCard
+            icon="🔍"
+            name="ExposureGate"
+            tagline="CVE & Exposure Scanning Gate"
+            description="An AI-powered pre-commit and pre-merge exposure gate. Scans your code changes against known CVEs, vulnerability patterns, and exposure risks — before every commit."
+            href="/exposuregate"
+          />
+          <ProductCard
             icon="📋"
             name="OCBC"
             tagline="Open Controls Baseline Catalog"
             description="Merges NIST SP 800-53 Rev. 5, SP 800-53B, and FedRAMP OSCAL baselines into a single enriched JSON file. Zero configuration. CI-ready. Feed it directly into your policy engines."
             href="/ocbc"
+          />
+          <ProductCard
+            icon="📊"
+            name="OEBC"
+            tagline="Open Exposure Baseline Catalog"
+            description="Merges NVD, OSV, and GitHub Advisory data into a single enriched JSON file. Zero configuration. CI-ready. Feed it directly into your exposure gates."
+            href="/oebc"
           />
           <ProductCard
             icon="📜"
@@ -88,20 +102,6 @@ export default function Home() {
             tagline="SQL Analytics for AI Systems"
             description="Query LLM responses, agent traces, and RAG pipelines using standard SQL. Auto-logs every AI API call into six canonical tables with zero configuration. From vibes to queries."
             href="/anysql"
-          />
-          <ProductCard
-            icon="🔍"
-            name="ExposureGate"
-            tagline="CVE & Exposure Scanning Gate"
-            description="An AI-powered pre-commit and pre-merge exposure gate. Scans your code changes against known CVEs, vulnerability patterns, and exposure risks — before every commit."
-            href="/exposuregate"
-          />
-          <ProductCard
-            icon="📊"
-            name="OEBC"
-            tagline="Open Exposure Baseline Catalog"
-            description="Merges NVD, OSV, and GitHub Advisory data into a single enriched JSON file. Zero configuration. CI-ready. Feed it directly into your exposure gates."
-            href="/oebc"
           />
         </div>
       </section>
