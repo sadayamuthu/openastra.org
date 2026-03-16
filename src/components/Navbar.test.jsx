@@ -37,4 +37,9 @@ describe('Navbar', () => {
     renderNavbar()
     expect(screen.getByRole('link', { name: /exposuregate/i })).toBeInTheDocument()
   })
+
+  it('renders OEBC nav link', () => {
+    renderNavbar()
+    expect(screen.getByRole('link', { name: /oebc/i })).toBeInTheDocument()
+  })
 })

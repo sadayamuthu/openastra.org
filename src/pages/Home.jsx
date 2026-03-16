@@ -48,6 +48,12 @@ export default function Home() {
           >
             Explore ExposureGate
           </Link>
+          <Link
+            to="/oebc"
+            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
+          >
+            Explore OEBC
+          </Link>
         </div>
       </section>
 
@@ -89,6 +95,13 @@ export default function Home() {
             tagline="CVE & Exposure Scanning Gate"
             description="An AI-powered pre-commit and pre-merge exposure gate. Scans your code changes against known CVEs, vulnerability patterns, and exposure risks — before every commit."
             href="/exposuregate"
+          />
+          <ProductCard
+            icon="📊"
+            name="OEBC"
+            tagline="Open Exposure Baseline Catalog"
+            description="Merges NVD, OSV, and GitHub Advisory data into a single enriched JSON file. Zero configuration. CI-ready. Feed it directly into your exposure gates."
+            href="/oebc"
           />
         </div>
       </section>

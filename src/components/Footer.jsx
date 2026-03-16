@@ -46,6 +46,14 @@ export default function Footer() {
           >
             ExposureGate ↗
           </a>
+          <a
+            href="https://github.com/sadayamuthu/oebc"
+            target="_blank"
+            rel="noreferrer"
+            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
+          >
+            OEBC ↗
+          </a>
         </div>
       </div>
     </footer>
