@@ -48,6 +48,16 @@ describe('Home page', () => {
     expect(screen.getByRole('link', { name: /explore anysql/i })).toHaveAttribute('href', '/anysql')
   })
 
+  it('renders ExposureGate product card', () => {
+    renderHome()
+    expect(screen.getByText('ExposureGate')).toBeInTheDocument()
+  })
+
+  it('renders Explore ExposureGate hero button', () => {
+    renderHome()
+    expect(screen.getByRole('link', { name: /explore exposuregate/i })).toHaveAttribute('href', '/exposuregate')
+  })
+
   it('renders OpenGPL with Governance Policy Language tagline', () => {
     renderHome()
     expect(screen.getByText(/governance policy language/i)).toBeInTheDocument()

@@ -30,4 +30,10 @@ describe('Footer', () => {
     const link = screen.getByRole('link', { name: /anysql/i })
     expect(link).toHaveAttribute('href', 'https://github.com/sadayamuthu/anySQL')
   })
+
+  it('renders ExposureGate footer link', () => {
+    render(<Footer />)
+    const link = screen.getByRole('link', { name: /exposuregate/i })
+    expect(link).toHaveAttribute('href', 'https://github.com/sadayamuthu/exposuregate')
+  })
 })

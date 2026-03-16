@@ -42,13 +42,19 @@ export default function Home() {
           >
             Explore anySQL
           </Link>
+          <Link
+            to="/exposuregate"
+            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
+          >
+            Explore ExposureGate
+          </Link>
         </div>
       </section>
 
       {/* Products */}
       <section className="flex flex-col gap-8">
         <h2 className="text-2xl font-semibold text-text-primary text-center">Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <ProductCard
             icon="🛡️"
             name="ControlGate"
@@ -76,6 +82,13 @@ export default function Home() {
             tagline="SQL Analytics for AI Systems"
             description="Query LLM responses, agent traces, and RAG pipelines using standard SQL. Auto-logs every AI API call into six canonical tables with zero configuration. From vibes to queries."
             href="/anysql"
+          />
+          <ProductCard
+            icon="🔍"
+            name="ExposureGate"
+            tagline="CVE & Exposure Scanning Gate"
+            description="An AI-powered pre-commit and pre-merge exposure gate. Scans your code changes against known CVEs, vulnerability patterns, and exposure risks — before every commit."
+            href="/exposuregate"
           />
         </div>
       </section>

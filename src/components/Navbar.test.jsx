@@ -32,4 +32,9 @@ describe('Navbar', () => {
     renderNavbar()
     expect(screen.getByRole('link', { name: /anysql/i })).toBeInTheDocument()
   })
+
+  it('renders ExposureGate nav link', () => {
+    renderNavbar()
+    expect(screen.getByRole('link', { name: /exposuregate/i })).toBeInTheDocument()
+  })
 })

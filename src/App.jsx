@@ -6,6 +6,7 @@ import ControlGate from './pages/ControlGate'
 import OCBC from './pages/OCBC'
 import OpenGPL from './pages/OpenGPL'
 import AnySQL from './pages/AnySQL'
+import ExposureGate from './pages/ExposureGate'
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/ocbc" element={<OCBC />} />
             <Route path="/opengpl" element={<OpenGPL />} />
             <Route path="/anysql" element={<AnySQL />} />
+            <Route path="/exposuregate" element={<ExposureGate />} />
           </Routes>
         </main>
         <Footer />

@@ -38,6 +38,14 @@ export default function Footer() {
           >
             anySQL ↗
           </a>
+          <a
+            href="https://github.com/sadayamuthu/exposuregate"
+            target="_blank"
+            rel="noreferrer"
+            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
+          >
+            ExposureGate ↗
+          </a>
         </div>
       </div>
     </footer>
