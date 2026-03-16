@@ -25,10 +25,10 @@ export default function Home() {
             Explore ControlGate
           </Link>
           <Link
-            to="/ncsb"
+            to="/ocbc"
             className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
           >
-            Explore NCSB
+            Explore OCBC
           </Link>
           <Link
             to="/opengpl"
@@ -58,10 +58,10 @@ export default function Home() {
           />
           <ProductCard
             icon="📋"
-            name="NCSB"
-            tagline="NIST Cloud Security Baseline"
+            name="OCBC"
+            tagline="Open Controls Baseline Catalog"
             description="Merges NIST SP 800-53 Rev. 5, SP 800-53B, and FedRAMP OSCAL baselines into a single enriched JSON file. Zero configuration. CI-ready. Feed it directly into your policy engines."
-            href="/ncsb"
+            href="/ocbc"
           />
           <ProductCard
             icon="📜"

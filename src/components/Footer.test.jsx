@@ -13,10 +13,10 @@ describe('Footer', () => {
     expect(link).toHaveAttribute('href', 'https://github.com/sadayamuthu/controlgate')
   })
 
-  it('renders NCSB GitHub link', () => {
+  it('renders OCBC GitHub link', () => {
     render(<Footer />)
-    const link = screen.getByRole('link', { name: /ncsb/i })
-    expect(link).toHaveAttribute('href', 'https://github.com/sadayamuthu/nist-cloud-security-baseline')
+    const link = screen.getByRole('link', { name: /ocbc/i })
+    expect(link).toHaveAttribute('href', 'https://github.com/sadayamuthu/ocbc')
   })
 
   it('renders OpenGPL footer link', () => {

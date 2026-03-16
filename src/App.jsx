@@ -3,7 +3,7 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import ControlGate from './pages/ControlGate'
-import NCSB from './pages/NCSB'
+import OCBC from './pages/OCBC'
 import OpenGPL from './pages/OpenGPL'
 import AnySQL from './pages/AnySQL'
 
@@ -16,7 +16,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/controlgate" element={<ControlGate />} />
-            <Route path="/ncsb" element={<NCSB />} />
+            <Route path="/ocbc" element={<OCBC />} />
             <Route path="/opengpl" element={<OpenGPL />} />
             <Route path="/anysql" element={<AnySQL />} />
           </Routes>

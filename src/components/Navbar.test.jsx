@@ -19,7 +19,7 @@ describe('Navbar', () => {
     renderNavbar()
     expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /controlgate/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /ncsb/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /ocbc/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /github/i })).toBeInTheDocument()
   })
 

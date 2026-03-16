@@ -15,12 +15,12 @@ export default function Footer() {
             ControlGate ↗
           </a>
           <a
-            href="https://github.com/sadayamuthu/nist-cloud-security-baseline"
+            href="https://github.com/sadayamuthu/ocbc"
             target="_blank"
             rel="noreferrer"
             className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
           >
-            NCSB ↗
+            OCBC ↗
           </a>
           <a
             href="https://github.com/sadayamuthu/opengpl"

@@ -19,7 +19,7 @@ const features = [
   },
 ]
 
-export default function NCSB() {
+export default function OCBC() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-24 flex flex-col gap-20">
 
@@ -29,10 +29,10 @@ export default function NCSB() {
           📋 Product
         </div>
         <h1 className="text-5xl font-bold text-text-primary leading-tight">
-          NCSB
+          OCBC
         </h1>
         <p className="text-accent-cyan text-lg">
-          NIST Cloud Security Baseline — Enriched SP 800-53 Rev. 5 in machine-readable JSON
+          Open Controls Baseline Catalog — Enriched SP 800-53 Rev. 5 in machine-readable JSON
         </p>
         <p className="text-text-muted text-base max-w-2xl leading-relaxed">
           Merges the full NIST SP 800-53 Rev. 5 control catalog with SP 800-53B baseline
@@ -64,15 +64,15 @@ export default function NCSB() {
         <div className="bg-surface border border-subtle rounded-xl p-6 font-mono text-sm flex flex-col gap-3">
           <div>
             <span className="text-text-muted"># Install</span>
-            <p className="text-accent-cyan mt-1">pip install ncsb</p>
+            <p className="text-accent-cyan mt-1">pip install ocbc</p>
           </div>
           <div>
             <span className="text-text-muted"># Generate enriched baseline JSON</span>
-            <p className="text-accent-cyan mt-1">ncsb-generate --out baseline.json</p>
+            <p className="text-accent-cyan mt-1">ocbc-generate --out baseline.json</p>
           </div>
           <div>
             <span className="text-text-muted"># Or run without installing</span>
-            <p className="text-accent-cyan mt-1">python -m src.ncsb.generate --out baseline.json</p>
+            <p className="text-accent-cyan mt-1">python -m src.ocbc.generate --out baseline.json</p>
           </div>
         </div>
       </section>
@@ -80,7 +80,7 @@ export default function NCSB() {
       {/* CTA */}
       <section>
         <a
-          href="https://github.com/sadayamuthu/nist-cloud-security-baseline"
+          href="https://github.com/sadayamuthu/ocbc"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-accent-blue text-space font-semibold text-sm hover:opacity-90 transition-opacity glow-blue"

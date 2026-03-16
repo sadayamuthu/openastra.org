@@ -16,7 +16,7 @@ export default function Navbar() {
         <div className="flex items-center gap-8">
           <NavLink to="/" end className={linkClass}>Home</NavLink>
           <NavLink to="/controlgate" className={linkClass}>ControlGate</NavLink>
-          <NavLink to="/ncsb" className={linkClass}>NCSB</NavLink>
+          <NavLink to="/ocbc" className={linkClass}>OCBC</NavLink>
           <NavLink to="/opengpl" className={linkClass}>OpenGPL</NavLink>
           <NavLink to="/anysql" className={linkClass}>anySQL</NavLink>
           <a

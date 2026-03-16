@@ -15,16 +15,16 @@ describe('Home page', () => {
     expect(screen.getByText(/The North Star for Autonomous Systems/i)).toBeInTheDocument()
   })
 
-  it('renders ControlGate and NCSB product cards', () => {
+  it('renders ControlGate and OCBC product cards', () => {
     renderHome()
     expect(screen.getByText('ControlGate')).toBeInTheDocument()
-    expect(screen.getByText('NCSB')).toBeInTheDocument()
+    expect(screen.getByText('OCBC')).toBeInTheDocument()
   })
 
   it('renders CTA buttons linking to product pages', () => {
     renderHome()
     expect(screen.getByRole('link', { name: /explore controlgate/i })).toHaveAttribute('href', '/controlgate')
-    expect(screen.getByRole('link', { name: /explore ncsb/i })).toHaveAttribute('href', '/ncsb')
+    expect(screen.getByRole('link', { name: /explore ocbc/i })).toHaveAttribute('href', '/ocbc')
     expect(screen.getByRole('link', { name: /explore opengpl/i })).toHaveAttribute('href', '/opengpl')
   })
 
