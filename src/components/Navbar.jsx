@@ -16,11 +16,11 @@ export default function Navbar() {
         <div className="flex items-center gap-8">
           <NavLink to="/" end className={linkClass}>Home</NavLink>
           <NavLink to="/controlgate" className={linkClass}>ControlGate</NavLink>
+          <NavLink to="/exposuregate" className={linkClass}>ExposureGate</NavLink>
           <NavLink to="/ocbc" className={linkClass}>OCBC</NavLink>
+          <NavLink to="/oebc" className={linkClass}>OEBC</NavLink>
           <NavLink to="/opengpl" className={linkClass}>OpenGPL</NavLink>
           <NavLink to="/anysql" className={linkClass}>anySQL</NavLink>
-          <NavLink to="/exposuregate" className={linkClass}>ExposureGate</NavLink>
-          <NavLink to="/oebc" className={linkClass}>OEBC</NavLink>
           <a
             href="https://github.com/sadayamuthu"
             target="_blank"
