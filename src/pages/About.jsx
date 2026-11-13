@@ -4,7 +4,7 @@ import { GITHUB, frameworksByCategory } from '../data/frameworks'
 
 export default function About() {
   return (
-    <div className="max-w-page mx-auto px-4 sm:px-6 py-14 grid lg:grid-cols-3 gap-12">
+    <div className="max-w-page mx-auto px-4 sm:px-6 py-14 grid grid-cols-1 lg:grid-cols-3 gap-12">
       <div className="lg:col-span-2">
         <Eyebrow>About</Eyebrow>
         <h1 className="font-serif text-5xl mt-3">About OpenAstra</h1>

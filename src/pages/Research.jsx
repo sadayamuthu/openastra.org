@@ -30,7 +30,7 @@ export default function Research() {
             <h3 className="font-serif italic text-2xl mb-2">{g.category.numeral}. {g.category.name}</h3>
             <ul>
               {g.frameworks.map((f) => (
-                <li key={f.slug} className="py-5 border-b border-rule grid md:grid-cols-[8rem_1fr] gap-2 md:gap-6">
+                <li key={f.slug} className="py-5 border-b border-rule grid grid-cols-1 md:grid-cols-[8rem_1fr] gap-2 md:gap-6">
                   <Link to={`/${f.slug}`} className="font-medium hover:text-rust">{f.name} →</Link>
                   <Citation framework={f} />
                 </li>
@@ -43,7 +43,7 @@ export default function Research() {
         </p>
       </section>
 
-      <div className="grid md:grid-cols-2 gap-4 mt-14">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-14">
         <div id="white-papers"><ComingSoon label="White papers">Technical write-ups for each framework.</ComingSoon></div>
         <div id="patents"><ComingSoon label="Patents">Filings will be listed here as they publish.</ComingSoon></div>
       </div>

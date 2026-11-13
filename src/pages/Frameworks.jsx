@@ -39,7 +39,7 @@ export default function Frameworks() {
         <section key={g.category.id} id={g.category.id} className="mt-12 pt-6 border-t border-rule">
           <h2 className="font-serif italic text-3xl">{g.category.numeral}. {g.category.name}</h2>
           <p className="text-ink-muted mt-1 mb-6 max-w-2xl">{g.category.blurb}</p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {g.frameworks.map((fw) => <Card key={fw.slug} fw={fw} />)}
           </div>
         </section>

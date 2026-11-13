@@ -37,7 +37,7 @@ export default function FrameworkPage({ slug }) {
         <span className="text-ink">{fw.name}</span>
       </nav>
 
-      <header className="grid lg:grid-cols-3 gap-10 py-10">
+      <header className="grid grid-cols-1 lg:grid-cols-3 gap-10 py-10">
         <div className="lg:col-span-2">
           <Eyebrow>{String(fw.number).padStart(2, '0')} · {category.name}</Eyebrow>
           <h1 className="font-serif text-5xl sm:text-6xl tracking-tight mt-3">{fw.name}</h1>
@@ -69,7 +69,7 @@ export default function FrameworkPage({ slug }) {
       )}
 
       <Block title="How it works">
-        <ol className="grid md:grid-cols-3 gap-4">
+        <ol className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {fw.steps.map((s, i) => (
             <li key={s.title} className="border border-dashed border-ink/30 rounded-sm p-4">
               <p className="font-mono text-xs text-rust">{i + 1}</p>
@@ -92,7 +92,7 @@ export default function FrameworkPage({ slug }) {
 
       {fw.features && (
         <Block title="Key features">
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {fw.features.map((f) => (
               <div key={f.title} className="bg-card border border-rule rounded-sm p-5">
                 <p className="font-serif text-lg">{f.title}</p>
@@ -107,7 +107,7 @@ export default function FrameworkPage({ slug }) {
         <CodeBlock blocks={fw.quickstart} />
       </Block>
 
-      <div className="grid md:grid-cols-2 gap-8 border-t border-rule">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-rule">
         {fw.zenodo && (
           <section className="py-8">
             <h2 className="text-[11px] font-medium tracking-[0.14em] uppercase text-ink-muted mb-4">Cite this</h2>

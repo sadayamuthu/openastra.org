@@ -34,7 +34,7 @@ function Category({ group }) {
 export default function FrameworkIndex({ aside }) {
   const groups = frameworksByCategory()
   return (
-    <div className="grid md:grid-cols-2 gap-x-12">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
       <div>
         {groups.slice(0, 2).map((g) => <Category key={g.category.id} group={g} />)}
       </div>
