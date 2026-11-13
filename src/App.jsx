@@ -8,12 +8,14 @@ import FrameworkPage from './pages/FrameworkPage'
 import Research from './pages/Research'
 import Patents from './pages/Patents'
 import About from './pages/About'
+import Lab from './pages/Lab'
 import NotFound from './pages/NotFound'
 import { frameworks } from './data/frameworks'
 
 const TITLES = {
   '/': 'OpenAstra · Security research for autonomous agents',
   '/frameworks': 'Frameworks · OpenAstra',
+  '/lab': 'In the lab · OpenAstra',
   '/research': 'Research · OpenAstra',
   '/patents': 'Patents · OpenAstra',
   '/about': 'About · OpenAstra',
@@ -35,6 +37,7 @@ export function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/frameworks" element={<Frameworks />} />
+        <Route path="/lab" element={<Lab />} />
         <Route path="/research" element={<Research />} />
         <Route path="/patents" element={<Patents />} />
         <Route path="/about" element={<About />} />

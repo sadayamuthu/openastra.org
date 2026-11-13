@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { STAGES, frameworks } from '../data/frameworks'
 
 function Names({ stage }) {
-  const list = frameworks.filter((f) => f.stage === stage)
+  const list = frameworks.filter((f) => f.stage === stage && !f.lab)
   return (
     <span className="flex flex-wrap justify-center gap-x-2">
       {list.map((f, i) => (

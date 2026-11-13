@@ -18,6 +18,7 @@ describe('Navbar', () => {
   it('has the four section links', () => {
     renderNavbar()
     expect(screen.getByRole('link', { name: 'Frameworks' })).toHaveAttribute('href', '/frameworks')
+    expect(screen.getByRole('link', { name: 'Lab' })).toHaveAttribute('href', '/lab')
     expect(screen.getByRole('link', { name: 'Research' })).toHaveAttribute('href', '/research')
     expect(screen.getByRole('link', { name: 'Patents' })).toHaveAttribute('href', '/patents')
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about')

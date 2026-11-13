@@ -159,7 +159,7 @@ export const frameworks = [
   {
     slug: 'cyberlake',
     name: 'CyberLake',
-    number: 4,
+    lab: true,
     category: 'agentic',
     stage: 'run',
     summary: 'Trust registry for agents and MCP servers',
@@ -171,9 +171,9 @@ export const frameworks = [
       { title: 'Verify', text: 'CyberLake signs a cryptographic identity and scans for prompt-injection, dependency, and exfiltration risk.' },
       { title: 'Trust', text: 'Review capabilities and provenance before granting credentials, then pin to a known-good version.' },
     ],
-    status: 'In development',
+    status: 'Coming soon',
     facts: [
-      ['Status', 'In development'],
+      ['Status', 'Coming soon'],
       ['Kind', 'Registry'],
       ['Identity', 'Signed, DNS-verified'],
       ['Audit', 'Immutable, version-pinned'],
@@ -185,7 +185,7 @@ export const frameworks = [
   {
     slug: 'controlgate',
     name: 'ControlGate',
-    number: 5,
+    number: 4,
     category: 'security-controls',
     stage: 'review',
     summary: 'NIST 800-53 pre-commit and pre-merge compliance gate',
@@ -221,7 +221,7 @@ export const frameworks = [
   {
     slug: 'exposuregate',
     name: 'ExposureGate',
-    number: 6,
+    lab: true,
     category: 'security-controls',
     stage: 'merge',
     summary: 'CVE and exposure gate for every code change',
@@ -237,9 +237,9 @@ export const frameworks = [
       title: 'Exposure gates include',
       items: ['CVE detection', 'Secrets exposure', 'Dependency vulnerabilities', 'Container image scanning', 'SBOM analysis', 'Exposed endpoints', 'Misconfiguration detection', 'License risk', '+ more'],
     },
-    status: 'In development',
+    status: 'Coming soon',
     facts: [
-      ['Status', 'In development'],
+      ['Status', 'Coming soon'],
       ['Runs at', 'Pre-commit · PR'],
     ],
     links: { github: `${GITHUB}/exposuregate` },
@@ -247,7 +247,7 @@ export const frameworks = [
   {
     slug: 'opengpl',
     name: 'OpenGPL',
-    number: 7,
+    number: 5,
     category: 'security-controls',
     stage: 'write',
     summary: 'Declarative governance policy language for AI',
@@ -281,7 +281,7 @@ export const frameworks = [
   {
     slug: 'ocbc',
     name: 'OCBC',
-    number: 8,
+    number: 6,
     category: 'security-catalog',
     stage: 'foundation',
     summary: 'NIST 800-53 + FedRAMP as one enriched JSON catalog',
@@ -319,7 +319,7 @@ export const frameworks = [
   {
     slug: 'oebc',
     name: 'OEBC',
-    number: 9,
+    number: 7,
     category: 'security-catalog',
     stage: 'foundation',
     summary: 'NVD + OSV + GHSA exposure catalog, enriched with EPSS and KEV',
@@ -357,7 +357,7 @@ export const frameworks = [
   {
     slug: 'anysql',
     name: 'anySQL',
-    number: 10,
+    number: 8,
     category: 'observability',
     stage: 'run',
     summary: 'SQL over LLM calls, agent traces and RAG pipelines',
@@ -393,10 +393,14 @@ export function getCategory(id) {
   return categories.find((c) => c.id === id)
 }
 
+export function shippedFrameworks() {
+  return frameworks.filter((f) => !f.lab).sort((a, b) => a.number - b.number)
+}
+
 export function frameworksByCategory() {
   return categories.map((category) => ({
     category,
-    frameworks: frameworks
+    frameworks: shippedFrameworks()
       .filter((f) => f.category === category.id)
       .sort((a, b) => a.number - b.number),
   }))
@@ -436,3 +440,91 @@ export function bibtex(fw) {
 }
 
 export const citedFrameworks = () => frameworks.filter((f) => f.zenodo)
+
+// ───────────── In the lab ─────────────
+// Early-stage projects: no published code yet, so no numbers and no DOIs.
+// Domains are shown as plain text until each site is live.
+
+export const LAB_GROUPS = [
+  {
+    id: 'openq',
+    name: 'OpenQ suite',
+    title: 'OpenQ: the quantum-safe suite',
+    blurb: 'From "what\'s at risk" to "fixed", following NIST FIPS 203, 204 and 205.',
+  },
+  { id: 'agentic', name: 'Agentic', title: 'I. Agentic' },
+  { id: 'security-controls', name: 'Security Controls', title: 'II. Security Controls' },
+  { id: 'observability', name: 'Observability', title: 'IV. Observability' },
+]
+
+const NEW_LAB_PROJECTS = [
+  {
+    name: 'OpenQR',
+    domain: 'openqr.dev',
+    group: 'openq',
+    step: 'Know',
+    category: 'security-catalog',
+    summary: 'Post-quantum algorithm catalog',
+    description: 'A machine-readable, daily-updated catalog of cryptographic algorithms, their NIST post-quantum status, library support, and migration mappings.',
+  },
+  {
+    name: 'OpenQS',
+    domain: 'openqs.org',
+    group: 'openq',
+    step: 'Find',
+    category: 'security-controls',
+    summary: 'Scan and gate quantum-vulnerable crypto',
+    description: 'Finds quantum-vulnerable cryptography in code and infrastructure, produces a cryptography inventory, and gates new uses before merge.',
+  },
+  {
+    name: 'OpenQO',
+    domain: 'openqo.org',
+    group: 'openq',
+    step: 'Fix',
+    category: 'security-controls',
+    summary: 'Migrate to PQC and rotate keys',
+    description: 'Automated changes to hybrid post-quantum cryptography, plus ordered certificate and key rotation, with Unasked-style checks on every change.',
+  },
+  {
+    name: 'AgentID',
+    domain: 'openid.ai',
+    group: 'agentic',
+    category: 'agentic',
+    summary: 'Identity and scoped credentials for AI agents',
+    description: 'Cryptographic identities for agents, short-lived task-scoped credentials, and verifiable on-behalf-of chains.',
+  },
+  {
+    name: 'OpenQA',
+    domain: 'openqa.dev',
+    group: 'agentic',
+    category: 'agentic',
+    summary: 'Adversarial test suites for agents in CI',
+    description: 'Repeatable adversarial suites (prompt injection, unasked edits, tool misuse, risky merges) run in CI, with a scorecard per run.',
+  },
+  {
+    name: 'OpenCIQ',
+    domain: 'openciq.com',
+    group: 'observability',
+    category: 'observability',
+    summary: 'Continuous compliance scoring with OSCAL evidence',
+    description: 'Each NIST control gets a live score with the evidence behind it, and FedRAMP SSP and POA&M documents are generated in OSCAL.',
+  },
+  {
+    name: 'OpenEQ',
+    domain: 'openeq.dev',
+    group: 'observability',
+    category: 'observability',
+    summary: 'Egress record for AI agents and dev tools',
+    description: 'A record of every outbound connection from agents, IDEs and MCP servers, with egress rules and a "what left this machine" report.',
+  },
+]
+
+const GROUP_ORDER = LAB_GROUPS.map((g) => g.id)
+
+export function labProjects() {
+  const fromFrameworks = frameworks
+    .filter((f) => f.lab)
+    .map((f) => ({ name: f.name, group: f.category, category: f.category, summary: f.summary, description: f.tagline, to: `/${f.slug}` }))
+  const all = [...NEW_LAB_PROJECTS, ...fromFrameworks]
+  return GROUP_ORDER.flatMap((g) => all.filter((p) => p.group === g))
+}

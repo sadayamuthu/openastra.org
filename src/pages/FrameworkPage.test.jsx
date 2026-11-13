@@ -56,10 +56,18 @@ describe('FrameworkPage headings', () => {
   })
 })
 
-describe('FrameworkPage in development', () => {
-  it('shows an in-development notice instead of a quick start', () => {
+describe('FrameworkPage coming soon', () => {
+  it('shows a coming-soon notice instead of a quick start', () => {
     render(<MemoryRouter><FrameworkPage slug="exposuregate" /></MemoryRouter>)
     expect(screen.queryByRole('heading', { name: 'Quick start' })).toBeNull()
-    expect(screen.getAllByText('In development').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Coming soon').length).toBeGreaterThan(0)
+  })
+})
+
+describe('FrameworkPage for lab projects', () => {
+  it('labels CyberLake as In the lab, without a number', () => {
+    render(<MemoryRouter><FrameworkPage slug="cyberlake" /></MemoryRouter>)
+    expect(screen.getByText(/In the lab · Agentic/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'In the lab' })).toHaveAttribute('href', '/lab')
   })
 })

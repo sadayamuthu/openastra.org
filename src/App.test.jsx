@@ -25,6 +25,7 @@ describe('routes', () => {
     ['/', /Security research/],
     ['/frameworks', 'Frameworks'],
     ['/research', 'Research'],
+    ['/lab', "What we're building next."],
     ['/patents', 'Patents'],
     ['/about', 'About'],
     ['/does-not-exist', 'Not found'],

@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom'
-import { categories, frameworks, frameworksByCategory } from '../data/frameworks'
+import { categories, frameworksByCategory, labProjects, shippedFrameworks } from '../data/frameworks'
 import { DoiTag, Eyebrow, Pill } from '../components/ui'
 
 function Card({ fw }) {
@@ -27,10 +27,13 @@ export default function Frameworks() {
   return (
     <div className="max-w-page mx-auto px-4 sm:px-6 py-14">
       <Eyebrow>
-        {frameworks.length} open frameworks
+        {shippedFrameworks().length} open frameworks
         {active && ` · ${groups.reduce((n, g) => n + g.frameworks.length, 0)} shown`}
       </Eyebrow>
-      <h1 className="font-serif text-5xl mt-3">Frameworks</h1>
+      <div className="flex flex-wrap items-baseline justify-between gap-4 mt-3">
+        <h1 className="font-serif text-5xl">Frameworks</h1>
+        <Link to="/lab" className="text-sm hover:text-rust">{labProjects().length} more in the lab →</Link>
+      </div>
       <div className="flex flex-wrap gap-2 mt-6" role="group" aria-label="Filter by category">
         <Pill active={!active} onClick={() => select(null)}>All</Pill>
         {categories.map((c) => (
