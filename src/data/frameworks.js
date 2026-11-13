@@ -211,6 +211,7 @@ export const frameworks = [
     ],
     facts: [
       ['Framework', 'NIST SP 800-53 Rev. 5'],
+      ['Controls', '370 non-negotiable'],
       ['Baselines', 'FedRAMP'],
       ['Runs at', 'Pre-commit · PR'],
     ],

@@ -13,7 +13,7 @@ async function copy(text) {
   return false
 }
 
-function CopyButton({ label, text, onFail, children }) {
+function CopyButton({ label, text, onFail, onCopied, children }) {
   const [state, setState] = useState('idle')
   const timer = useRef()
   useEffect(() => () => clearTimeout(timer.current), [])
@@ -26,6 +26,7 @@ function CopyButton({ label, text, onFail, children }) {
       return
     }
     setState('copied')
+    onCopied()
     clearTimeout(timer.current)
     timer.current = setTimeout(() => setState('idle'), 2000)
   }
@@ -66,6 +67,7 @@ function Fallback({ label, text }) {
 
 export default function Citation({ framework, compact = false }) {
   const [fallback, setFallback] = useState(null)
+  const [announcement, setAnnouncement] = useState('')
   const z = framework.zenodo
   const url = doiUrl(z.doi)
   const version = /^\d/.test(z.version) ? `v${z.version}` : z.version
@@ -84,8 +86,22 @@ export default function Citation({ framework, compact = false }) {
           {url}
         </a>
         <div className="flex flex-wrap gap-2">
-          <CopyButton label="Copy citation" text={citationText(framework)} onFail={(text) => setFallback({ label: 'Citation', text })}>Copy</CopyButton>
-          <CopyButton label="Copy BibTeX" text={bibtex(framework)} onFail={(text) => setFallback({ label: 'BibTeX', text })}>BibTeX</CopyButton>
+          <CopyButton
+            label={`Copy citation for ${framework.name}`}
+            text={citationText(framework)}
+            onFail={(text) => setFallback({ label: 'Citation', text })}
+            onCopied={() => setAnnouncement('Citation copied')}
+          >
+            Copy
+          </CopyButton>
+          <CopyButton
+            label={`Copy BibTeX for ${framework.name}`}
+            text={bibtex(framework)}
+            onFail={(text) => setFallback({ label: 'BibTeX', text })}
+            onCopied={() => setAnnouncement('BibTeX copied')}
+          >
+            BibTeX
+          </CopyButton>
           {!compact && (
             <a
               href={zenodoUrl(z.doi)}
@@ -99,6 +115,7 @@ export default function Citation({ framework, compact = false }) {
         </div>
       </div>
       {fallback && <Fallback label={fallback.label} text={fallback.text} />}
+      <span role="status" aria-live="polite" className="sr-only">{announcement}</span>
     </div>
   )
 }

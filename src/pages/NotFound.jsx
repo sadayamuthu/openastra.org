@@ -1,6 +1,11 @@
+import { useEffect } from 'react'
 import { Button, Eyebrow } from '../components/ui'
 
 export default function NotFound() {
+  useEffect(() => {
+    document.title = 'Not found · OpenAstra'
+  }, [])
+
   return (
     <div className="max-w-page mx-auto px-4 sm:px-6 py-24 flex flex-col items-start gap-4">
       <Eyebrow>404</Eyebrow>

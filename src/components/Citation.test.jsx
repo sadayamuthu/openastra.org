@@ -31,23 +31,23 @@ describe('Citation', () => {
   it('copies the APA citation and confirms', async () => {
     const writeText = mockClipboard()
     render(<Citation framework={mergelock} />)
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy citation' })) })
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy citation for MergeLock' })) })
     expect(writeText).toHaveBeenCalledWith(citationText(mergelock))
-    expect(screen.getByRole('button', { name: 'Copy citation' })).toHaveTextContent('Copied')
+    expect(screen.getByRole('button', { name: 'Copy citation for MergeLock' })).toHaveTextContent('Copied')
   })
 
   it('copies BibTeX', async () => {
     const writeText = mockClipboard()
     render(<Citation framework={mergelock} />)
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy BibTeX' })) })
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy BibTeX for MergeLock' })) })
     expect(writeText).toHaveBeenCalledWith(bibtex(mergelock))
   })
 
   it('does not throw when the clipboard API is unavailable', async () => {
     Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true })
     render(<Citation framework={mergelock} />)
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy citation' })) })
-    expect(screen.getByRole('button', { name: 'Copy citation' })).toBeInTheDocument()
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy citation for MergeLock' })) })
+    expect(screen.getByRole('button', { name: 'Copy citation for MergeLock' })).toBeInTheDocument()
   })
 
   it('links to the Zenodo record unless compact', () => {
@@ -60,7 +60,7 @@ describe('Citation', () => {
   it('reveals and selects the citation when the clipboard API is unavailable', async () => {
     Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true })
     render(<Citation framework={mergelock} />)
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy citation' })) })
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy citation for MergeLock' })) })
     const box = screen.getByRole('textbox', { name: 'Citation' })
     expect(box).toHaveValue(citationText(mergelock))
     expect(box.selectionEnd - box.selectionStart).toBe(citationText(mergelock).length)
@@ -69,9 +69,16 @@ describe('Citation', () => {
   it('reveals and selects the BibTeX when the clipboard API is unavailable', async () => {
     Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true })
     render(<Citation framework={mergelock} />)
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy BibTeX' })) })
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy BibTeX for MergeLock' })) })
     const box = screen.getByRole('textbox', { name: 'BibTeX' })
     expect(box).toHaveValue(bibtex(mergelock))
     expect(box.selectionEnd - box.selectionStart).toBe(bibtex(mergelock).length)
+  })
+
+  it('announces Copied to screen readers', async () => {
+    mockClipboard()
+    render(<Citation framework={mergelock} />)
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy citation for MergeLock' })) })
+    expect(screen.getByRole('status')).toHaveTextContent('Citation copied')
   })
 })

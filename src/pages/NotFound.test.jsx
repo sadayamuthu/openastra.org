@@ -8,4 +8,10 @@ describe('NotFound', () => {
     expect(screen.getByText('Not found')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Browse frameworks' })).toHaveAttribute('href', '/frameworks')
   })
+
+  it('sets the tab title', () => {
+    document.title = 'Research · OpenAstra'
+    render(<MemoryRouter><NotFound /></MemoryRouter>)
+    expect(document.title).toBe('Not found · OpenAstra')
+  })
 })

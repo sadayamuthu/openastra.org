@@ -96,3 +96,9 @@ describe('packages', () => {
     frameworks.flatMap((f) => f.packages || []).forEach((p) => expect(p.url).toMatch(/^https:\/\//))
   })
 })
+
+describe('ControlGate facts', () => {
+  it('keeps the 370 non-negotiable controls figure', () => {
+    expect(getFramework('controlgate').facts).toContainEqual(['Controls', '370 non-negotiable'])
+  })
+})
