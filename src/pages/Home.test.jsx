@@ -1,75 +1,45 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import Home from './Home'
+import { frameworks } from '../data/frameworks'
+
+const renderHome = () => render(<MemoryRouter><Home /></MemoryRouter>)
 
 describe('Home page', () => {
-  const renderHome = () =>
-    render(
-      <MemoryRouter>
-        <Home />
-      </MemoryRouter>
+  it('leads with the research-lab headline', () => {
+    renderHome()
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/Security research for the age of autonomous agents/)
+  })
+
+  it('indexes all 10 frameworks, each linking to its page', () => {
+    renderHome()
+    const index = screen.getByRole('region', { name: 'The index' })
+    frameworks.forEach((f) => {
+      expect(within(index).getByRole('link', { name: new RegExp(f.name) })).toHaveAttribute('href', `/${f.slug}`)
+    })
+  })
+
+  it('shows the four categories', () => {
+    renderHome()
+    ;['Agentic', 'Security Controls', 'Security Catalog', 'Observability'].forEach((c) =>
+      expect(screen.getAllByText(new RegExp(c)).length).toBeGreaterThan(0)
     )
-
-  it('renders the hero headline', () => {
-    renderHome()
-    expect(screen.getByText(/The North Star for Autonomous Systems/i)).toBeInTheDocument()
   })
 
-  it('renders ControlGate and OCBC product cards', () => {
+  it('features the MergeLock citation', () => {
     renderHome()
-    expect(screen.getByText('ControlGate')).toBeInTheDocument()
-    expect(screen.getByText('OCBC')).toBeInTheDocument()
+    expect(screen.getAllByRole('link', { name: 'https://doi.org/10.5281/zenodo.23637443' }).length).toBeGreaterThan(0)
   })
 
-  it('renders CTA buttons linking to product pages', () => {
+  it('shows White papers and Patents as Coming soon', () => {
     renderHome()
-    expect(screen.getByRole('link', { name: /explore controlgate/i })).toHaveAttribute('href', '/controlgate')
-    expect(screen.getByRole('link', { name: /explore ocbc/i })).toHaveAttribute('href', '/ocbc')
-    expect(screen.getByRole('link', { name: /explore opengpl/i })).toHaveAttribute('href', '/opengpl')
+    expect(screen.getAllByText('Coming soon')).toHaveLength(2)
+    expect(screen.getByText('White papers')).toBeInTheDocument()
   })
 
-  it('renders OpenGPL product card', () => {
+  it('maps frameworks onto the pipeline', () => {
     renderHome()
-    expect(screen.getByText('OpenGPL')).toBeInTheDocument()
-  })
-
-  it('renders Explore OpenGPL hero button', () => {
-    renderHome()
-    expect(screen.getByRole('link', { name: /explore opengpl/i })).toBeInTheDocument()
-  })
-
-  it('renders anySQL product card', () => {
-    renderHome()
-    expect(screen.getByText('anySQL')).toBeInTheDocument()
-  })
-
-  it('renders Explore anySQL hero button', () => {
-    renderHome()
-    expect(screen.getByRole('link', { name: /explore anysql/i })).toHaveAttribute('href', '/anysql')
-  })
-
-  it('renders ExposureGate product card', () => {
-    renderHome()
-    expect(screen.getByText('ExposureGate')).toBeInTheDocument()
-  })
-
-  it('renders Explore ExposureGate hero button', () => {
-    renderHome()
-    expect(screen.getByRole('link', { name: /explore exposuregate/i })).toHaveAttribute('href', '/exposuregate')
-  })
-
-  it('renders OEBC product card', () => {
-    renderHome()
-    expect(screen.getByText('OEBC')).toBeInTheDocument()
-  })
-
-  it('renders Explore OEBC hero button', () => {
-    renderHome()
-    expect(screen.getByRole('link', { name: /explore oebc/i })).toHaveAttribute('href', '/oebc')
-  })
-
-  it('renders OpenGPL with Governance Policy Language tagline', () => {
-    renderHome()
-    expect(screen.getByText(/governance policy language/i)).toBeInTheDocument()
+    const pipeline = screen.getByRole('region', { name: 'Where each framework fits' })
+    ;['Write', 'Review', 'Merge', 'Run', 'Foundation'].forEach((s) => expect(within(pipeline).getByText(s)).toBeInTheDocument())
   })
 })

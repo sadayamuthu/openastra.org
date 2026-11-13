@@ -1,60 +1,21 @@
+import { Link } from 'react-router-dom'
+import { GITHUB } from '../data/frameworks'
+import { NAV_LINKS } from '../data/nav'
+
 export default function Footer() {
   return (
-    <footer className="border-t border-subtle bg-surface mt-auto">
-      <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-text-muted text-sm">
-          © {new Date().getFullYear()} OpenAstra. Open source, MIT licensed.
+    <footer className="mt-auto">
+      <div className="max-w-page mx-auto px-4 sm:px-6 py-8 border-t-2 border-ink flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm text-ink-muted">
+        <p>
+          <span className="font-serif text-ink">OpenAstra</span> · Independent research · Autonomous systems security
         </p>
-        <div className="flex items-center gap-6 text-sm">
-          <a
-            href="https://github.com/sadayamuthu/controlgate"
-            target="_blank"
-            rel="noreferrer"
-            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
-          >
-            ControlGate ↗
-          </a>
-          <a
-            href="https://github.com/sadayamuthu/exposuregate"
-            target="_blank"
-            rel="noreferrer"
-            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
-          >
-            ExposureGate ↗
-          </a>
-          <a
-            href="https://github.com/sadayamuthu/ocbc"
-            target="_blank"
-            rel="noreferrer"
-            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
-          >
-            OCBC ↗
-          </a>
-          <a
-            href="https://github.com/sadayamuthu/oebc"
-            target="_blank"
-            rel="noreferrer"
-            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
-          >
-            OEBC ↗
-          </a>
-          <a
-            href="https://github.com/sadayamuthu/opengpl"
-            target="_blank"
-            rel="noreferrer"
-            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
-          >
-            OpenGPL ↗
-          </a>
-          <a
-            href="https://github.com/sadayamuthu/anySQL"
-            target="_blank"
-            rel="noreferrer"
-            className="text-text-muted hover:text-accent-cyan transition-colors duration-200"
-          >
-            anySQL ↗
-          </a>
+        <div className="flex flex-wrap gap-x-5 gap-y-1">
+          {NAV_LINKS.map((l) => (
+            <Link key={l.to} to={l.to} className="hover:text-ink">{l.label}</Link>
+          ))}
+          <a href={GITHUB} target="_blank" rel="noreferrer" className="hover:text-ink">GitHub ↗</a>
         </div>
+        <p>© {new Date().getFullYear()} · Open source</p>
       </div>
     </footer>
   )

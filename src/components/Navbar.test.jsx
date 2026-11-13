@@ -2,44 +2,41 @@ import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import Navbar from './Navbar'
 
+const renderNavbar = (path = '/') =>
+  render(
+    <MemoryRouter initialEntries={[path]}>
+      <Navbar />
+    </MemoryRouter>
+  )
+
 describe('Navbar', () => {
-  const renderNavbar = () =>
-    render(
-      <MemoryRouter>
-        <Navbar />
-      </MemoryRouter>
-    )
-
-  it('renders the OpenAstra logo', () => {
+  it('links the OpenAstra wordmark home', () => {
     renderNavbar()
-    expect(screen.getByText('OpenAstra')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'OpenAstra' })).toHaveAttribute('href', '/')
   })
 
-  it('renders navigation links', () => {
+  it('has the four section links', () => {
     renderNavbar()
-    expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /controlgate/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /ocbc/i })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /github/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Frameworks' })).toHaveAttribute('href', '/frameworks')
+    expect(screen.getByRole('link', { name: 'Research' })).toHaveAttribute('href', '/research')
+    expect(screen.getByRole('link', { name: 'Patents' })).toHaveAttribute('href', '/patents')
+    expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about')
   })
 
-  it('renders OpenGPL nav link', () => {
+  it('links GitHub externally', () => {
     renderNavbar()
-    expect(screen.getByRole('link', { name: /opengpl/i })).toBeInTheDocument()
+    const gh = screen.getByRole('link', { name: /github/i })
+    expect(gh).toHaveAttribute('href', 'https://github.com/sadayamuthu')
+    expect(gh).toHaveAttribute('target', '_blank')
   })
 
-  it('renders anySQL nav link', () => {
+  it('wraps links on narrow screens', () => {
     renderNavbar()
-    expect(screen.getByRole('link', { name: /anysql/i })).toBeInTheDocument()
+    expect(screen.getByRole('navigation').querySelector('.flex-wrap')).not.toBeNull()
   })
 
-  it('renders ExposureGate nav link', () => {
-    renderNavbar()
-    expect(screen.getByRole('link', { name: /exposuregate/i })).toBeInTheDocument()
-  })
-
-  it('renders OEBC nav link', () => {
-    renderNavbar()
-    expect(screen.getByRole('link', { name: /oebc/i })).toBeInTheDocument()
+  it('marks the active section', () => {
+    renderNavbar('/research')
+    expect(screen.getByRole('link', { name: 'Research' })).toHaveAttribute('aria-current', 'page')
   })
 })

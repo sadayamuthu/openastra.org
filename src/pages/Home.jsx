@@ -1,121 +1,84 @@
 import { Link } from 'react-router-dom'
-import ProductCard from '../components/ProductCard'
+import FrameworkIndex from '../components/FrameworkIndex'
+import Pipeline from '../components/Pipeline'
+import Citation from '../components/Citation'
+import { Button, ComingSoon, Eyebrow, Pill } from '../components/ui'
+import { citedFrameworks, doiUrl, frameworks, getFramework } from '../data/frameworks'
+
+function Section({ label, children, className = '' }) {
+  const id = label.toLowerCase().replace(/\W+/g, '-')
+  return (
+    <section aria-labelledby={id} className={`py-10 border-t border-rule ${className}`}>
+      <h2 id={id} className="text-[11px] font-medium tracking-[0.14em] uppercase text-ink-muted mb-2">{label}</h2>
+      {children}
+    </section>
+  )
+}
 
 export default function Home() {
+  const cited = citedFrameworks()
+  const latest = [...cited].sort((a, b) => b.zenodo.date.localeCompare(a.zenodo.date) || a.number - b.number).slice(0, 3)
+
   return (
-    <div className="max-w-6xl mx-auto px-6 py-24 flex flex-col gap-32">
-
+    <div className="max-w-page mx-auto px-4 sm:px-6">
       {/* Hero */}
-      <section className="flex flex-col items-center text-center gap-8">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-subtle text-text-muted text-xs tracking-widest uppercase">
-          <span className="text-accent-cyan">✦</span> Open Source Security Tools
-        </div>
-        <h1 className="text-5xl sm:text-6xl font-bold leading-tight max-w-3xl text-accent-cyan">
-          The North Star for Autonomous Systems
+      <section className="py-14 sm:py-20 max-w-3xl">
+        <Eyebrow>Independent research lab · Autonomous systems security</Eyebrow>
+        <h1 className="font-serif text-4xl sm:text-6xl leading-[1.05] tracking-tight mt-4">
+          Security research for the age of <em className="text-rust">autonomous agents</em>.
         </h1>
-        <p className="text-text-muted text-lg max-w-xl leading-relaxed">
-          OpenAstra builds open source tools that bring NIST-grade security compliance
-          into every developer's workflow.
+        <p className="text-lg text-ink-muted mt-6 max-w-2xl leading-relaxed">
+          Open frameworks with citable, versioned releases that make AI agents, and the code
+          they write, verifiable, governable, and compliant.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Link
-            to="/controlgate"
-            className="px-6 py-3 rounded-lg bg-accent-blue text-space font-semibold text-sm hover:opacity-90 transition-opacity glow-blue"
-          >
-            Explore ControlGate
-          </Link>
-          <Link
-            to="/exposuregate"
-            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
-          >
-            Explore ExposureGate
-          </Link>
-          <Link
-            to="/ocbc"
-            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
-          >
-            Explore OCBC
-          </Link>
-          <Link
-            to="/oebc"
-            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
-          >
-            Explore OEBC
-          </Link>
-          <Link
-            to="/opengpl"
-            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
-          >
-            Explore OpenGPL
-          </Link>
-          <Link
-            to="/anysql"
-            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
-          >
-            Explore anySQL
-          </Link>
+        <div className="flex flex-wrap gap-2 mt-6">
+          <Pill>{frameworks.length} open frameworks</Pill>
+          <Pill>{cited.length} Zenodo DOIs</Pill>
+          <Pill soon>Patents coming soon</Pill>
+        </div>
+        <div className="flex flex-wrap gap-3 mt-8">
+          <Button to="/frameworks" variant="solid">Browse frameworks</Button>
+          <Button to="/research">Research &amp; citations</Button>
         </div>
       </section>
 
-      {/* Products */}
-      <section className="flex flex-col gap-8">
-        <h2 className="text-2xl font-semibold text-text-primary text-center">Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <ProductCard
-            icon="🛡️"
-            name="ControlGate"
-            tagline="NIST RMF & FedRAMP Compliance Gate"
-            description="An AI-powered pre-commit and pre-merge security gate. Scans your code changes against 370 non-negotiable NIST SP 800-53 Rev. 5 controls across 18 security gates — before every commit."
-            href="/controlgate"
-          />
-          <ProductCard
-            icon="🔍"
-            name="ExposureGate"
-            tagline="CVE & Exposure Scanning Gate"
-            description="An AI-powered pre-commit and pre-merge exposure gate. Scans your code changes against known CVEs, vulnerability patterns, and exposure risks — before every commit."
-            href="/exposuregate"
-          />
-          <ProductCard
-            icon="📋"
-            name="OCBC"
-            tagline="Open Controls Baseline Catalog"
-            description="Merges NIST SP 800-53 Rev. 5, SP 800-53B, and FedRAMP OSCAL baselines into a single enriched JSON file. Zero configuration. CI-ready. Feed it directly into your policy engines."
-            href="/ocbc"
-          />
-          <ProductCard
-            icon="📊"
-            name="OEBC"
-            tagline="Open Exposure Baseline Catalog"
-            description="Merges NVD, OSV, and GitHub Advisory data into a single enriched JSON file. Zero configuration. CI-ready. Feed it directly into your exposure gates."
-            href="/oebc"
-          />
-          <ProductCard
-            icon="📜"
-            name="OpenGPL"
-            tagline="Governance Policy Language for AI Systems"
-            description="An open, declarative policy language for AI agents. Define behavior, resource access, and output constraints — with compliance evidence at runtime and at rest."
-            href="/opengpl"
-          />
-          <ProductCard
-            icon="🗄️"
-            name="anySQL"
-            tagline="SQL Analytics for AI Systems"
-            description="Query LLM responses, agent traces, and RAG pipelines using standard SQL. Auto-logs every AI API call into six canonical tables with zero configuration. From vibes to queries."
-            href="/anysql"
-          />
+      <Section label="The index">
+        <FrameworkIndex
+          aside={
+            <div className="bg-card border border-rule rounded-sm p-5">
+              <p className="text-[11px] font-medium tracking-[0.14em] uppercase text-ink-muted mb-3">Cite this · Featured</p>
+              <Citation framework={getFramework('mergelock')} compact />
+            </div>
+          }
+        />
+      </Section>
+
+      <Section label="Where each framework fits">
+        <p className="font-serif text-2xl mb-6 max-w-2xl">Guardrails at every stage of the agent lifecycle.</p>
+        <Pipeline />
+      </Section>
+
+      <Section label="Latest on Zenodo">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="md:col-span-2">
+            <ul>
+              {latest.map((f) => (
+                <li key={f.slug} className="py-3 border-b border-rule flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                  <Link to={`/${f.slug}`} className="font-serif text-lg hover:text-rust">{f.zenodo.title}</Link>
+                  <a href={doiUrl(f.zenodo.doi)} target="_blank" rel="noreferrer" className="font-mono text-xs text-rust underline underline-offset-2 shrink-0">
+                    doi.org/{f.zenodo.doi} ↗
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <Link to="/research" className="inline-block mt-4 text-sm hover:text-rust">All {cited.length} citations →</Link>
+          </div>
+          <div className="flex flex-col gap-4">
+            <ComingSoon label="White papers" />
+            <ComingSoon label="Patents" />
+          </div>
         </div>
-      </section>
-
-      {/* About */}
-      <section className="flex flex-col items-center text-center gap-4 pb-8">
-        <h2 className="text-2xl font-semibold text-text-primary">About OpenAstra</h2>
-        <p className="text-text-muted text-base max-w-2xl leading-relaxed">
-          OpenAstra is a independent research services focused on autonomous systems security.
-          We build open source tools that make NIST compliance traceable, automated, and
-          accessible to every engineering team — from solo developers to enterprise cloud teams.
-        </p>
-      </section>
-
+      </Section>
     </div>
   )
 }

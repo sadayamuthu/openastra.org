@@ -1,36 +1,36 @@
 import { Link, NavLink } from 'react-router-dom'
+import { GITHUB } from '../data/frameworks'
+import { NAV_LINKS } from '../data/nav'
+
+
+const linkClass = ({ isActive }) =>
+  `text-sm pb-0.5 border-b transition-colors ${
+    isActive ? 'text-ink border-rust' : 'text-ink-muted border-transparent hover:text-ink'
+  }`
 
 export default function Navbar() {
-  const linkClass = ({ isActive }) =>
-    `text-sm transition-colors duration-200 ${
-      isActive ? 'text-accent-cyan' : 'text-text-muted hover:text-text-primary'
-    }`
-
   return (
-    <nav className="sticky top-0 z-50 bg-surface border-b border-subtle">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-text-primary font-semibold text-lg">
-          <span className="text-accent-cyan">✦</span>
-          <span>OpenAstra</span>
+    <header className="bg-paper/95 backdrop-blur sticky top-0 z-50">
+      <nav className="max-w-page mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-x-8 gap-y-2 border-b-2 border-ink">
+        <Link to="/" className="font-serif text-xl tracking-tight text-ink">
+          OpenAstra
         </Link>
-        <div className="flex items-center gap-8">
-          <NavLink to="/" end className={linkClass}>Home</NavLink>
-          <NavLink to="/controlgate" className={linkClass}>ControlGate</NavLink>
-          <NavLink to="/exposuregate" className={linkClass}>ExposureGate</NavLink>
-          <NavLink to="/ocbc" className={linkClass}>OCBC</NavLink>
-          <NavLink to="/oebc" className={linkClass}>OEBC</NavLink>
-          <NavLink to="/opengpl" className={linkClass}>OpenGPL</NavLink>
-          <NavLink to="/anysql" className={linkClass}>anySQL</NavLink>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-1">
+          {NAV_LINKS.map((l) => (
+            <NavLink key={l.to} to={l.to} className={linkClass}>
+              {l.label}
+            </NavLink>
+          ))}
           <a
-            href="https://github.com/sadayamuthu"
+            href={GITHUB}
             target="_blank"
             rel="noreferrer"
-            className="text-sm text-text-muted hover:text-text-primary transition-colors duration-200"
+            className="text-sm text-ink-muted hover:text-ink transition-colors"
           >
             GitHub ↗
           </a>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   )
 }
