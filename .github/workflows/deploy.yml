@@ -34,6 +34,9 @@ jobs:
       - name: Fix SPA routing (copy index.html to 404.html)
         run: cp dist/index.html dist/404.html
 
+      - name: Publish OCBC catalog (served at /ocbc/catalog/v0.1/latest.json)
+        run: mkdir -p dist/ocbc && cp -r ocbc/catalog dist/ocbc/
+
       - name: Write CNAME file
         run: echo "openastra.org" > dist/CNAME
 

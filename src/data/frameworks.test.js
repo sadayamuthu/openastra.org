@@ -102,3 +102,48 @@ describe('ControlGate facts', () => {
     expect(getFramework('controlgate').facts).toContainEqual(['Controls', '370 non-negotiable'])
   })
 })
+
+describe('install commands match what is actually published', () => {
+  const cmds = (slug) => (getFramework(slug).quickstart || []).flatMap((b) => b.lines).join('\n')
+
+  it('ExposureGate and CyberLake are marked in development with no install commands', () => {
+    ;['exposuregate', 'cyberlake'].forEach((slug) => {
+      expect(getFramework(slug).status).toBe('In development')
+      expect(getFramework(slug).quickstart).toBeUndefined()
+    })
+  })
+
+  it('does not link the unreachable cyberlake.org', () => {
+    expect(getFramework('cyberlake').links.website).toBeUndefined()
+  })
+
+  it('never tells people to pip install a package that is not on PyPI', () => {
+    const notOnPypi = ['exposuregate', 'oebc', 'cyberlake', 'opengpl', 'mergelock', 'unasked']
+    frameworks.forEach((f) => {
+      notOnPypi.forEach((pkg) => expect(cmds(f.slug)).not.toMatch(new RegExp(`pip install ${pkg}(\\s|$)`)))
+    })
+  })
+
+  it('OEBC downloads the published catalog or builds from source', () => {
+    expect(cmds('oebc')).toContain('curl -L https://openastra.org/oebc/catalog/v0.1/latest.json.gz | gunzip > oebc_catalog.json')
+    expect(cmds('oebc')).toContain('git clone https://github.com/sadayamuthu/oebc.git')
+    expect(cmds('oebc')).toContain('make generate')
+  })
+
+  it('OCBC uses the real CLI subcommands', () => {
+    expect(cmds('ocbc')).toContain('pip install ocbc')
+    expect(cmds('ocbc')).toContain('ocbc fetch --out catalog.json')
+    expect(cmds('ocbc')).toContain('ocbc generate')
+    expect(cmds('ocbc')).not.toMatch(/ocbc-generate|python -m src\.ocbc/)
+  })
+
+  it('anySQL wraps the client the way the SDK documents', () => {
+    expect(cmds('anysql')).toContain('client = anysql.claude(db).wrap(anthropic_client)')
+  })
+
+  it('links the hosted OCBC and OEBC catalogs', () => {
+    const urls = (slug) => getFramework(slug).packages.map((p) => p.url)
+    expect(urls('ocbc')).toContain('https://openastra.org/ocbc/catalog/v0.1/latest.json')
+    expect(urls('oebc')).toContain('https://openastra.org/oebc/catalog/v0.1/latest.json.gz')
+  })
+})

@@ -103,9 +103,20 @@ export default function FrameworkPage({ slug }) {
         </Block>
       )}
 
-      <Block title="Quick start">
-        <CodeBlock blocks={fw.quickstart} />
-      </Block>
+      {fw.quickstart ? (
+        <Block title="Quick start">
+          <CodeBlock blocks={fw.quickstart} />
+        </Block>
+      ) : (
+        <Block title="Availability">
+          <div className="border border-dashed border-ink/30 rounded-sm p-6 flex flex-col gap-1">
+            <p className="font-serif text-2xl text-rust">{fw.status}</p>
+            <p className="text-sm text-ink-muted">
+              The source isn't published yet. Watch the GitHub repository to hear when it is.
+            </p>
+          </div>
+        </Block>
+      )}
 
       {fw.packages?.length > 0 && (
         <Block title="Install from">

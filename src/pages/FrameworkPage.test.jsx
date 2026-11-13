@@ -55,3 +55,11 @@ describe('FrameworkPage headings', () => {
     expect(screen.getByRole('heading', { name: 'At a glance' })).toBeInTheDocument()
   })
 })
+
+describe('FrameworkPage in development', () => {
+  it('shows an in-development notice instead of a quick start', () => {
+    render(<MemoryRouter><FrameworkPage slug="exposuregate" /></MemoryRouter>)
+    expect(screen.queryByRole('heading', { name: 'Quick start' })).toBeNull()
+    expect(screen.getAllByText('In development').length).toBeGreaterThan(0)
+  })
+})
