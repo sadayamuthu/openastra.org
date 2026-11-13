@@ -1,14 +1,51 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
-import ControlGate from './pages/ControlGate'
-import OCBC from './pages/OCBC'
-import OpenGPL from './pages/OpenGPL'
-// import AnySQL from './pages/AnySQL'
-import CyberLake from './pages/CyberLake'
-import ExposureGate from './pages/ExposureGate'
-import OEBC from './pages/OEBC'
+import Frameworks from './pages/Frameworks'
+import FrameworkPage from './pages/FrameworkPage'
+import Research from './pages/Research'
+import Patents from './pages/Patents'
+import About from './pages/About'
+import NotFound from './pages/NotFound'
+import { frameworks } from './data/frameworks'
+
+const TITLES = {
+  '/': 'OpenAstra · Security research for autonomous agents',
+  '/frameworks': 'Frameworks · OpenAstra',
+  '/research': 'Research · OpenAstra',
+  '/patents': 'Patents · OpenAstra',
+  '/about': 'About · OpenAstra',
+}
+
+function ScrollAndTitle() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo?.(0, 0)
+    if (TITLES[pathname]) document.title = TITLES[pathname]
+  }, [pathname])
+  return null
+}
+
+export function AppRoutes() {
+  return (
+    <>
+      <ScrollAndTitle />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/frameworks" element={<Frameworks />} />
+        <Route path="/research" element={<Research />} />
+        <Route path="/patents" element={<Patents />} />
+        <Route path="/about" element={<About />} />
+        {frameworks.map((f) => (
+          <Route key={f.slug} path={`/${f.slug}`} element={<FrameworkPage slug={f.slug} />} />
+        ))}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
+  )
+}
 
 export default function App() {
   return (
@@ -16,16 +53,7 @@ export default function App() {
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/controlgate" element={<ControlGate />} />
-            <Route path="/ocbc" element={<OCBC />} />
-            <Route path="/opengpl" element={<OpenGPL />} />
-            {/* <Route path="/anysql" element={<AnySQL />} /> */}
-            <Route path="/cyberlake" element={<CyberLake />} />
-            <Route path="/exposuregate" element={<ExposureGate />} />
-            <Route path="/oebc" element={<OEBC />} />
-          </Routes>
+          <AppRoutes />
         </main>
         <Footer />
       </div>
