@@ -24,22 +24,28 @@ export default function FrameworkPage({ slug }) {
   if (!fw) return <NotFound />
 
   const category = getCategory(fw.category)
-  const related = frameworks.filter((f) => f.category === fw.category && f.slug !== fw.slug)
+  const related = frameworks.filter((f) => f.category === fw.category && f.slug !== fw.slug && !f.lab)
   const facts = fw.zenodo ? [...fw.facts, ['DOI', fw.zenodo.doi]] : fw.facts
 
   return (
     <article className="max-w-page mx-auto px-4 sm:px-6 py-10">
       <nav aria-label="Breadcrumb" className="text-sm text-ink-muted">
-        <Link to="/frameworks" className="hover:text-ink">Frameworks</Link>
-        <span aria-hidden="true"> / </span>
-        <Link to={`/frameworks?category=${category.id}`} className="hover:text-ink">{category.numeral}. {category.name}</Link>
+        {fw.lab ? (
+          <Link to="/lab" className="hover:text-ink">In the lab</Link>
+        ) : (
+          <>
+            <Link to="/frameworks" className="hover:text-ink">Frameworks</Link>
+            <span aria-hidden="true"> / </span>
+            <Link to={`/frameworks?category=${category.id}`} className="hover:text-ink">{category.numeral}. {category.name}</Link>
+          </>
+        )}
         <span aria-hidden="true"> / </span>
         <span className="text-ink">{fw.name}</span>
       </nav>
 
       <header className="grid grid-cols-1 lg:grid-cols-3 gap-10 py-10">
         <div className="lg:col-span-2">
-          <Eyebrow>{String(fw.number).padStart(2, '0')} · {category.name}</Eyebrow>
+          <Eyebrow>{fw.lab ? `In the lab · ${category.name}` : `${String(fw.number).padStart(2, '0')} · ${category.name}`}</Eyebrow>
           <h1 className="font-serif text-5xl sm:text-6xl tracking-tight mt-3">{fw.name}</h1>
           <p className="font-serif text-xl sm:text-2xl mt-4 leading-snug">{fw.tagline}</p>
           <p className="text-ink-muted mt-4 leading-relaxed max-w-2xl">{fw.description}</p>

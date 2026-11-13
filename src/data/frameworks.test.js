@@ -1,13 +1,14 @@
 import {
-  categories, frameworks, getFramework, frameworksByCategory,
+  categories, frameworks, getFramework, frameworksByCategory, shippedFrameworks, labProjects, LAB_GROUPS,
   doiUrl, citationText, bibtex,
 } from './frameworks'
 
 describe('frameworks data', () => {
-  it('has 10 frameworks with unique slugs and numbers 1..10', () => {
-    expect(frameworks).toHaveLength(10)
-    expect(new Set(frameworks.map((f) => f.slug)).size).toBe(10)
-    expect(frameworks.map((f) => f.number).sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+  it('indexes 8 shipped frameworks numbered 1..8, with unique slugs overall', () => {
+    expect(new Set(frameworks.map((f) => f.slug)).size).toBe(frameworks.length)
+    expect(shippedFrameworks()).toHaveLength(8)
+    expect(shippedFrameworks().map((f) => f.number)).toEqual([1, 2, 3, 4, 5, 6, 7, 8])
+    shippedFrameworks().forEach((f) => expect(f.zenodo).toBeDefined())
   })
 
   it('puts every framework in a known category and leaves no category empty', () => {
@@ -19,7 +20,7 @@ describe('frameworks data', () => {
 
   it('orders the agentic category MergeLock, Unasked, ZeroEgress, CyberLake', () => {
     const agentic = frameworksByCategory().find((g) => g.category.id === 'agentic')
-    expect(agentic.frameworks.map((f) => f.slug)).toEqual(['mergelock', 'unasked', 'zero-egress', 'cyberlake'])
+    expect(agentic.frameworks.map((f) => f.slug)).toEqual(['mergelock', 'unasked', 'zero-egress'])
   })
 
   it('gives 8 frameworks a well-formed Zenodo DOI and none to CyberLake or ExposureGate', () => {
@@ -106,9 +107,9 @@ describe('ControlGate facts', () => {
 describe('install commands match what is actually published', () => {
   const cmds = (slug) => (getFramework(slug).quickstart || []).flatMap((b) => b.lines).join('\n')
 
-  it('ExposureGate and CyberLake are marked in development with no install commands', () => {
+  it('ExposureGate and CyberLake are marked coming soon with no install commands', () => {
     ;['exposuregate', 'cyberlake'].forEach((slug) => {
-      expect(getFramework(slug).status).toBe('In development')
+      expect(getFramework(slug).status).toBe('Coming soon')
       expect(getFramework(slug).quickstart).toBeUndefined()
     })
   })
@@ -145,5 +146,44 @@ describe('install commands match what is actually published', () => {
     const urls = (slug) => getFramework(slug).packages.map((p) => p.url)
     expect(urls('ocbc')).toContain('https://openastra.org/ocbc/catalog/v0.1/latest.json')
     expect(urls('oebc')).toContain('https://openastra.org/oebc/catalog/v0.1/latest.json.gz')
+  })
+})
+
+describe('In the lab', () => {
+  it('holds CyberLake, ExposureGate and the 7 new projects', () => {
+    expect(labProjects().map((p) => p.name)).toEqual([
+      'OpenQR', 'OpenQS', 'OpenQO', 'AgentID', 'OpenQA', 'CyberLake', 'ExposureGate', 'OpenCIQ', 'OpenEQ',
+    ])
+  })
+
+  it('keeps lab projects out of the numbered index', () => {
+    ;['cyberlake', 'exposuregate'].forEach((slug) => {
+      expect(getFramework(slug).lab).toBe(true)
+      expect(getFramework(slug).number).toBeUndefined()
+    })
+  })
+
+  it('pairs each new project with its domain', () => {
+    const domains = Object.fromEntries(labProjects().filter((p) => p.domain).map((p) => [p.name, p.domain]))
+    expect(domains).toEqual({
+      OpenQR: 'openqr.dev', OpenQS: 'openqs.org', OpenQO: 'openqo.org', AgentID: 'openid.ai',
+      OpenQA: 'openqa.dev', OpenCIQ: 'openciq.com', OpenEQ: 'openeq.dev',
+    })
+  })
+
+  it('orders the OpenQ suite Know, Find, Fix', () => {
+    expect(labProjects().filter((p) => p.group === 'openq').map((p) => `${p.step} ${p.name}`)).toEqual([
+      'Know OpenQR', 'Find OpenQS', 'Fix OpenQO',
+    ])
+  })
+
+  it('gives every project a known group', () => {
+    const ids = LAB_GROUPS.map((g) => g.id)
+    labProjects().forEach((p) => expect(ids).toContain(p.group))
+  })
+
+  it('links CyberLake and ExposureGate to their existing pages', () => {
+    expect(labProjects().find((p) => p.name === 'CyberLake').to).toBe('/cyberlake')
+    expect(labProjects().find((p) => p.name === 'ExposureGate').to).toBe('/exposuregate')
   })
 })
