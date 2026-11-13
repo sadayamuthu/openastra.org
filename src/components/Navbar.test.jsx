@@ -28,9 +28,9 @@ describe('Navbar', () => {
     expect(screen.getByRole('link', { name: /opengpl/i })).toBeInTheDocument()
   })
 
-  it('renders anySQL nav link', () => {
+  it('renders CyberLake nav link', () => {
     renderNavbar()
-    expect(screen.getByRole('link', { name: /anysql/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /cyberlake/i })).toBeInTheDocument()
   })
 
   it('renders ExposureGate nav link', () => {

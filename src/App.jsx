@@ -5,7 +5,8 @@ import Home from './pages/Home'
 import ControlGate from './pages/ControlGate'
 import OCBC from './pages/OCBC'
 import OpenGPL from './pages/OpenGPL'
-import AnySQL from './pages/AnySQL'
+// import AnySQL from './pages/AnySQL'
+import CyberLake from './pages/CyberLake'
 import ExposureGate from './pages/ExposureGate'
 import OEBC from './pages/OEBC'
 
@@ -20,7 +21,8 @@ export default function App() {
             <Route path="/controlgate" element={<ControlGate />} />
             <Route path="/ocbc" element={<OCBC />} />
             <Route path="/opengpl" element={<OpenGPL />} />
-            <Route path="/anysql" element={<AnySQL />} />
+            {/* <Route path="/anysql" element={<AnySQL />} /> */}
+            <Route path="/cyberlake" element={<CyberLake />} />
             <Route path="/exposuregate" element={<ExposureGate />} />
             <Route path="/oebc" element={<OEBC />} />
           </Routes>

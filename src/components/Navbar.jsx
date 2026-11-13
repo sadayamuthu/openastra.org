@@ -20,7 +20,8 @@ export default function Navbar() {
           <NavLink to="/ocbc" className={linkClass}>OCBC</NavLink>
           <NavLink to="/oebc" className={linkClass}>OEBC</NavLink>
           <NavLink to="/opengpl" className={linkClass}>OpenGPL</NavLink>
-          <NavLink to="/anysql" className={linkClass}>anySQL</NavLink>
+          {/* <NavLink to="/anysql" className={linkClass}>anySQL</NavLink> */}
+          <NavLink to="/cyberlake" className={linkClass}>CyberLake</NavLink>
           <a
             href="https://github.com/sadayamuthu"
             target="_blank"

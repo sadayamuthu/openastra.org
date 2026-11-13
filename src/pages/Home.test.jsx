@@ -38,14 +38,14 @@ describe('Home page', () => {
     expect(screen.getByRole('link', { name: /explore opengpl/i })).toBeInTheDocument()
   })
 
-  it('renders anySQL product card', () => {
+  it('renders CyberLake product card', () => {
     renderHome()
-    expect(screen.getByText('anySQL')).toBeInTheDocument()
+    expect(screen.getByText('CyberLake')).toBeInTheDocument()
   })
 
-  it('renders Explore anySQL hero button', () => {
+  it('renders Explore CyberLake hero button', () => {
     renderHome()
-    expect(screen.getByRole('link', { name: /explore anysql/i })).toHaveAttribute('href', '/anysql')
+    expect(screen.getByRole('link', { name: /explore cyberlake/i })).toHaveAttribute('href', '/cyberlake')
   })
 
   it('renders ExposureGate product card', () => {

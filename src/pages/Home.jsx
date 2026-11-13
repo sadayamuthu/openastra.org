@@ -48,11 +48,17 @@ export default function Home() {
           >
             Explore OpenGPL
           </Link>
-          <Link
+          {/* <Link
             to="/anysql"
             className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
           >
             Explore anySQL
+          </Link> */}
+          <Link
+            to="/cyberlake"
+            className="px-6 py-3 rounded-lg border border-subtle text-text-primary text-sm hover:border-accent-cyan transition-colors duration-200"
+          >
+            Explore CyberLake
           </Link>
         </div>
       </section>
@@ -96,12 +102,19 @@ export default function Home() {
             description="An open, declarative policy language for AI agents. Define behavior, resource access, and output constraints — with compliance evidence at runtime and at rest."
             href="/opengpl"
           />
-          <ProductCard
+          {/* <ProductCard
             icon="🗄️"
             name="anySQL"
             tagline="SQL Analytics for AI Systems"
             description="Query LLM responses, agent traces, and RAG pipelines using standard SQL. Auto-logs every AI API call into six canonical tables with zero configuration. From vibes to queries."
             href="/anysql"
+          /> */}
+          <ProductCard
+            icon="🌊"
+            name="CyberLake"
+            tagline="The trust layer for autonomous agents"
+            description="A trust registry for AI agents. Publish any tool, MCP server, or agent — CyberLake verifies it before it gets credentials. Signed identity, capabilities manifest, security score, and an immutable audit trail."
+            href="/cyberlake"
           />
         </div>
       </section>
