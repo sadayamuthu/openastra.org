@@ -54,3 +54,9 @@ describe('frameworks data', () => {
     expect(getFramework('nope')).toBeUndefined()
   })
 })
+
+describe('facts accuracy', () => {
+  it('ExposureGate does not claim an unverified data source', () => {
+    expect(getFramework('exposuregate').facts.map(([k]) => k)).not.toContain('Data')
+  })
+})

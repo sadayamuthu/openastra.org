@@ -14,7 +14,7 @@ export default function Research() {
       <Eyebrow>Research</Eyebrow>
       <h1 className="font-serif text-5xl mt-3">Research</h1>
       <p className="text-ink-muted mt-4 max-w-2xl leading-relaxed">
-        Every framework is archived on Zenodo with a permanent DOI. Cite the software today;
+        Eight of our ten frameworks are archived on Zenodo with a permanent DOI. Cite the software today;
         white papers and patents are on the way.
       </p>
       <nav className="flex flex-wrap gap-2 mt-6" aria-label="Research sections">

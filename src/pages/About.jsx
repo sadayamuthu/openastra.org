@@ -14,8 +14,8 @@ export default function About() {
         <p className="text-ink-muted mt-4 leading-relaxed">
           We build open source frameworks that make AI agents and the code they write
           verifiable, and that make NIST compliance traceable, automated, and accessible to
-          every engineering team, from solo developers to enterprise cloud teams. Every
-          framework ships with a citable Zenodo release.
+          every engineering team, from solo developers to enterprise cloud teams. Most
+          frameworks ship with a citable Zenodo release.
         </p>
         <div className="flex flex-wrap gap-3 mt-8">
           <Button href={GITHUB} variant="solid">GitHub</Button>

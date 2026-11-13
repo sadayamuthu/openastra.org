@@ -56,4 +56,22 @@ describe('Citation', () => {
     rerender(<Citation framework={mergelock} compact />)
     expect(screen.queryByRole('link', { name: /Zenodo/ })).toBeNull()
   })
+
+  it('reveals and selects the citation when the clipboard API is unavailable', async () => {
+    Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true })
+    render(<Citation framework={mergelock} />)
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy citation' })) })
+    const box = screen.getByRole('textbox', { name: 'Citation' })
+    expect(box).toHaveValue(citationText(mergelock))
+    expect(box.selectionEnd - box.selectionStart).toBe(citationText(mergelock).length)
+  })
+
+  it('reveals and selects the BibTeX when the clipboard API is unavailable', async () => {
+    Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true })
+    render(<Citation framework={mergelock} />)
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy BibTeX' })) })
+    const box = screen.getByRole('textbox', { name: 'BibTeX' })
+    expect(box).toHaveValue(bibtex(mergelock))
+    expect(box.selectionEnd - box.selectionStart).toBe(bibtex(mergelock).length)
+  })
 })

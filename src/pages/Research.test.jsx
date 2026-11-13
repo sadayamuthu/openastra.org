@@ -25,3 +25,10 @@ describe('Research page', () => {
     expect(text).not.toMatch(/paper/i)
   })
 })
+
+describe('Research copy accuracy', () => {
+  it('does not claim every framework has a DOI', () => {
+    const { container } = render(<MemoryRouter><Research /></MemoryRouter>)
+    expect(container.textContent).not.toMatch(/every framework/i)
+  })
+})

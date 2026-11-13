@@ -227,7 +227,6 @@ export const frameworks = [
       { comment: 'Scan staged changes', lines: ['exposuregate scan --mode pre-commit'] },
     ],
     facts: [
-      ['Data', 'OEBC catalog'],
       ['Runs at', 'Pre-commit · PR'],
     ],
     links: { github: `${GITHUB}/exposuregate` },

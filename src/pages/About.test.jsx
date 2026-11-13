@@ -11,3 +11,10 @@ describe('About page', () => {
     )
   })
 })
+
+describe('About copy accuracy', () => {
+  it('does not claim every framework has a Zenodo release', () => {
+    const { container } = render(<MemoryRouter><About /></MemoryRouter>)
+    expect(container.textContent).not.toMatch(/every framework ships/i)
+  })
+})

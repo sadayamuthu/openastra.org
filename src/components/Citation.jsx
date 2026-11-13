@@ -13,19 +13,24 @@ async function copy(text) {
   return false
 }
 
-function CopyButton({ label, text, children }) {
+function CopyButton({ label, text, onFail, children }) {
   const [state, setState] = useState('idle')
   const timer = useRef()
   useEffect(() => () => clearTimeout(timer.current), [])
 
   const onClick = async () => {
     const ok = await copy(text)
-    setState(ok ? 'copied' : 'failed')
+    if (!ok) {
+      setState('idle')
+      onFail(text)
+      return
+    }
+    setState('copied')
     clearTimeout(timer.current)
     timer.current = setTimeout(() => setState('idle'), 2000)
   }
 
-  const shown = state === 'copied' ? 'Copied' : state === 'failed' ? 'Select & copy' : children
+  const shown = state === 'copied' ? 'Copied' : children
   return (
     <button
       type="button"
@@ -38,7 +43,29 @@ function CopyButton({ label, text, children }) {
   )
 }
 
+function Fallback({ label, text }) {
+  const ref = useRef()
+  useEffect(() => {
+    ref.current?.focus()
+    ref.current?.select()
+  }, [text])
+  return (
+    <label className="flex flex-col gap-1 text-xs text-ink-muted">
+      <span>{label} · press ⌘C / Ctrl+C to copy</span>
+      <textarea
+        ref={ref}
+        readOnly
+        aria-label={label}
+        value={text}
+        rows={label === 'BibTeX' ? 9 : 3}
+        className="w-full font-mono text-xs text-ink bg-paper border border-rule rounded-sm p-2"
+      />
+    </label>
+  )
+}
+
 export default function Citation({ framework, compact = false }) {
+  const [fallback, setFallback] = useState(null)
   const z = framework.zenodo
   const url = doiUrl(z.doi)
   const version = /^\d/.test(z.version) ? `v${z.version}` : z.version
@@ -57,8 +84,8 @@ export default function Citation({ framework, compact = false }) {
           {url}
         </a>
         <div className="flex flex-wrap gap-2">
-          <CopyButton label="Copy citation" text={citationText(framework)}>Copy</CopyButton>
-          <CopyButton label="Copy BibTeX" text={bibtex(framework)}>BibTeX</CopyButton>
+          <CopyButton label="Copy citation" text={citationText(framework)} onFail={(text) => setFallback({ label: 'Citation', text })}>Copy</CopyButton>
+          <CopyButton label="Copy BibTeX" text={bibtex(framework)} onFail={(text) => setFallback({ label: 'BibTeX', text })}>BibTeX</CopyButton>
           {!compact && (
             <a
               href={zenodoUrl(z.doi)}
@@ -71,6 +98,7 @@ export default function Citation({ framework, compact = false }) {
           )}
         </div>
       </div>
+      {fallback && <Fallback label={fallback.label} text={fallback.text} />}
     </div>
   )
 }
