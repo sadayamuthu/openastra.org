@@ -171,17 +171,14 @@ export const frameworks = [
       { title: 'Verify', text: 'CyberLake signs a cryptographic identity and scans for prompt-injection, dependency, and exfiltration risk.' },
       { title: 'Trust', text: 'Review capabilities and provenance before granting credentials, then pin to a known-good version.' },
     ],
-    quickstart: [
-      { comment: 'Install', lines: ['pip install cyberlake'] },
-      { comment: 'Run the registry locally', lines: ['cyberlake serve'] },
-      { comment: 'Verify an agent before it gets credentials', lines: ['cyberlake verify acme/invoice-reconciler'] },
-    ],
+    status: 'In development',
     facts: [
+      ['Status', 'In development'],
       ['Kind', 'Registry'],
       ['Identity', 'Signed, DNS-verified'],
       ['Audit', 'Immutable, version-pinned'],
     ],
-    links: { github: `${GITHUB}/cyberlake`, website: 'https://cyberlake.org' },
+    links: { github: `${GITHUB}/cyberlake` },
   },
 
   // ───────────── II. Security Controls ─────────────
@@ -240,12 +237,9 @@ export const frameworks = [
       title: 'Exposure gates include',
       items: ['CVE detection', 'Secrets exposure', 'Dependency vulnerabilities', 'Container image scanning', 'SBOM analysis', 'Exposed endpoints', 'Misconfiguration detection', 'License risk', '+ more'],
     },
-    quickstart: [
-      { comment: 'Install', lines: ['pip install exposuregate'] },
-      { comment: 'Bootstrap your project', lines: ['exposuregate init'] },
-      { comment: 'Scan staged changes', lines: ['exposuregate scan --mode pre-commit'] },
-    ],
+    status: 'In development',
     facts: [
+      ['Status', 'In development'],
       ['Runs at', 'Pre-commit · PR'],
     ],
     links: { github: `${GITHUB}/exposuregate` },
@@ -305,9 +299,9 @@ export const frameworks = [
       { title: 'CI-ready', text: 'Ships with a GitHub Actions workflow that regenerates the baseline daily and commits the result automatically.' },
     ],
     quickstart: [
-      { comment: 'Install', lines: ['pip install ocbc'] },
-      { comment: 'Generate enriched baseline JSON', lines: ['ocbc-generate --out baseline.json'] },
-      { comment: 'Or run without installing', lines: ['python -m src.ocbc.generate --out baseline.json'] },
+      { comment: 'Download the latest catalog (no install)', lines: ['curl -s https://openastra.org/ocbc/catalog/v0.1/latest.json -o catalog.json'] },
+      { comment: 'Or use the CLI', lines: ['pip install ocbc', 'ocbc fetch --out catalog.json'] },
+      { comment: 'Generate from the live NIST and FedRAMP sources', lines: ['ocbc generate --out my-catalog.json'] },
     ],
     facts: [
       ['Sources', 'NIST SP 800-53 Rev. 5 · 800-53B · FedRAMP OSCAL'],
@@ -317,6 +311,7 @@ export const frameworks = [
     links: { github: `${GITHUB}/ocbc` },
     packages: [
       { label: 'PyPI', url: 'https://pypi.org/project/ocbc/' },
+      { label: 'Latest catalog (.json)', url: 'https://openastra.org/ocbc/catalog/v0.1/latest.json' },
       { label: 'Baseline JSON release', url: 'https://github.com/sadayamuthu/ocbc/releases/latest' },
     ],
     zenodo: { doi: '10.5281/zenodo.23980534', title: 'OCBC: Open Controls Baseline Catalog, a Machine-Readable NIST SP 800-53 Rev. 5 and FedRAMP Catalog', version: 'baseline-2026-03-27', year: 2026, date: '2026-11-05' },
@@ -342,9 +337,8 @@ export const frameworks = [
       { title: 'CI-ready', text: 'Ships with a GitHub Actions workflow that regenerates the baseline daily and commits the result automatically.' },
     ],
     quickstart: [
-      { comment: 'Install', lines: ['pip install oebc'] },
-      { comment: 'Generate enriched exposure baseline JSON', lines: ['oebc-generate --out exposure-baseline.json'] },
-      { comment: 'Or run without installing', lines: ['python -m src.oebc.generate --out exposure-baseline.json'] },
+      { comment: 'Download the latest catalog (no install)', lines: ['curl -L https://openastra.org/oebc/catalog/v0.1/latest.json.gz | gunzip > oebc_catalog.json'] },
+      { comment: 'Or build it from source', lines: ['git clone https://github.com/sadayamuthu/oebc.git', 'cd oebc', 'make install-dev', 'make generate'] },
     ],
     facts: [
       ['Sources', 'NVD · OSV · GitHub Advisory'],
@@ -353,7 +347,8 @@ export const frameworks = [
     ],
     links: { github: `${GITHUB}/oebc` },
     packages: [
-      { label: 'Catalog release (.json.gz)', url: 'https://github.com/sadayamuthu/oebc/releases/latest' },
+      { label: 'Latest catalog (.json.gz)', url: 'https://openastra.org/oebc/catalog/v0.1/latest.json.gz' },
+      { label: 'Catalog release', url: 'https://github.com/sadayamuthu/oebc/releases/latest' },
     ],
     zenodo: { doi: '10.5281/zenodo.23980544', title: 'OEBC: Open Exposure Baseline Catalog, a CVE Exposure Baseline Enriched with EPSS and CISA KEV', version: 'baseline-2026-06-14', year: 2026, date: '2026-11-05' },
   },
@@ -376,7 +371,7 @@ export const frameworks = [
     ],
     quickstart: [
       { comment: 'Install', lines: ['pip install anysql-sdk'] },
-      { comment: 'Wrap your client and run analytics', lines: ['import anysql', 'db = anysql.init()', 'client = anysql.claude(anthropic_client)', 'df = db.rag_failure_modes()'] },
+      { comment: 'Wrap your client and run analytics', lines: ['import anysql', 'db = anysql.init()', 'client = anysql.claude(db).wrap(anthropic_client)', 'df = db.rag_failure_modes()'] },
     ],
     facts: [
       ['Engine', 'DuckDB · SQLite'],
