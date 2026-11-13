@@ -8,20 +8,17 @@ export function Eyebrow({ children, className = '' }) {
   )
 }
 
-export function Pill({ children, active = false, soon = false, as: As = 'span', className = '', ...props }) {
+export function Pill({ children, active = false, soon = false, className = '', ...props }) {
   const tone = active
     ? 'bg-ink text-paper border-ink'
     : soon
       ? 'border-dashed border-rust/60 text-rust'
       : 'border-ink/25 text-ink hover:border-ink'
-  return (
-    <As
-      className={`inline-flex items-center px-3 py-1 rounded-full border text-xs transition-colors ${tone} ${className}`}
-      {...props}
-    >
-      {children}
-    </As>
-  )
+  const cls = `inline-flex items-center px-3 py-1 rounded-full border text-xs transition-colors ${tone} ${className}`
+  if (props.onClick) {
+    return <button type="button" className={cls} aria-pressed={active} {...props}>{children}</button>
+  }
+  return <span className={cls} {...props}>{children}</span>
 }
 
 export function DoiTag() {
