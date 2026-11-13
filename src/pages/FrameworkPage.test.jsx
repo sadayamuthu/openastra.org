@@ -48,3 +48,10 @@ describe('FrameworkPage packages', () => {
     expect(screen.queryByRole('heading', { name: 'Install from' })).toBeNull()
   })
 })
+
+describe('FrameworkPage headings', () => {
+  it('marks At a glance as a heading', () => {
+    render(<MemoryRouter><FrameworkPage slug="mergelock" /></MemoryRouter>)
+    expect(screen.getByRole('heading', { name: 'At a glance' })).toBeInTheDocument()
+  })
+})

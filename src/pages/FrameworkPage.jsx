@@ -18,7 +18,7 @@ export default function FrameworkPage({ slug }) {
   const fw = getFramework(slug)
 
   useEffect(() => {
-    document.title = fw ? `${fw.name} · OpenAstra` : 'Not found · OpenAstra'
+    if (fw) document.title = `${fw.name} · OpenAstra`
   }, [fw])
 
   if (!fw) return <NotFound />
@@ -50,7 +50,7 @@ export default function FrameworkPage({ slug }) {
           </div>
         </div>
         <aside className="bg-card border border-rule rounded-sm p-5 self-start">
-          <p className="text-[11px] font-medium tracking-[0.14em] uppercase text-ink-muted mb-2">At a glance</p>
+          <h2 className="text-[11px] font-medium tracking-[0.14em] uppercase text-ink-muted mb-2">At a glance</h2>
           <dl>
             {facts.map(([k, v]) => (
               <div key={k} className="flex justify-between gap-4 py-2 border-b border-rule last:border-0 text-sm">

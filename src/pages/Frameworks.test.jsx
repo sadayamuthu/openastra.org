@@ -33,4 +33,10 @@ describe('Frameworks page', () => {
     renderAt()
     expect(screen.getAllByText('DOI')).toHaveLength(8)
   })
+
+  it('keeps the total count when filtered and says how many are shown', () => {
+    renderAt('/frameworks?category=agentic')
+    expect(screen.getByText(/10 open frameworks/)).toBeInTheDocument()
+    expect(screen.getByText(/4 shown/)).toBeInTheDocument()
+  })
 })
