@@ -107,6 +107,25 @@ export default function FrameworkPage({ slug }) {
         <CodeBlock blocks={fw.quickstart} />
       </Block>
 
+      {fw.packages?.length > 0 && (
+        <Block title="Install from">
+          <ul className="flex flex-wrap gap-2">
+            {fw.packages.map((p) => (
+              <li key={p.label}>
+                <a
+                  href={p.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-sm border border-ink/30 text-sm hover:border-rust hover:text-rust transition-colors"
+                >
+                  {p.label} <span aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Block>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-rule">
         {fw.zenodo && (
           <section className="py-8">

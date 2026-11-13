@@ -60,3 +60,39 @@ describe('facts accuracy', () => {
     expect(getFramework('exposuregate').facts.map(([k]) => k)).not.toContain('Data')
   })
 })
+
+describe('packages', () => {
+  const urls = (slug) => Object.fromEntries((getFramework(slug).packages || []).map((p) => [p.label, p.url]))
+
+  it('links MergeLock to Homebrew, Docker, deb/rpm, GitHub Action and the MCP Registry', () => {
+    expect(urls('mergelock')).toEqual({
+      Homebrew: 'https://github.com/sadayamuthu/homebrew-tap/blob/main/Formula/mergelock.rb',
+      Docker: 'https://github.com/sadayamuthu/mergelock/pkgs/container/mergelock',
+      '.deb / .rpm / binaries': 'https://github.com/sadayamuthu/mergelock/releases/latest',
+      'GitHub Action': 'https://github.com/sadayamuthu/mergelock/blob/main/action.yml',
+      'MCP Registry': 'https://registry.modelcontextprotocol.io/v0/servers?search=io.github.sadayamuthu/mergelock',
+    })
+  })
+
+  it('links PyPI only for packages published by the author', () => {
+    const pypi = (slug) => urls(slug).PyPI
+    expect(pypi('controlgate')).toBe('https://pypi.org/project/controlgate/')
+    expect(pypi('ocbc')).toBe('https://pypi.org/project/ocbc/')
+    expect(pypi('anysql')).toBe('https://pypi.org/project/anysql-sdk/')
+    expect(pypi('opengpl')).toBe('https://pypi.org/project/opengpl-sdk/')
+    expect(pypi('unasked')).toBeUndefined() // PyPI "unasked" is someone else's project
+  })
+
+  it('does not link a Homebrew formula that the tap does not have', () => {
+    expect(urls('unasked').Homebrew).toBeUndefined()
+    expect(getFramework('unasked').quickstart.flatMap((b) => b.lines).join('\n')).not.toMatch(/brew install/)
+  })
+
+  it('links the OpenGPL sidecar image', () => {
+    expect(urls('opengpl')['Docker (sidecar)']).toBe('https://github.com/sadayamuthu/opengpl/pkgs/container/opengpl%2Fsidecar')
+  })
+
+  it('only uses https URLs', () => {
+    frameworks.flatMap((f) => f.packages || []).forEach((p) => expect(p.url).toMatch(/^https:\/\//))
+  })
+})

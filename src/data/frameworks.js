@@ -70,6 +70,13 @@ export const frameworks = [
       ['Requires', 'git 2.38+'],
     ],
     links: { github: `${GITHUB}/mergelock` },
+    packages: [
+      { label: 'Homebrew', url: 'https://github.com/sadayamuthu/homebrew-tap/blob/main/Formula/mergelock.rb' },
+      { label: 'Docker', url: 'https://github.com/sadayamuthu/mergelock/pkgs/container/mergelock' },
+      { label: '.deb / .rpm / binaries', url: 'https://github.com/sadayamuthu/mergelock/releases/latest' },
+      { label: 'GitHub Action', url: 'https://github.com/sadayamuthu/mergelock/blob/main/action.yml' },
+      { label: 'MCP Registry', url: 'https://registry.modelcontextprotocol.io/v0/servers?search=io.github.sadayamuthu/mergelock' },
+    ],
     zenodo: { doi: '10.5281/zenodo.23637443', title: 'mergelock: a git-native merge gate', version: '0.1.5', year: 2026, date: '2026-10-25' },
   },
   {
@@ -94,17 +101,22 @@ export const frameworks = [
       items: ['deletion', 'test', 'dependency', 'feature', 'refactor', 'collateral'],
     },
     quickstart: [
-      { comment: 'Install (Homebrew, macOS and Linux)', lines: ['brew install sadayamuthu/tap/unasked'] },
+      { comment: 'Install: download a .deb, .rpm or binary from Releases, or run in Docker', lines: ['docker run --rm -v "$PWD":/repo ghcr.io/sadayamuthu/unasked --since origin/main'] },
       { comment: 'After your agent stops: report unasked hunks', lines: ['unasked'] },
       { comment: 'Revert exactly those hunks, and undo if needed', lines: ['unasked --drop', 'unasked undo'] },
     ],
     facts: [
       ['Works with', 'Claude Code · Codex'],
       ['Network', 'None. Local and deterministic'],
-      ['Packages', 'brew · deb · rpm · Docker'],
+      ['Packages', 'deb · rpm · Docker · binaries'],
       ['Requires', 'git 2.30+'],
     ],
     links: { github: `${GITHUB}/unasked` },
+    packages: [
+      { label: 'Docker', url: 'https://github.com/sadayamuthu/unasked/pkgs/container/unasked' },
+      { label: '.deb / .rpm / binaries', url: 'https://github.com/sadayamuthu/unasked/releases/latest' },
+      { label: 'GitHub Action', url: 'https://github.com/sadayamuthu/unasked/blob/main/action.yml' },
+    ],
     zenodo: { doi: '10.5281/zenodo.23637740', title: 'unasked: see what your coding agent changed that you never asked for', version: '0.1.0', year: 2026, date: '2026-10-25' },
   },
   {
@@ -139,6 +151,9 @@ export const frameworks = [
       ['Telemetry', 'None'],
     ],
     links: { github: `${GITHUB}/zero-egress` },
+    packages: [
+      { label: '.dmg / .exe / .deb / .rpm / AppImage', url: 'https://github.com/sadayamuthu/zero-egress/releases/latest' },
+    ],
     zenodo: { doi: '10.5281/zenodo.23679808', title: 'ZeroEgress: an AI code editor that works offline', version: '0.1.0', year: 2026, date: '2026-10-26' },
   },
   {
@@ -200,6 +215,9 @@ export const frameworks = [
       ['Runs at', 'Pre-commit · PR'],
     ],
     links: { github: `${GITHUB}/controlgate` },
+    packages: [
+      { label: 'PyPI', url: 'https://pypi.org/project/controlgate/' },
+    ],
     zenodo: { doi: '10.5281/zenodo.23980530', title: 'ControlGate: A Pre-Commit and Pre-Merge NIST SP 800-53 Compliance Gate', version: '0.2.1', year: 2026, date: '2026-11-05' },
   },
   {
@@ -257,6 +275,10 @@ export const frameworks = [
       ['Ships as', 'SDK · CLI · Docker sidecar'],
     ],
     links: { github: `${GITHUB}/opengpl`, website: 'https://opengpl.org' },
+    packages: [
+      { label: 'PyPI', url: 'https://pypi.org/project/opengpl-sdk/' },
+      { label: 'Docker (sidecar)', url: 'https://github.com/sadayamuthu/opengpl/pkgs/container/opengpl%2Fsidecar' },
+    ],
     zenodo: { doi: '10.5281/zenodo.23844061', title: 'OpenGPL: Governance Policy Language', version: '0.2.0', year: 2026, date: '2026-10-31' },
   },
 
@@ -292,6 +314,10 @@ export const frameworks = [
       ['Updated', 'Daily'],
     ],
     links: { github: `${GITHUB}/ocbc` },
+    packages: [
+      { label: 'PyPI', url: 'https://pypi.org/project/ocbc/' },
+      { label: 'Baseline JSON release', url: 'https://github.com/sadayamuthu/ocbc/releases/latest' },
+    ],
     zenodo: { doi: '10.5281/zenodo.23980534', title: 'OCBC: Open Controls Baseline Catalog, a Machine-Readable NIST SP 800-53 Rev. 5 and FedRAMP Catalog', version: 'baseline-2026-03-27', year: 2026, date: '2026-11-05' },
   },
   {
@@ -325,6 +351,9 @@ export const frameworks = [
       ['Updated', 'Daily'],
     ],
     links: { github: `${GITHUB}/oebc` },
+    packages: [
+      { label: 'Catalog release (.json.gz)', url: 'https://github.com/sadayamuthu/oebc/releases/latest' },
+    ],
     zenodo: { doi: '10.5281/zenodo.23980544', title: 'OEBC: Open Exposure Baseline Catalog, a CVE Exposure Baseline Enriched with EPSS and CISA KEV', version: 'baseline-2026-06-14', year: 2026, date: '2026-11-05' },
   },
 
@@ -353,6 +382,9 @@ export const frameworks = [
       ['Config', 'Zero'],
     ],
     links: { github: `${GITHUB}/anySQL`, website: 'https://anysql.org' },
+    packages: [
+      { label: 'PyPI', url: 'https://pypi.org/project/anysql-sdk/' },
+    ],
     zenodo: { doi: '10.5281/zenodo.23980548', title: 'anySQL: SQL Analytics for AI Systems', version: '0.1.1', year: 2026, date: '2026-11-05' },
   },
 ]

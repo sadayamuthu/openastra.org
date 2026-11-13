@@ -35,3 +35,16 @@ describe('FrameworkPage', () => {
     expect(screen.getByText('Not found')).toBeInTheDocument()
   })
 })
+
+describe('FrameworkPage packages', () => {
+  it('lists package links under Install from', () => {
+    render(<MemoryRouter><FrameworkPage slug="anysql" /></MemoryRouter>)
+    expect(screen.getByRole('heading', { name: 'Install from' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /PyPI/ })).toHaveAttribute('href', 'https://pypi.org/project/anysql-sdk/')
+  })
+
+  it('omits the section when a framework has no packages', () => {
+    render(<MemoryRouter><FrameworkPage slug="cyberlake" /></MemoryRouter>)
+    expect(screen.queryByRole('heading', { name: 'Install from' })).toBeNull()
+  })
+})
