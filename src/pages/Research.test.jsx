@@ -51,6 +51,15 @@ describe('Research agenda', () => {
     expect(region.queryByRole('link', { name: /AgentID/ })).toBeNull()
   })
 
+  it('links areas I to VI to their category, and V (lab only) to its lab group', () => {
+    renderResearch()
+    const region = within(screen.getByRole('region', { name: 'Research agenda' }))
+    expect(region.getByRole('link', { name: 'Agentic AI Security' })).toHaveAttribute('href', '/frameworks?category=agentic')
+    expect(region.getByRole('link', { name: 'AI Governance & Compliance' })).toHaveAttribute('href', '/frameworks?category=governance')
+    expect(region.getByRole('link', { name: 'AI Identity & Access' })).toHaveAttribute('href', '/lab?group=identity')
+    expect(region.queryByRole('link', { name: 'AI Runtime Security' })).toBeNull()
+  })
+
   it('is reachable from the section links', () => {
     renderResearch()
     expect(screen.getByRole('link', { name: 'Agenda' })).toHaveAttribute('href', '#agenda')

@@ -3,6 +3,13 @@ import Citation from '../components/Citation'
 import { ComingSoon, Eyebrow, Pill } from '../components/ui'
 import { agenda, citedFrameworks, frameworksByCategory } from '../data/frameworks'
 
+// Areas with shipped work link to their /frameworks filter; lab-only areas to their /lab group.
+function areaLink(a) {
+  if (a.shipped.length) return `/frameworks?category=${a.category}`
+  if (a.lab.length) return `/lab?group=${a.category}`
+  return null
+}
+
 export default function Research() {
   const total = citedFrameworks().length
   const groups = frameworksByCategory()
@@ -59,7 +66,11 @@ export default function Research() {
                 className="py-4 border-b border-rule grid grid-cols-1 md:grid-cols-[3rem_1fr_1.3fr_auto] gap-1 md:gap-4 items-baseline"
               >
                 <span className="font-serif italic text-ink-muted">{a.numeral}</span>
-                <span className="font-medium">{a.name}</span>
+                {areaLink(a) ? (
+                  <Link to={areaLink(a)} className="font-medium hover:text-rust">{a.name}</Link>
+                ) : (
+                  <span className="font-medium">{a.name}</span>
+                )}
                 <span className="text-sm text-ink-muted">{a.topics}</span>
                 <span className="flex flex-wrap gap-x-3 gap-y-1 text-sm">
                   {open && (
