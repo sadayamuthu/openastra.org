@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom'
-import { categories, frameworksByCategory, labProjects, shippedFrameworks } from '../data/frameworks'
+import { frameworksByCategory, labProjects, shippedFrameworks } from '../data/frameworks'
 import { DoiTag, Eyebrow, Pill } from '../components/ui'
 
 function Card({ fw }) {
@@ -19,8 +19,9 @@ function Card({ fw }) {
 export default function Frameworks() {
   const [params, setParams] = useSearchParams()
   const requested = params.get('category')
-  const active = categories.some((c) => c.id === requested) ? requested : null
-  const groups = frameworksByCategory().filter((g) => !active || g.category.id === active)
+  const all = frameworksByCategory()
+  const active = all.some((g) => g.category.id === requested) ? requested : null
+  const groups = all.filter((g) => !active || g.category.id === active)
 
   const select = (id) => setParams(id ? { category: id } : {}, { replace: true })
 
@@ -36,7 +37,7 @@ export default function Frameworks() {
       </div>
       <div className="flex flex-wrap gap-2 mt-6" role="group" aria-label="Filter by category">
         <Pill active={!active} onClick={() => select(null)}>All</Pill>
-        {categories.map((c) => (
+        {all.map(({ category: c }) => (
           <Pill key={c.id} active={active === c.id} onClick={() => select(c.id)}>{c.name}</Pill>
         ))}
       </div>

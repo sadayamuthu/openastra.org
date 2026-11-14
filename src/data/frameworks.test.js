@@ -13,9 +13,24 @@ describe('frameworks data', () => {
 
   it('puts every framework in a known category and leaves no category empty', () => {
     const ids = categories.map((c) => c.id)
-    expect(ids).toEqual(['agentic', 'security-controls', 'security-catalog', 'observability'])
+    expect(ids).toEqual(['agentic', 'security-controls', 'security-catalog', 'observability', 'identity', 'governance'])
     frameworks.forEach((f) => expect(ids).toContain(f.category))
     frameworksByCategory().forEach((g) => expect(g.frameworks.length).toBeGreaterThan(0))
+  })
+
+  it('numbers shipped frameworks in category order, with OpenGPL under Governance', () => {
+    expect(shippedFrameworks().map((f) => f.slug)).toEqual(
+      ['mergelock', 'unasked', 'zero-egress', 'controlgate', 'ocbc', 'oebc', 'anysql', 'opengpl'])
+    expect(getFramework('opengpl').category).toBe('governance')
+    expect(frameworksByCategory().map((g) => g.category.id)).toEqual(
+      ['agentic', 'security-controls', 'security-catalog', 'observability', 'governance'])
+  })
+
+  it('puts AgentID in the Identity & Access lab group', () => {
+    const agentId = labProjects().find((p) => p.name === 'AgentID')
+    expect(agentId.group).toBe('identity')
+    expect(agentId.category).toBe('identity')
+    expect(LAB_GROUPS.map((g) => g.id)).toContain('identity')
   })
 
   it('orders the agentic category MergeLock, Unasked, ZeroEgress, CyberLake', () => {
@@ -152,7 +167,7 @@ describe('install commands match what is actually published', () => {
 describe('In the lab', () => {
   it('holds CyberLake, ExposureGate and the 7 new projects', () => {
     expect(labProjects().map((p) => p.name)).toEqual([
-      'OpenQR', 'OpenQS', 'OpenQO', 'AgentID', 'OpenQA', 'CyberLake', 'ExposureGate', 'OpenCIQ', 'OpenEQ',
+      'OpenQR', 'OpenQS', 'OpenQO', 'OpenQA', 'CyberLake', 'ExposureGate', 'OpenCIQ', 'OpenEQ', 'AgentID',
     ])
   })
 

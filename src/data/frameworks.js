@@ -26,6 +26,18 @@ export const categories = [
     name: 'Observability',
     blurb: 'See what your AI systems actually did, with tools you already know.',
   },
+  {
+    id: 'identity',
+    numeral: 'V',
+    name: 'Identity & Access',
+    blurb: 'Who an agent is, what it may do, and on whose behalf: short-lived identities and delegated authorization.',
+  },
+  {
+    id: 'governance',
+    numeral: 'VI',
+    name: 'Governance & Compliance',
+    blurb: 'Machine-checkable policy for AI systems, mapped to ISO 42001 and the NIST AI RMF.',
+  },
 ]
 
 export const STAGES = [
@@ -247,8 +259,8 @@ export const frameworks = [
   {
     slug: 'opengpl',
     name: 'OpenGPL',
-    number: 5,
-    category: 'security-controls',
+    number: 8,
+    category: 'governance',
     stage: 'write',
     summary: 'Declarative governance policy language for AI',
     tagline: 'Governance Policy Language for AI systems.',
@@ -281,7 +293,7 @@ export const frameworks = [
   {
     slug: 'ocbc',
     name: 'OCBC',
-    number: 6,
+    number: 5,
     category: 'security-catalog',
     stage: 'foundation',
     summary: 'NIST 800-53 + FedRAMP as one enriched JSON catalog',
@@ -319,7 +331,7 @@ export const frameworks = [
   {
     slug: 'oebc',
     name: 'OEBC',
-    number: 7,
+    number: 6,
     category: 'security-catalog',
     stage: 'foundation',
     summary: 'NVD + OSV + GHSA exposure catalog, enriched with EPSS and KEV',
@@ -357,7 +369,7 @@ export const frameworks = [
   {
     slug: 'anysql',
     name: 'anySQL',
-    number: 8,
+    number: 7,
     category: 'observability',
     stage: 'run',
     summary: 'SQL over LLM calls, agent traces and RAG pipelines',
@@ -403,7 +415,7 @@ export function frameworksByCategory() {
     frameworks: shippedFrameworks()
       .filter((f) => f.category === category.id)
       .sort((a, b) => a.number - b.number),
-  }))
+  })).filter((g) => g.frameworks.length > 0)
 }
 
 export function doiUrl(doi) {
@@ -455,6 +467,7 @@ export const LAB_GROUPS = [
   { id: 'agentic', name: 'Agentic', title: 'I. Agentic' },
   { id: 'security-controls', name: 'Security Controls', title: 'II. Security Controls' },
   { id: 'observability', name: 'Observability', title: 'IV. Observability' },
+  { id: 'identity', name: 'Identity & Access', title: 'V. Identity & Access' },
 ]
 
 const NEW_LAB_PROJECTS = [
@@ -488,8 +501,8 @@ const NEW_LAB_PROJECTS = [
   {
     name: 'AgentID',
     domain: 'openid.ai',
-    group: 'agentic',
-    category: 'agentic',
+    group: 'identity',
+    category: 'identity',
     summary: 'Identity and scoped credentials for AI agents',
     description: 'Cryptographic identities for agents, short-lived task-scoped credentials, and verifiable on-behalf-of chains.',
   },
