@@ -1,6 +1,6 @@
 import {
   categories, frameworks, getFramework, frameworksByCategory, shippedFrameworks, labProjects, LAB_GROUPS,
-  doiUrl, citationText, bibtex,
+  doiUrl, citationText, bibtex, agenda,
 } from './frameworks'
 
 describe('frameworks data', () => {
@@ -200,5 +200,26 @@ describe('In the lab', () => {
   it('links CyberLake and ExposureGate to their existing pages', () => {
     expect(labProjects().find((p) => p.name === 'CyberLake').to).toBe('/cyberlake')
     expect(labProjects().find((p) => p.name === 'ExposureGate').to).toBe('/exposuregate')
+  })
+})
+
+describe('research agenda', () => {
+  it('has ten areas numbered I to X', () => {
+    expect(agenda().map((a) => a.numeral)).toEqual(['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'])
+  })
+
+  it('leaves VII to X as open areas with no projects', () => {
+    agenda().slice(6).forEach((a) => {
+      expect(a.category).toBeUndefined()
+      expect(a.shipped).toEqual([])
+      expect(a.lab).toEqual([])
+    })
+  })
+
+  it('derives projects from categories', () => {
+    const [, , , , v, vi] = agenda()
+    expect(vi.shipped.map((f) => f.name)).toEqual(['OpenGPL'])
+    expect(v.shipped).toEqual([])
+    expect(v.lab.map((p) => p.name)).toEqual(['AgentID'])
   })
 })

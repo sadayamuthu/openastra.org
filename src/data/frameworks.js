@@ -541,3 +541,29 @@ export function labProjects() {
   const all = [...NEW_LAB_PROJECTS, ...fromFrameworks]
   return GROUP_ORDER.flatMap((g) => all.filter((p) => p.group === g))
 }
+
+// ───────────── Research agenda ─────────────
+// Ten focus areas. I–VI map to a site category; their projects are derived from
+// it so the agenda and the index never disagree. VII–X are open areas.
+
+export const AGENDA = [
+  { numeral: 'I', name: 'Agentic AI Security', category: 'agentic', topics: 'Agent autonomy, multi-agent security, MCP and A2A, agent orchestration' },
+  { numeral: 'II', name: 'Security Controls', category: 'security-controls', topics: 'Policy as code, guardrails, preventive and detective controls, enforcement' },
+  { numeral: 'III', name: 'Security Catalog', category: 'security-catalog', topics: 'Control and threat catalogs, AI asset inventory, risk mappings' },
+  { numeral: 'IV', name: 'Observability & Monitoring', category: 'observability', topics: 'Agent tracing, audit logging, anomaly detection, behavioral monitoring' },
+  { numeral: 'V', name: 'AI Identity & Access', category: 'identity', topics: 'Agent identities, workload identity, delegated authorization, least privilege' },
+  { numeral: 'VI', name: 'AI Governance & Compliance', category: 'governance', topics: 'NIST AI RMF, ISO 42001, regulatory compliance, continuous assurance' },
+  { numeral: 'VII', name: 'AI Threat Modeling & Risk Assessment', topics: 'OWASP LLM and Agentic Top 10, MITRE ATLAS, risk scoring, attack paths' },
+  { numeral: 'VIII', name: 'AI Runtime Security', topics: 'Runtime guardrails, tool-call inspection, execution isolation, sandboxing' },
+  { numeral: 'IX', name: 'AI Data Security & Privacy', topics: 'RAG security, data leakage prevention, vector store security, data poisoning' },
+  { numeral: 'X', name: 'AI Resilience & Recovery', topics: 'Agent rollback, action recovery, kill switches, cascading failure prevention' },
+]
+
+export function agenda() {
+  const lab = labProjects()
+  return AGENDA.map((a) => ({
+    ...a,
+    shipped: a.category ? shippedFrameworks().filter((f) => f.category === a.category) : [],
+    lab: a.category ? lab.filter((p) => p.category === a.category).map(({ name, to }) => ({ name, to })) : [],
+  }))
+}

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import Research from './Research'
 import { citedFrameworks, doiUrl } from '../data/frameworks'
@@ -30,5 +30,34 @@ describe('Research copy accuracy', () => {
   it('does not claim every framework has a DOI', () => {
     const { container } = render(<MemoryRouter><Research /></MemoryRouter>)
     expect(container.textContent).not.toMatch(/every framework/i)
+  })
+})
+
+describe('Research agenda', () => {
+  it('lists ten areas, four of them open', () => {
+    renderResearch()
+    const region = within(screen.getByRole('region', { name: 'Research agenda' }))
+    expect(region.getAllByRole('listitem')).toHaveLength(10)
+    expect(region.getAllByText('Open area')).toHaveLength(4)
+  })
+
+  it('links shipped projects and lab projects that have a page, and nothing else', () => {
+    renderResearch()
+    const region = within(screen.getByRole('region', { name: 'Research agenda' }))
+    expect(region.getByRole('link', { name: 'MergeLock' })).toHaveAttribute('href', '/mergelock')
+    expect(region.getByRole('link', { name: 'OpenGPL' })).toHaveAttribute('href', '/opengpl')
+    expect(region.getByRole('link', { name: /CyberLake/ })).toHaveAttribute('href', '/cyberlake')
+    expect(region.getByText(/AgentID/)).toBeInTheDocument()
+    expect(region.queryByRole('link', { name: /AgentID/ })).toBeNull()
+  })
+
+  it('is reachable from the section links', () => {
+    renderResearch()
+    expect(screen.getByRole('link', { name: 'Agenda' })).toHaveAttribute('href', '#agenda')
+  })
+
+  it('says all eight frameworks are archived', () => {
+    const { container } = renderResearch()
+    expect(container.textContent).toMatch(/All eight frameworks are archived/)
   })
 })
