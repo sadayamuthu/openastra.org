@@ -26,6 +26,18 @@ export const categories = [
     name: 'Observability',
     blurb: 'See what your AI systems actually did, with tools you already know.',
   },
+  {
+    id: 'identity',
+    numeral: 'V',
+    name: 'Identity & Access',
+    blurb: 'Who an agent is, what it may do, and on whose behalf: short-lived identities and delegated authorization.',
+  },
+  {
+    id: 'governance',
+    numeral: 'VI',
+    name: 'Governance & Compliance',
+    blurb: 'Machine-checkable policy for AI systems, mapped to ISO 42001 and the NIST AI RMF.',
+  },
 ]
 
 export const STAGES = [
@@ -247,8 +259,8 @@ export const frameworks = [
   {
     slug: 'opengpl',
     name: 'OpenGPL',
-    number: 5,
-    category: 'security-controls',
+    number: 8,
+    category: 'governance',
     stage: 'write',
     summary: 'Declarative governance policy language for AI',
     tagline: 'Governance Policy Language for AI systems.',
@@ -281,7 +293,7 @@ export const frameworks = [
   {
     slug: 'ocbc',
     name: 'OCBC',
-    number: 6,
+    number: 5,
     category: 'security-catalog',
     stage: 'foundation',
     summary: 'NIST 800-53 + FedRAMP as one enriched JSON catalog',
@@ -319,7 +331,7 @@ export const frameworks = [
   {
     slug: 'oebc',
     name: 'OEBC',
-    number: 7,
+    number: 6,
     category: 'security-catalog',
     stage: 'foundation',
     summary: 'NVD + OSV + GHSA exposure catalog, enriched with EPSS and KEV',
@@ -357,7 +369,7 @@ export const frameworks = [
   {
     slug: 'anysql',
     name: 'anySQL',
-    number: 8,
+    number: 7,
     category: 'observability',
     stage: 'run',
     summary: 'SQL over LLM calls, agent traces and RAG pipelines',
@@ -403,7 +415,7 @@ export function frameworksByCategory() {
     frameworks: shippedFrameworks()
       .filter((f) => f.category === category.id)
       .sort((a, b) => a.number - b.number),
-  }))
+  })).filter((g) => g.frameworks.length > 0)
 }
 
 export function doiUrl(doi) {
@@ -455,6 +467,7 @@ export const LAB_GROUPS = [
   { id: 'agentic', name: 'Agentic', title: 'I. Agentic' },
   { id: 'security-controls', name: 'Security Controls', title: 'II. Security Controls' },
   { id: 'observability', name: 'Observability', title: 'IV. Observability' },
+  { id: 'identity', name: 'Identity & Access', title: 'V. Identity & Access' },
 ]
 
 const NEW_LAB_PROJECTS = [
@@ -488,8 +501,8 @@ const NEW_LAB_PROJECTS = [
   {
     name: 'AgentID',
     domain: 'openid.ai',
-    group: 'agentic',
-    category: 'agentic',
+    group: 'identity',
+    category: 'identity',
     summary: 'Identity and scoped credentials for AI agents',
     description: 'Cryptographic identities for agents, short-lived task-scoped credentials, and verifiable on-behalf-of chains.',
   },
@@ -527,4 +540,30 @@ export function labProjects() {
     .map((f) => ({ name: f.name, group: f.category, category: f.category, summary: f.summary, description: f.tagline, to: `/${f.slug}` }))
   const all = [...NEW_LAB_PROJECTS, ...fromFrameworks]
   return GROUP_ORDER.flatMap((g) => all.filter((p) => p.group === g))
+}
+
+// ───────────── Research agenda ─────────────
+// Ten focus areas. I–VI map to a site category; their projects are derived from
+// it so the agenda and the index never disagree. VII–X are open areas.
+
+export const AGENDA = [
+  { numeral: 'I', name: 'Agentic AI Security', category: 'agentic', topics: 'Agent autonomy, multi-agent security, MCP and A2A, agent orchestration' },
+  { numeral: 'II', name: 'Security Controls', category: 'security-controls', topics: 'Policy as code, guardrails, preventive and detective controls, enforcement' },
+  { numeral: 'III', name: 'Security Catalog', category: 'security-catalog', topics: 'Control and threat catalogs, AI asset inventory, risk mappings' },
+  { numeral: 'IV', name: 'Observability & Monitoring', category: 'observability', topics: 'Agent tracing, audit logging, anomaly detection, behavioral monitoring' },
+  { numeral: 'V', name: 'AI Identity & Access', category: 'identity', topics: 'Agent identities, workload identity, delegated authorization, least privilege' },
+  { numeral: 'VI', name: 'AI Governance & Compliance', category: 'governance', topics: 'NIST AI RMF, ISO 42001, regulatory compliance, continuous assurance' },
+  { numeral: 'VII', name: 'AI Threat Modeling & Risk Assessment', topics: 'OWASP LLM and Agentic Top 10, MITRE ATLAS, risk scoring, attack paths' },
+  { numeral: 'VIII', name: 'AI Runtime Security', topics: 'Runtime guardrails, tool-call inspection, execution isolation, sandboxing' },
+  { numeral: 'IX', name: 'AI Data Security & Privacy', topics: 'RAG security, data leakage prevention, vector store security, data poisoning' },
+  { numeral: 'X', name: 'AI Resilience & Recovery', topics: 'Agent rollback, action recovery, kill switches, cascading failure prevention' },
+]
+
+export function agenda() {
+  const lab = labProjects()
+  return AGENDA.map((a) => ({
+    ...a,
+    shipped: a.category ? shippedFrameworks().filter((f) => f.category === a.category) : [],
+    lab: a.category ? lab.filter((p) => p.category === a.category).map(({ name, to }) => ({ name, to })) : [],
+  }))
 }

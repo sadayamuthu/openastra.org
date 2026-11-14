@@ -28,6 +28,18 @@ describe('Frameworks page', () => {
     expect(names()).toHaveLength(8)
   })
 
+  it('offers a Governance chip but no chip for Identity, which has nothing shipped', () => {
+    renderAt()
+    expect(screen.queryByRole('button', { name: 'Identity & Access' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'Governance & Compliance' }))
+    expect(names()).toEqual(['OpenGPL'])
+  })
+
+  it('treats ?category=identity (no shipped work) as All', () => {
+    renderAt('/frameworks?category=identity')
+    expect(names()).toHaveLength(8)
+  })
+
   it('tags only DOI-bearing frameworks with DOI', () => {
     renderAt()
     expect(screen.getAllByText('DOI')).toHaveLength(8)

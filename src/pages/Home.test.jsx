@@ -19,9 +19,9 @@ describe('Home page', () => {
     })
   })
 
-  it('shows the four categories', () => {
+  it('shows the five categories with shipped work', () => {
     renderHome()
-    ;['Agentic', 'Security Controls', 'Security Catalog', 'Observability'].forEach((c) =>
+    ;['Agentic', 'Security Controls', 'Security Catalog', 'Observability', 'VI. Governance & Compliance'].forEach((c) =>
       expect(screen.getAllByText(new RegExp(c)).length).toBeGreaterThan(0)
     )
   })

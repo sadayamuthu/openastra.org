@@ -18,6 +18,11 @@ describe('Lab page', () => {
     expect(suite.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual(['OpenQR', 'OpenQS', 'OpenQO'])
   })
 
+  it('shows AgentID under ?group=identity', () => {
+    renderAt('/lab?group=identity')
+    expect(names()).toEqual(['AgentID'])
+  })
+
   it('filters by group', () => {
     renderAt()
     fireEvent.click(screen.getByRole('button', { name: 'Observability' }))

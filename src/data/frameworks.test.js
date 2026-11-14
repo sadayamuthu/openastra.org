@@ -1,6 +1,6 @@
 import {
   categories, frameworks, getFramework, frameworksByCategory, shippedFrameworks, labProjects, LAB_GROUPS,
-  doiUrl, citationText, bibtex,
+  doiUrl, citationText, bibtex, agenda,
 } from './frameworks'
 
 describe('frameworks data', () => {
@@ -13,9 +13,24 @@ describe('frameworks data', () => {
 
   it('puts every framework in a known category and leaves no category empty', () => {
     const ids = categories.map((c) => c.id)
-    expect(ids).toEqual(['agentic', 'security-controls', 'security-catalog', 'observability'])
+    expect(ids).toEqual(['agentic', 'security-controls', 'security-catalog', 'observability', 'identity', 'governance'])
     frameworks.forEach((f) => expect(ids).toContain(f.category))
     frameworksByCategory().forEach((g) => expect(g.frameworks.length).toBeGreaterThan(0))
+  })
+
+  it('numbers shipped frameworks in category order, with OpenGPL under Governance', () => {
+    expect(shippedFrameworks().map((f) => f.slug)).toEqual(
+      ['mergelock', 'unasked', 'zero-egress', 'controlgate', 'ocbc', 'oebc', 'anysql', 'opengpl'])
+    expect(getFramework('opengpl').category).toBe('governance')
+    expect(frameworksByCategory().map((g) => g.category.id)).toEqual(
+      ['agentic', 'security-controls', 'security-catalog', 'observability', 'governance'])
+  })
+
+  it('puts AgentID in the Identity & Access lab group', () => {
+    const agentId = labProjects().find((p) => p.name === 'AgentID')
+    expect(agentId.group).toBe('identity')
+    expect(agentId.category).toBe('identity')
+    expect(LAB_GROUPS.map((g) => g.id)).toContain('identity')
   })
 
   it('orders the agentic category MergeLock, Unasked, ZeroEgress, CyberLake', () => {
@@ -152,7 +167,7 @@ describe('install commands match what is actually published', () => {
 describe('In the lab', () => {
   it('holds CyberLake, ExposureGate and the 7 new projects', () => {
     expect(labProjects().map((p) => p.name)).toEqual([
-      'OpenQR', 'OpenQS', 'OpenQO', 'AgentID', 'OpenQA', 'CyberLake', 'ExposureGate', 'OpenCIQ', 'OpenEQ',
+      'OpenQR', 'OpenQS', 'OpenQO', 'OpenQA', 'CyberLake', 'ExposureGate', 'OpenCIQ', 'OpenEQ', 'AgentID',
     ])
   })
 
@@ -185,5 +200,26 @@ describe('In the lab', () => {
   it('links CyberLake and ExposureGate to their existing pages', () => {
     expect(labProjects().find((p) => p.name === 'CyberLake').to).toBe('/cyberlake')
     expect(labProjects().find((p) => p.name === 'ExposureGate').to).toBe('/exposuregate')
+  })
+})
+
+describe('research agenda', () => {
+  it('has ten areas numbered I to X', () => {
+    expect(agenda().map((a) => a.numeral)).toEqual(['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'])
+  })
+
+  it('leaves VII to X as open areas with no projects', () => {
+    agenda().slice(6).forEach((a) => {
+      expect(a.category).toBeUndefined()
+      expect(a.shipped).toEqual([])
+      expect(a.lab).toEqual([])
+    })
+  })
+
+  it('derives projects from categories', () => {
+    const [, , , , v, vi] = agenda()
+    expect(vi.shipped.map((f) => f.name)).toEqual(['OpenGPL'])
+    expect(v.shipped).toEqual([])
+    expect(v.lab.map((p) => p.name)).toEqual(['AgentID'])
   })
 })
