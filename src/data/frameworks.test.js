@@ -1,5 +1,5 @@
 import {
-  categories, frameworks, getFramework, frameworksByCategory, shippedFrameworks, labProjects, LAB_GROUPS,
+  categories, frameworks, getFramework, frameworksByCategory, shippedFrameworks, labProjects, LAB_GROUPS, HIDDEN_LAB_PROJECTS,
   doiUrl, citationText, bibtex, agenda,
 } from './frameworks'
 
@@ -225,5 +225,33 @@ describe('research agenda', () => {
     expect(vi.shipped.map((f) => f.name)).toEqual(['OpenGPL'])
     expect(v.shipped).toEqual([])
     expect(v.lab.map((p) => p.name)).toEqual(['AgentID'])
+  })
+})
+
+describe('hidden lab projects', () => {
+  it('holds three projects for each open area, VII to X', () => {
+    expect(HIDDEN_LAB_PROJECTS.map((p) => `${p.area} ${p.name}`)).toEqual([
+      'VII ThreatDiff', 'VII OATC', 'VII AgentRisk',
+      'VIII IntentLock', 'VIII Taintline', 'VIII Airlock',
+      'IX Tripwire', 'IX ACLDrift', 'IX HubScan',
+      'X Rewind', 'X Fuse', 'X AgentChaos',
+    ])
+  })
+
+  it('gives each one a repo, a summary and a description', () => {
+    HIDDEN_LAB_PROJECTS.forEach((p) => {
+      expect(p.repo).toMatch(/^https:\/\/github\.com\/sadayamuthu\/[a-z]+$/)
+      expect(p.summary).toBeTruthy()
+      expect(p.description).toBeTruthy()
+    })
+  })
+
+  it('keeps them off the site', () => {
+    const hidden = HIDDEN_LAB_PROJECTS.map((p) => p.name)
+    const visible = [
+      ...labProjects().map((p) => p.name),
+      ...agenda().flatMap((a) => a.lab.map((p) => p.name)),
+    ]
+    hidden.forEach((name) => expect(visible).not.toContain(name))
   })
 })
