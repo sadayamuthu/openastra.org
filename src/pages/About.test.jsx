@@ -18,3 +18,21 @@ describe('About copy accuracy', () => {
     expect(container.textContent).not.toMatch(/every framework ships/i)
   })
 })
+
+describe('About people cards', () => {
+  it('shows a card for every author linking to their profile page', () => {
+    render(<MemoryRouter><About /></MemoryRouter>)
+    expect(screen.getByRole('heading', { level: 2, name: /Authors/ })).toBeInTheDocument()
+    ;[
+      ['Karthikeyan Sadayamuthu', '/about/karthikeyan-sadayamuthu'],
+      ['Vinodh Kannan Sadayamuthu', '/about/vinodh-kannan-sadayamuthu'],
+      ['Kartic Narayanan', '/about/kartic-narayanan'],
+      ['Manjulata Singh', '/about/manjulata-singh'],
+      ['Chakkaravarthi Kannan', '/about/chakkaravarthi-kannan'],
+      ['Vibha Nair', '/about/vibha-nair'],
+    ].forEach(([name, href]) =>
+      expect(screen.getByRole('link', { name: new RegExp(name) })).toHaveAttribute('href', href)
+    )
+    expect(screen.getAllByText(/Profile coming soon/)).toHaveLength(5)
+  })
+})

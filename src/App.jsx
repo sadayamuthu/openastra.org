@@ -8,6 +8,7 @@ import FrameworkPage from './pages/FrameworkPage'
 import Research from './pages/Research'
 import Patents from './pages/Patents'
 import About from './pages/About'
+import Profile from './pages/Profile'
 import Lab from './pages/Lab'
 import NotFound from './pages/NotFound'
 import { frameworks } from './data/frameworks'
@@ -22,11 +23,13 @@ const TITLES = {
 }
 
 function ScrollAndTitle() {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   useEffect(() => {
-    window.scrollTo?.(0, 0)
+    const target = hash && document.getElementById(hash.slice(1))
+    if (target) target.scrollIntoView?.({ block: 'start' })
+    else window.scrollTo?.(0, 0)
     if (TITLES[pathname]) document.title = TITLES[pathname]
-  }, [pathname])
+  }, [pathname, hash])
   return null
 }
 
@@ -41,6 +44,7 @@ export function AppRoutes() {
         <Route path="/research" element={<Research />} />
         <Route path="/patents" element={<Patents />} />
         <Route path="/about" element={<About />} />
+        <Route path="/about/:slug" element={<Profile />} />
         {frameworks.map((f) => (
           <Route key={f.slug} path={`/${f.slug}`} element={<FrameworkPage slug={f.slug} />} />
         ))}
