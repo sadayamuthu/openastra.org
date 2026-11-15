@@ -545,6 +545,100 @@ const NEW_LAB_PROJECTS = [
   },
 ]
 
+// ───────────── Hidden lab projects ─────────────
+// Planned projects for the open agenda areas VII–X. Their repos are private, and
+// no page reads this list, so none of them appear on the site.
+// To show one: give its area a category (categories + AGENDA) and a LAB_GROUPS
+// entry, then move it into NEW_LAB_PROJECTS with that group and category.
+const repo = (name) => `${GITHUB}/${name}`
+
+export const HIDDEN_LAB_PROJECTS = [
+  {
+    name: 'ThreatDiff',
+    area: 'VII',
+    repo: repo('threatdiff'),
+    summary: 'Threat model as code, diffed on every PR',
+    description: 'Maps agent configs (prompts, tools, MCP servers, data sources) to attack paths labeled with OWASP Agentic Top 10 and MITRE ATLAS, and gates PRs that open new paths from untrusted input to dangerous actions.',
+  },
+  {
+    name: 'OATC',
+    area: 'VII',
+    repo: repo('oatc'),
+    summary: 'Open AI Threat Catalog',
+    description: 'OWASP LLM and Agentic Top 10 and MITRE ATLAS merged and cross-mapped in machine-readable JSON, with each threat mapped to OCBC controls.',
+  },
+  {
+    name: 'AgentRisk',
+    area: 'VII',
+    repo: repo('agentrisk'),
+    summary: 'EPSS-style risk score for agent deployments',
+    description: 'One score per agent from its untrusted inputs, tool sensitivity, autonomy and reversibility, so a fleet can be ranked by risk.',
+  },
+  {
+    name: 'IntentLock',
+    area: 'VIII',
+    repo: repo('intentlock'),
+    summary: 'Tool calls bound to what the user asked for',
+    description: 'Compiles the user\'s request into a capability envelope of allowed tools, arguments and recipients, and enforces it at an MCP proxy.',
+  },
+  {
+    name: 'Taintline',
+    area: 'VIII',
+    repo: repo('taintline'),
+    summary: 'Taint tracking for agent context',
+    description: 'Labels every span of context by origin and blocks untrusted spans from flowing into sensitive tool-call arguments such as shell commands, URLs and recipients.',
+  },
+  {
+    name: 'Airlock',
+    area: 'VIII',
+    repo: repo('airlock'),
+    summary: 'Disposable sandboxes per tool call',
+    description: 'Runs each risky tool call in a short-lived microVM or WASM sandbox with no network by default, and checks results against policy before merging them back.',
+  },
+  {
+    name: 'Tripwire',
+    area: 'IX',
+    repo: repo('tripwire'),
+    summary: 'Canary documents for RAG',
+    description: 'Plants unique synthetic records per permission boundary in vector stores, and reports which boundary failed when one shows up in an output, log or egress.',
+  },
+  {
+    name: 'ACLDrift',
+    area: 'IX',
+    repo: repo('acldrift'),
+    summary: 'Vector index vs. source permissions',
+    description: 'Checks every indexed chunk against the access list of its source document and flags chunks retrievable beyond their original permissions.',
+  },
+  {
+    name: 'HubScan',
+    area: 'IX',
+    repo: repo('hubscan'),
+    summary: 'RAG poisoning detection by embedding shape',
+    description: 'Finds documents that rank highly for far more queries than they should, plus chunks with embedded instructions, without needing attack signatures.',
+  },
+  {
+    name: 'Rewind',
+    area: 'X',
+    repo: repo('rewind'),
+    summary: 'Undo log for agent actions',
+    description: 'Records a compensating action for every agent action and rolls back whole sessions across files, git, cloud APIs and SaaS, flagging irreversible actions before they run.',
+  },
+  {
+    name: 'Fuse',
+    area: 'X',
+    repo: repo('fuse'),
+    summary: 'Circuit breakers and kill switch for agent fleets',
+    description: 'Rate, spend and blast-radius limits per agent and per fleet; a tripped limit revokes AgentID credentials in one step and halts dependent agents.',
+  },
+  {
+    name: 'AgentChaos',
+    area: 'X',
+    repo: repo('agentchaos'),
+    summary: 'Chaos engineering for agents',
+    description: 'Injects tool timeouts, malformed and poisoned outputs and misbehaving peer agents, then reports whether the agent fails safe, loops, makes things up or cascades.',
+  },
+]
+
 const GROUP_ORDER = LAB_GROUPS.map((g) => g.id)
 
 export function labProjects() {
