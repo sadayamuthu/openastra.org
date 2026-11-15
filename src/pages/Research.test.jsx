@@ -11,7 +11,7 @@ describe('Research page', () => {
     expect(screen.getByRole('heading', { name: /Zenodo citations/ })).toBeInTheDocument()
     const hrefs = screen.getAllByRole('link', { name: /^https:\/\/doi\.org\// }).map((a) => a.getAttribute('href'))
     expect(hrefs.sort()).toEqual(citedFrameworks().map((f) => doiUrl(f.zenodo.doi)).sort())
-    expect(hrefs).toHaveLength(8)
+    expect(hrefs).toHaveLength(9)
   })
 
   it('keeps White papers and Patents as Coming soon', () => {
@@ -65,8 +65,8 @@ describe('Research agenda', () => {
     expect(screen.getByRole('link', { name: 'Agenda' })).toHaveAttribute('href', '#agenda')
   })
 
-  it('says eight of the nine frameworks are archived', () => {
+  it('says all nine frameworks are archived', () => {
     const { container } = renderResearch()
-    expect(container.textContent).toMatch(/Eight of the nine frameworks are archived/)
+    expect(container.textContent).toMatch(/All nine frameworks are archived/)
   })
 })

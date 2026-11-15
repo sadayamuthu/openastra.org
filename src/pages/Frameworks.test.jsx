@@ -42,7 +42,7 @@ describe('Frameworks page', () => {
 
   it('tags only DOI-bearing frameworks with DOI', () => {
     renderAt()
-    expect(screen.getAllByText('DOI')).toHaveLength(8)
+    expect(screen.getAllByText('DOI')).toHaveLength(9)
   })
 
   it('keeps the total count when filtered and says how many are shown', () => {
