@@ -6,10 +6,10 @@ const renderAt = (path = '/lab') => render(<MemoryRouter initialEntries={[path]}
 const names = () => screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)
 
 describe('Lab page', () => {
-  it('lists all 9 projects, each marked Coming soon', () => {
+  it('lists all 8 projects, each marked Coming soon', () => {
     renderAt()
-    expect(names()).toHaveLength(9)
-    expect(screen.getAllByText('Coming soon').length).toBe(9)
+    expect(names()).toHaveLength(8)
+    expect(screen.getAllByText('Coming soon').length).toBe(8)
   })
 
   it('presents the OpenQ suite in Know, Find, Fix order', () => {
@@ -31,7 +31,7 @@ describe('Lab page', () => {
 
   it('treats an unknown group as All', () => {
     renderAt('/lab?group=bogus')
-    expect(names()).toHaveLength(9)
+    expect(names()).toHaveLength(8)
   })
 
   it('links CyberLake to its page and shows domains as plain text', () => {

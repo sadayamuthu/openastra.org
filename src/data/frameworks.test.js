@@ -4,11 +4,11 @@ import {
 } from './frameworks'
 
 describe('frameworks data', () => {
-  it('indexes 8 shipped frameworks numbered 1..8, with unique slugs overall', () => {
+  it('indexes 9 shipped frameworks numbered 1..9, with unique slugs overall', () => {
     expect(new Set(frameworks.map((f) => f.slug)).size).toBe(frameworks.length)
-    expect(shippedFrameworks()).toHaveLength(8)
-    expect(shippedFrameworks().map((f) => f.number)).toEqual([1, 2, 3, 4, 5, 6, 7, 8])
-    shippedFrameworks().forEach((f) => expect(f.zenodo).toBeDefined())
+    expect(shippedFrameworks()).toHaveLength(9)
+    expect(shippedFrameworks().map((f) => f.number)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
+    shippedFrameworks().filter((f) => f.slug !== 'exposuregate').forEach((f) => expect(f.zenodo).toBeDefined())
   })
 
   it('puts every framework in a known category and leaves no category empty', () => {
@@ -20,7 +20,7 @@ describe('frameworks data', () => {
 
   it('numbers shipped frameworks in category order, with OpenGPL under Governance', () => {
     expect(shippedFrameworks().map((f) => f.slug)).toEqual(
-      ['mergelock', 'unasked', 'zero-egress', 'controlgate', 'ocbc', 'oebc', 'anysql', 'opengpl'])
+      ['mergelock', 'unasked', 'zero-egress', 'controlgate', 'exposuregate', 'ocbc', 'oebc', 'anysql', 'opengpl'])
     expect(getFramework('opengpl').category).toBe('governance')
     expect(frameworksByCategory().map((g) => g.category.id)).toEqual(
       ['agentic', 'security-controls', 'security-catalog', 'observability', 'governance'])
@@ -72,8 +72,8 @@ describe('frameworks data', () => {
 })
 
 describe('facts accuracy', () => {
-  it('ExposureGate does not claim an unverified data source', () => {
-    expect(getFramework('exposuregate').facts.map(([k]) => k)).not.toContain('Data')
+  it('ExposureGate names the data it actually reads', () => {
+    expect(getFramework('exposuregate').facts).toContainEqual(['Data', 'OEBC · OSV'])
   })
 })
 
@@ -93,6 +93,7 @@ describe('packages', () => {
   it('links PyPI only for packages published by the author', () => {
     const pypi = (slug) => urls(slug).PyPI
     expect(pypi('controlgate')).toBe('https://pypi.org/project/controlgate/')
+    expect(pypi('exposuregate')).toBe('https://pypi.org/project/exposuregate/')
     expect(pypi('ocbc')).toBe('https://pypi.org/project/ocbc/')
     expect(pypi('anysql')).toBe('https://pypi.org/project/anysql-sdk/')
     expect(pypi('opengpl')).toBe('https://pypi.org/project/opengpl-sdk/')
@@ -122,11 +123,16 @@ describe('ControlGate facts', () => {
 describe('install commands match what is actually published', () => {
   const cmds = (slug) => (getFramework(slug).quickstart || []).flatMap((b) => b.lines).join('\n')
 
-  it('ExposureGate and CyberLake are marked coming soon with no install commands', () => {
-    ;['exposuregate', 'cyberlake'].forEach((slug) => {
-      expect(getFramework(slug).status).toBe('Coming soon')
-      expect(getFramework(slug).quickstart).toBeUndefined()
-    })
+  it('CyberLake is marked coming soon with no install commands', () => {
+    expect(getFramework('cyberlake').status).toBe('Coming soon')
+    expect(getFramework('cyberlake').quickstart).toBeUndefined()
+  })
+
+  it('ExposureGate uses the real CLI subcommands', () => {
+    expect(getFramework('exposuregate').status).toBeUndefined()
+    expect(cmds('exposuregate')).toContain('pip install exposuregate')
+    expect(cmds('exposuregate')).toContain('exposuregate update-data')
+    expect(cmds('exposuregate')).toContain('exposuregate scan --mode pr --target-branch main')
   })
 
   it('does not link the unreachable cyberlake.org', () => {
@@ -134,7 +140,7 @@ describe('install commands match what is actually published', () => {
   })
 
   it('never tells people to pip install a package that is not on PyPI', () => {
-    const notOnPypi = ['exposuregate', 'oebc', 'cyberlake', 'opengpl', 'mergelock', 'unasked']
+    const notOnPypi = ['oebc', 'cyberlake', 'opengpl', 'mergelock', 'unasked']
     frameworks.forEach((f) => {
       notOnPypi.forEach((pkg) => expect(cmds(f.slug)).not.toMatch(new RegExp(`pip install ${pkg}(\\s|$)`)))
     })
@@ -165,17 +171,16 @@ describe('install commands match what is actually published', () => {
 })
 
 describe('In the lab', () => {
-  it('holds CyberLake, ExposureGate and the 7 new projects', () => {
+  it('holds CyberLake and the 7 new projects', () => {
     expect(labProjects().map((p) => p.name)).toEqual([
-      'OpenQR', 'OpenQS', 'OpenQO', 'OpenQA', 'CyberLake', 'ExposureGate', 'OpenCIQ', 'OpenEQ', 'AgentID',
+      'OpenQR', 'OpenQS', 'OpenQO', 'OpenQA', 'CyberLake', 'OpenCIQ', 'OpenEQ', 'AgentID',
     ])
   })
 
   it('keeps lab projects out of the numbered index', () => {
-    ;['cyberlake', 'exposuregate'].forEach((slug) => {
-      expect(getFramework(slug).lab).toBe(true)
-      expect(getFramework(slug).number).toBeUndefined()
-    })
+    expect(getFramework('cyberlake').lab).toBe(true)
+    expect(getFramework('cyberlake').number).toBeUndefined()
+    expect(getFramework('exposuregate').lab).toBeUndefined()
   })
 
   it('pairs each new project with its domain', () => {
@@ -197,9 +202,8 @@ describe('In the lab', () => {
     labProjects().forEach((p) => expect(ids).toContain(p.group))
   })
 
-  it('links CyberLake and ExposureGate to their existing pages', () => {
+  it('links CyberLake to its existing page', () => {
     expect(labProjects().find((p) => p.name === 'CyberLake').to).toBe('/cyberlake')
-    expect(labProjects().find((p) => p.name === 'ExposureGate').to).toBe('/exposuregate')
   })
 })
 

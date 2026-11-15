@@ -25,7 +25,7 @@ describe('Frameworks page', () => {
 
   it('treats an unknown category as All', () => {
     renderAt('/frameworks?category=bogus')
-    expect(names()).toHaveLength(8)
+    expect(names()).toHaveLength(9)
   })
 
   it('offers a Governance chip but no chip for Identity, which has nothing shipped', () => {
@@ -37,7 +37,7 @@ describe('Frameworks page', () => {
 
   it('treats ?category=identity (no shipped work) as All', () => {
     renderAt('/frameworks?category=identity')
-    expect(names()).toHaveLength(8)
+    expect(names()).toHaveLength(9)
   })
 
   it('tags only DOI-bearing frameworks with DOI', () => {
@@ -47,7 +47,7 @@ describe('Frameworks page', () => {
 
   it('keeps the total count when filtered and says how many are shown', () => {
     renderAt('/frameworks?category=agentic')
-    expect(screen.getByText(/8 open frameworks/)).toBeInTheDocument()
+    expect(screen.getByText(/9 open frameworks/)).toBeInTheDocument()
     expect(screen.getByText(/3 shown/)).toBeInTheDocument()
   })
 })
@@ -55,6 +55,6 @@ describe('Frameworks page', () => {
 describe('Frameworks page lab pointer', () => {
   it('points to the lab', () => {
     renderAt()
-    expect(screen.getByRole('link', { name: /9 more in the lab/ })).toHaveAttribute('href', '/lab')
+    expect(screen.getByRole('link', { name: /8 more in the lab/ })).toHaveAttribute('href', '/lab')
   })
 })

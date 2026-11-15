@@ -46,14 +46,14 @@ describe('Home page', () => {
 })
 
 describe('Home — In the lab', () => {
-  it('shows the lab with the OpenQ suite and all 9 projects', () => {
+  it('shows the lab with the OpenQ suite and all 8 projects', () => {
     render(<MemoryRouter><Home /></MemoryRouter>)
     const lab = within(screen.getByRole('region', { name: 'In the lab' }))
     expect(lab.getByText('OpenQ: the quantum-safe suite')).toBeInTheDocument()
-    ;['OpenQR', 'OpenQS', 'OpenQO', 'AgentID', 'OpenQA', 'CyberLake', 'ExposureGate', 'OpenCIQ', 'OpenEQ'].forEach((n) =>
+    ;['OpenQR', 'OpenQS', 'OpenQO', 'AgentID', 'OpenQA', 'CyberLake', 'OpenCIQ', 'OpenEQ'].forEach((n) =>
       expect(lab.getByText(n)).toBeInTheDocument()
     )
-    expect(lab.getByRole('link', { name: /All 9/ })).toHaveAttribute('href', '/lab')
+    expect(lab.getByRole('link', { name: /All 8/ })).toHaveAttribute('href', '/lab')
   })
 
   it('does not link domains that have no site yet', () => {
@@ -64,7 +64,7 @@ describe('Home — In the lab', () => {
 
   it('counts shipped and lab projects in the hero', () => {
     render(<MemoryRouter><Home /></MemoryRouter>)
-    expect(screen.getByText('8 open frameworks')).toBeInTheDocument()
-    expect(screen.getByText('9 in the lab')).toBeInTheDocument()
+    expect(screen.getByText('9 open frameworks')).toBeInTheDocument()
+    expect(screen.getByText('8 in the lab')).toBeInTheDocument()
   })
 })
