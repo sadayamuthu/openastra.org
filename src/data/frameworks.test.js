@@ -8,7 +8,7 @@ describe('frameworks data', () => {
     expect(new Set(frameworks.map((f) => f.slug)).size).toBe(frameworks.length)
     expect(shippedFrameworks()).toHaveLength(9)
     expect(shippedFrameworks().map((f) => f.number)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
-    shippedFrameworks().filter((f) => f.slug !== 'exposuregate').forEach((f) => expect(f.zenodo).toBeDefined())
+    shippedFrameworks().forEach((f) => expect(f.zenodo).toBeDefined())
   })
 
   it('puts every framework in a known category and leaves no category empty', () => {
@@ -38,12 +38,12 @@ describe('frameworks data', () => {
     expect(agentic.frameworks.map((f) => f.slug)).toEqual(['mergelock', 'unasked', 'zero-egress'])
   })
 
-  it('gives 8 frameworks a well-formed Zenodo DOI and none to CyberLake or ExposureGate', () => {
+  it('gives 9 frameworks a well-formed Zenodo DOI and none to CyberLake', () => {
     const withDoi = frameworks.filter((f) => f.zenodo)
-    expect(withDoi).toHaveLength(8)
+    expect(withDoi).toHaveLength(9)
     withDoi.forEach((f) => expect(f.zenodo.doi).toMatch(/^10\.5281\/zenodo\.\d+$/))
     expect(getFramework('cyberlake').zenodo).toBeUndefined()
-    expect(getFramework('exposuregate').zenodo).toBeUndefined()
+    expect(getFramework('exposuregate').zenodo.doi).toBe('10.5281/zenodo.24241823')
   })
 
   it('builds doi.org URLs', () => {

@@ -267,6 +267,7 @@ export const frameworks = [
       { label: 'GitHub Action', url: 'https://github.com/sadayamuthu/exposuregate/blob/main/action.yml' },
       { label: 'Pre-commit hook', url: 'https://github.com/sadayamuthu/exposuregate/blob/main/.pre-commit-hooks.yaml' },
     ],
+    zenodo: { doi: '10.5281/zenodo.24241823', title: 'ExposureGate: exploited-vulnerability gate for dependency lockfiles in pre-commit and CI', version: '0.1.0', year: 2026, date: '2026-11-15' },
   },
   {
     slug: 'opengpl',
