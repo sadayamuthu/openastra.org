@@ -58,7 +58,7 @@ describe('FrameworkPage headings', () => {
 
 describe('FrameworkPage coming soon', () => {
   it('shows a coming-soon notice instead of a quick start', () => {
-    render(<MemoryRouter><FrameworkPage slug="exposuregate" /></MemoryRouter>)
+    render(<MemoryRouter><FrameworkPage slug="cyberlake" /></MemoryRouter>)
     expect(screen.queryByRole('heading', { name: 'Quick start' })).toBeNull()
     expect(screen.getAllByText('Coming soon').length).toBeGreaterThan(0)
   })

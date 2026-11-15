@@ -65,8 +65,8 @@ describe('Research agenda', () => {
     expect(screen.getByRole('link', { name: 'Agenda' })).toHaveAttribute('href', '#agenda')
   })
 
-  it('says all eight frameworks are archived', () => {
+  it('says eight of the nine frameworks are archived', () => {
     const { container } = renderResearch()
-    expect(container.textContent).toMatch(/All eight frameworks are archived/)
+    expect(container.textContent).toMatch(/Eight of the nine frameworks are archived/)
   })
 })
