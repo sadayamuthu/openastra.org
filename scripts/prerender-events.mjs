@@ -61,13 +61,16 @@ const dateFmt = new Intl.DateTimeFormat('en-GB', {
 
 function utcWhen(iso) {
   const p = Object.fromEntries(dateFmt.formatToParts(new Date(iso)).map((x) => [x.type, x.value]))
-  return `${p.weekday} ${p.day} ${MONTHS[p.month - 1]} ${p.year}, ${p.hour}:${p.minute} UTC`
+  return `${p.weekday} ${Number(p.day)} ${MONTHS[p.month - 1]} ${p.year}, ${p.hour}:${p.minute} UTC`
 }
 
+const utcDateOnly = (iso) => utcWhen(iso).replace(/,.*$/, '')
+
 export function eventMeta(event, site = SITE) {
+  const when = event.delivery === 'recorded' ? utcDateOnly(event.start) : utcWhen(event.start)
   return {
     title: `${event.title} · OpenAstra Talks`,
-    description: `${utcWhen(event.start)} · ${deliveryCopy(event).og}.${event.summary ? ` ${event.summary}` : ''}`,
+    description: `${when} · ${deliveryCopy(event).og}.${event.summary ? ` ${event.summary}` : ''}`,
     url: `${site}/events/${event.slug}/`,
     image: event.image ? `${site}/events/${event.image}` : `${site}/og-image.png`,
   }

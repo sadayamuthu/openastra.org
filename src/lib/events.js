@@ -116,10 +116,9 @@ export function youtubeEmbedUrl(url) {
   return id && /^[\w-]+$/.test(id) ? `https://www.youtube-nocookie.com/embed/${id}` : null
 }
 
-const pastVideoUrl = (e) => e.recordingUrl || e.videoUrl || e.streamUrl || null
-
-// The YouTube URL to open for "Watch on YouTube".
-export const videoLink = (event) => pastVideoUrl(event)
+// The YouTube URL to open for "Watch on YouTube": first of recording/video/stream that embeds.
+export const videoLink = (event) =>
+  [event.recordingUrl, event.videoUrl, event.streamUrl].find((u) => youtubeEmbedUrl(u)) || null
 
 export function videoFor(event, now) {
   const status = eventStatus(event, now)

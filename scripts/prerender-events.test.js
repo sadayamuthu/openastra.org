@@ -19,6 +19,12 @@ describe('prerender-events', () => {
     }
   })
 
+  it('recorded sessions describe themselves as recorded', async () => {
+    const { events } = await import('../src/data/events.js')
+    const m = eventMeta(events.find((e) => e.slug === 'mergelock'), site)
+    expect(m.description).toContain('Wed 9 Dec 2026 · Recorded session · Free. When several')
+  })
+
   it('escapes HTML in meta', () => {
     const out = withMeta(html, { title: 'A "B" & <C>', description: 'd', url: site, image: site })
     expect(out).toContain('A &quot;B&quot; &amp; &lt;C&gt;')

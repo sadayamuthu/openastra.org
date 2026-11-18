@@ -143,11 +143,17 @@ describe('recorded delivery', () => {
     expect(formatDuration(rec)).toBeNull()
     expect(formatDuration(live)).toBe('60 min, incl. Q&A')
   })
-  it('videoLink', () => {
+  it('videoLink is null without an embeddable URL', () => {
     expect(videoLink(rec)).toBeNull()
-    expect(videoLink({ ...rec, streamUrl: 'S' })).toBe('S')
-    expect(videoLink({ ...rec, streamUrl: 'S', videoUrl: 'V' })).toBe('V')
-    expect(videoLink({ ...rec, streamUrl: 'S', videoUrl: 'V', recordingUrl: 'R' })).toBe('R')
+    expect(videoLink({ ...rec, streamUrl: 'S', videoUrl: 'V', recordingUrl: 'R' })).toBeNull()
+  })
+
+  it('videoLink returns the first URL that embeds, same order as videoFor', () => {
+    const V = 'https://www.youtube.com/watch?v=abc123DEF45'
+    const R = 'https://youtu.be/rec11111111'
+    expect(videoLink({ ...rec, recordingUrl: 'https://vimeo.com/1', videoUrl: V })).toBe(V)
+    expect(videoLink({ ...rec, recordingUrl: R, videoUrl: V })).toBe(R)
+    expect(videoLink({ ...rec, streamUrl: V })).toBe(V)
   })
   it('rowState: watch, coming, video-soon', () => {
     const now = at('2026-12-09T17:00:00Z')

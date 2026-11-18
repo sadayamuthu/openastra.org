@@ -1,10 +1,21 @@
 import Countdown from './Countdown'
 import { Button } from './ui'
-import { deliveryCopy, eventStatus, videoFor } from '../lib/events'
+import { deliveryCopy, eventStatus, formatDayMonth, formatTime, videoFor, videoLink } from '../lib/events'
 
 export default function EventMedia({ event, now }) {
   const { kind, embed } = videoFor(event, now)
   const live = eventStatus(event, now) === 'live'
+
+  const recorded = event.delivery === 'recorded'
+
+  if (kind === 'coming') {
+    return (
+      <div className="border border-dashed border-ink/30 rounded-sm aspect-video flex flex-col items-center justify-center text-center p-6">
+        <p className="font-serif text-2xl text-rust">Coming {formatDayMonth(event)}</p>
+        <p className="text-sm text-ink-muted mt-2">Published {formatTime(event)}</p>
+      </div>
+    )
+  }
 
   if (kind === 'countdown') {
     return (
@@ -13,6 +24,27 @@ export default function EventMedia({ event, now }) {
         <p className="text-sm text-ink-muted mt-3">
           {event.delivery === 'live' ? 'The live stream plays here' : 'The premiere plays here, with live chat on YouTube'}
         </p>
+      </>
+    )
+  }
+
+  if (embed && recorded) {
+    return (
+      <>
+        <div className="relative aspect-video bg-ink rounded-sm overflow-hidden">
+          <iframe
+            title={event.title}
+            src={embed}
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowFullScreen
+            loading="lazy"
+            className="absolute inset-0 w-full h-full"
+          />
+        </div>
+        <div className="mt-4">
+          <Button href={videoLink(event)} variant="solid">{deliveryCopy(event).watch}</Button>
+        </div>
+        <p className="text-sm text-ink-muted mt-3">Questions? Ask in the YouTube comments.</p>
       </>
     )
   }
@@ -46,7 +78,7 @@ export default function EventMedia({ event, now }) {
 
   return (
     <div className="border border-dashed border-ink/30 rounded-sm aspect-video flex items-center justify-center text-center p-6">
-      <p className="font-serif text-2xl text-rust">{live ? 'Stream link coming soon' : 'Recording coming soon'}</p>
+      <p className="font-serif text-2xl text-rust">{recorded ? 'Video coming soon' : live ? 'Stream link coming soon' : 'Recording coming soon'}</p>
     </div>
   )
 }
