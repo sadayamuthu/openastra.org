@@ -18,3 +18,41 @@
     @apply outline outline-2 outline-offset-2 outline-rust;
   }
 }
+
+/* OpenAstra mark: intro draw-in and hover quarter-turn (see brand/motion for GIF/MP4). */
+@layer components {
+  .oa-star {
+    fill: theme('colors.rust');
+    transform-box: view-box;
+    transform-origin: 77px 23px;
+    transition: transform 0.6s cubic-bezier(0.6, 0, 0.2, 1);
+  }
+  .oa-star-pop {
+    transform-box: view-box;
+    transform-origin: 77px 23px;
+  }
+  .oa-logo:hover .oa-star,
+  a:focus-visible .oa-star {
+    transform: rotate(90deg) scale(1.1);
+  }
+  .oa-mark--intro .oa-ring {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: oa-draw 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s forwards;
+  }
+  .oa-mark--intro .oa-star-pop {
+    transform: scale(0) rotate(-90deg);
+    animation: oa-pop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) 0.65s forwards;
+  }
+  @keyframes oa-draw {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes oa-pop {
+    to { transform: scale(1) rotate(0deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .oa-star { transition: none; }
+    .oa-mark--intro .oa-ring { animation: none; stroke-dashoffset: 0; }
+    .oa-mark--intro .oa-star-pop { animation: none; transform: none; }
+  }
+}

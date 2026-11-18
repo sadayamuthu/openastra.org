@@ -14,9 +14,10 @@ describe('Research page', () => {
     expect(hrefs).toHaveLength(9)
   })
 
-  it('keeps White papers and Patents as Coming soon', () => {
-    renderResearch()
-    expect(screen.getAllByText('Coming soon')).toHaveLength(2)
+  it('keeps White papers as Coming soon and does not mention patents', () => {
+    const { container } = renderResearch()
+    expect(screen.getAllByText('Coming soon')).toHaveLength(1)
+    expect(container.textContent).not.toMatch(/patent/i)
   })
 
   it('never calls the Zenodo records papers', () => {

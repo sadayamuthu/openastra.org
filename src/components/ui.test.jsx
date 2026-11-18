@@ -12,8 +12,8 @@ describe('ui primitives', () => {
   })
 
   it('ComingSoon shows its label and the exact text Coming soon', () => {
-    render(<ComingSoon label="Patents" />)
-    expect(screen.getByText('Patents')).toBeInTheDocument()
+    render(<ComingSoon label="White papers" />)
+    expect(screen.getByText('White papers')).toBeInTheDocument()
     expect(screen.getByText('Coming soon')).toBeInTheDocument()
   })
 

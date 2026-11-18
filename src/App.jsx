@@ -6,7 +6,6 @@ import Home from './pages/Home'
 import Frameworks from './pages/Frameworks'
 import FrameworkPage from './pages/FrameworkPage'
 import Research from './pages/Research'
-import Patents from './pages/Patents'
 import About from './pages/About'
 import Profile from './pages/Profile'
 import Lab from './pages/Lab'
@@ -18,7 +17,6 @@ const TITLES = {
   '/frameworks': 'Frameworks · OpenAstra',
   '/lab': 'In the lab · OpenAstra',
   '/research': 'Research · OpenAstra',
-  '/patents': 'Patents · OpenAstra',
   '/about': 'About · OpenAstra',
 }
 
@@ -42,7 +40,6 @@ export function AppRoutes() {
         <Route path="/frameworks" element={<Frameworks />} />
         <Route path="/lab" element={<Lab />} />
         <Route path="/research" element={<Research />} />
-        <Route path="/patents" element={<Patents />} />
         <Route path="/about" element={<About />} />
         <Route path="/about/:slug" element={<Profile />} />
         {frameworks.map((f) => (

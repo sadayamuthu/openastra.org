@@ -36,3 +36,12 @@ describe('About people cards', () => {
     expect(screen.getAllByText(/Profile coming soon/)).toHaveLength(5)
   })
 })
+
+describe('About brand mark', () => {
+  it('shows the intro GIF and explains the mark, without a brand kit link', () => {
+    render(<MemoryRouter><About /></MemoryRouter>)
+    expect(screen.getByRole('heading', { level: 2, name: 'Open Orbit' })).toBeInTheDocument()
+    expect(screen.getByAltText(/OpenAstra mark/)).toHaveAttribute('src', '/brand/openastra-intro-512.gif')
+    expect(screen.queryByRole('link', { name: /Brand kit/ })).not.toBeInTheDocument()
+  })
+})
