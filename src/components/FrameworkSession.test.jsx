@@ -14,6 +14,7 @@ describe('FrameworkSession banner', () => {
   it('links MergeLock to its recorded session', () => {
     renderSlug('mergelock')
     expect(screen.getByText('Framework of the week · New video Wed 9 Dec')).toBeInTheDocument()
+    expect(screen.getByText('VIDEO')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Details/ })).toHaveAttribute('href', '/events/mergelock')
   })
 

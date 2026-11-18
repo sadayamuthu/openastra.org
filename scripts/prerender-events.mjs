@@ -80,7 +80,7 @@ export function hubMeta(site = SITE) {
   return {
     title: 'Events · OpenAstra',
     description:
-      'One OpenAstra framework a week: recorded sessions that premiere Wednesdays 11 AM ET with live Q&A in chat, then stay on demand.',
+      'One OpenAstra framework a week: a recorded session published every Wednesday on YouTube, with questions in the YouTube comments.',
     url: `${site}/events/`,
     image: `${site}/og-image.png`,
   }

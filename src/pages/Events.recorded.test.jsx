@@ -43,6 +43,14 @@ describe('Events hub, recorded sessions', () => {
     expect(within(od).getByText('Video coming soon')).toBeInTheDocument()
   })
 
+  it('released session without video gets a Video coming soon eyebrow and Details, not Watch', () => {
+    vi.setSystemTime(new Date('2026-12-17T00:00:00Z'))
+    renderHub()
+    expect(screen.getByText('Week 2 · Video coming soon')).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /▶ Watch/ })).toBeNull()
+    expect(screen.getByRole('link', { name: /Details/ })).toHaveAttribute('href', '/events/unasked')
+  })
+
   it('features the next upcoming session with a reminder and Details', () => {
     vi.setSystemTime(new Date('2026-12-25T00:00:00Z'))
     renderHub()

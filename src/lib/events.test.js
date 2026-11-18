@@ -169,5 +169,7 @@ describe('recorded delivery', () => {
     expect(f('2026-12-24T00:00:00Z')).toBe('zero-egress')
     expect(f('2026-11-20T00:00:00Z')).toBe('mergelock')
     expect(f('2028-01-01T00:00:00Z')).toBeUndefined()
+    expect(f('2026-12-16T15:59:59Z')).toBe('mergelock')
+    expect(f('2026-12-16T16:00:00Z')).toBe('unasked')
   })
 })

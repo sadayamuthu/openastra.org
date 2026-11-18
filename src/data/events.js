@@ -16,7 +16,7 @@
 //   streamUrl: 'https://www.youtube.com/watch?v=…',     // premiere/live stream (optional until known)
 //   videoUrl: 'https://www.youtube.com/watch?v=…',      // recorded: the published video; paste once released
 //   image: 'merge-conflicts.png',               // optional; file name in public/events/, 1200x630, used for link previews
-//   recordingUrl: null,                         // set after the talk; may equal streamUrl
+//   recordingUrl: null,                         // set after the talk; may equal streamUrl (recorded sessions: leave null; videoUrl is enough)
 //   delivery: 'recorded',                       // 'recorded' (video published on YouTube, Q&A in comments) | 'premiere' (YouTube Premiere + live chat) | 'live'; default 'premiere'
 //   series: 'framework-of-the-week',            // optional series id
 //   week: 1,                                    // position in the series (1..N, unique)
@@ -28,6 +28,7 @@
 //   (m.youtube.com and music.youtube.com hosts work too)
 //
 // Weekly routine (recorded series): publish/schedule the video for Wed 11 AM ET (16:00 UTC), paste its link as videoUrl.
+// Tip: schedule the video in YouTube Studio and paste its link before Wednesday — the page shows only 'Coming …' until the release time.
 // A Luma registerUrl is optional (reminder button only).
 //
 // WARNING: renaming or removing a slug breaks every link already shared for that talk.

@@ -12,7 +12,7 @@ export default function EventMedia({ event, now }) {
     return (
       <div className="border border-dashed border-ink/30 rounded-sm aspect-video flex flex-col items-center justify-center text-center p-6">
         <p className="font-serif text-2xl text-rust">Coming {formatDayMonth(event)}</p>
-        <p className="text-sm text-ink-muted mt-2">Published {formatTime(event)}</p>
+        <p className="text-sm text-ink-muted mt-2">Out at {formatTime(event)}</p>
       </div>
     )
   }

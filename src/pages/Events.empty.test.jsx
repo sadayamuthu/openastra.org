@@ -18,7 +18,7 @@ describe('Events hub, empty', () => {
     expect(screen.getByText('The first talk will be announced here.')).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /Follow on Luma/ })).toBeNull()
     expect(screen.getByText('Recordings build up here')).toBeInTheDocument()
-    expect(screen.getByText('Each premiere stays available right after it airs.')).toBeInTheDocument()
+    expect(screen.getByText("Each week's video appears here once it's published.")).toBeInTheDocument()
     expect(screen.queryByRole('region', { name: /The series/ })).toBeNull()
   })
 
@@ -31,6 +31,7 @@ describe('Events hub, empty', () => {
       const { default: Events } = await import('./Events')
       render(<MemoryRouter><Events /></MemoryRouter>)
       expect(screen.getByText('Announced soon')).toBeInTheDocument()
+      expect(screen.getByText('Next series')).toBeInTheDocument()
       expect(screen.getByText('The next series will be announced here.')).toBeInTheDocument()
       expect(screen.getAllByText('Video coming soon').length).toBe(7)
     } finally {

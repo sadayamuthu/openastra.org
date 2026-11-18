@@ -25,6 +25,7 @@ afterEach(() => vi.useRealTimers())
 describe('FrameworkSession banner states', () => {
   it('live shows badge and Watch', () => {
     setup('2026-12-02T16:10:00Z', { streamUrl: 'https://www.youtube.com/watch?v=abc123DEF45' })
+    expect(screen.getByText('WEBCAST')).toBeInTheDocument()
     expect(screen.getByText(/PREMIERING NOW/)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Watch/ })).toHaveAttribute('href', '/events/sess')
   })

@@ -38,7 +38,7 @@ function Featured({ event, now, hasEvents }) {
   if (!event) {
     return (
       <div className="border border-dashed border-ink/30 rounded-sm p-8 mt-8">
-        <Eyebrow className="text-rust">{hasEvents ? 'Next premiere' : 'Next talk'}</Eyebrow>
+        <Eyebrow className="text-rust">{hasEvents ? 'Next series' : 'Next talk'}</Eyebrow>
         <p className="font-serif text-3xl mt-2">Announced soon</p>
         {LUMA_CALENDAR_URL ? (
           <>
@@ -57,6 +57,8 @@ function Featured({ event, now, hasEvents }) {
   const live = status === 'live'
   const recorded = event.delivery === 'recorded'
   const released = recorded && status !== 'upcoming'
+  const hasVideo = released && videoFor(event, now).kind !== 'none'
+  const wk = event.week ? `Week ${event.week} · ` : ''
   const copy = deliveryCopy(event)
   const speakers = names(event.speakers, getAuthor)
   return (
@@ -66,7 +68,7 @@ function Featured({ event, now, hasEvents }) {
           {live ? (
             <span className="bg-rust text-paper px-2 py-1 rounded-sm"><span aria-hidden="true">●</span> {copy.badge}</span>
           ) : recorded ? (
-            `Week ${event.week} · ${released ? 'New this week' : `Coming ${formatDayMonth(event)}`}`
+            `${wk}${hasVideo ? 'New this week' : released ? 'Video coming soon' : `Coming ${formatDayMonth(event)}`}`
           ) : event.week ? `Week ${event.week} · Next premiere` : 'Next talk · Online'}
         </Eyebrow>
         <h2 className="font-serif text-3xl sm:text-4xl mt-3">{event.title}</h2>
@@ -74,8 +76,10 @@ function Featured({ event, now, hasEvents }) {
         <p className="text-sm text-ink-muted mt-3">{released ? formatDayMonth(event) : formatWhen(event)}</p>
         {speakers.length > 0 && <p className="text-sm mt-1">{speakers.join(' · ')}</p>}
         <div className="flex flex-wrap items-center gap-3 mt-6">
-          {released ? (
+          {hasVideo ? (
             <Button to={`/events/${event.slug}`} variant="solid">▶ Watch</Button>
+          ) : released ? (
+            <Link to={`/events/${event.slug}`} className="text-sm hover:text-rust">Details →</Link>
           ) : live ? (
             <Button to={`/events/${event.slug}`} variant="solid">{copy.watch}</Button>
           ) : (
@@ -131,7 +135,7 @@ function SeriesRow({ row, now, featured }) {
     <li className="grid grid-cols-[5.5rem_1fr] sm:grid-cols-[7.5rem_1fr_auto] items-baseline gap-4 py-4 border-t border-rule">
       <div className="font-mono text-xs text-ink-muted">
         <span className="block text-ink">Week {event.week}</span>
-        <span>{formatDayMonth(event)} · {formatTime(event)}</span>
+        <span>{event.delivery === 'recorded' ? formatDayMonth(event) : `${formatDayMonth(event)} · ${formatTime(event)}`}</span>
       </div>
       <div>
         <Link to={`/events/${event.slug}`} className="font-serif text-xl hover:text-rust">{event.title}</Link>
@@ -216,7 +220,7 @@ export default function Events() {
           {past.length === 0 && (
             <div className="mb-4">
               <p className="font-serif text-2xl">Recordings build up here</p>
-              <p className="text-ink-muted">Each premiere stays available right after it airs.</p>
+              <p className="text-ink-muted">Each week's video appears here once it's published.</p>
             </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

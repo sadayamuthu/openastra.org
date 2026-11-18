@@ -18,7 +18,7 @@ describe('EventPage, real recorded data', () => {
       </MemoryRouter>,
     )
     expect(screen.getByText('Coming Wed 9 Dec')).toBeInTheDocument()
-    expect(screen.getByText(/^Published .*(AM|PM)/)).toBeInTheDocument()
+    expect(screen.getByText(/^Out at .*(AM|PM)/)).toBeInTheDocument()
     expect(screen.getByText('Week 1 · Recorded session · Free')).toBeInTheDocument()
     expect(screen.getByText('YouTube · recorded session')).toBeInTheDocument()
     expect(screen.getByText('In the YouTube comments')).toBeInTheDocument()
