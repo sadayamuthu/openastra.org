@@ -1,6 +1,8 @@
 import { FIXTURE_EVENTS as E, FIXTURE_NOW as NOW } from '../test/eventsFixture'
 import { eventStatus, upcomingEvents, pastEvents, featuredEvent, findEvent, formatWhen,
-  formatDuration, formatShortDate, toIcs, youtubeEmbedUrl, videoFor } from './events'
+  formatDuration, formatShortDate, toIcs, youtubeEmbedUrl, videoFor, deliveryCopy, seriesRows, rowState,
+  sessionForFramework } from './events'
+import { events } from '../data/events'
 const at = (iso) => new Date(iso)
 const live = E.find((e) => e.slug === 'merge-conflicts')
 
@@ -65,4 +67,41 @@ it('uses fixed English month abbreviations (never ICU "Sept")', () => {
   const sep = { ...live, start: '2026-09-12T17:00:00Z' }
   expect(formatShortDate(sep, { timeZone: 'UTC' })).toBe('12 SEP 2026')
   expect(formatWhen(sep, { timeZone: 'UTC' })).toMatch(/^Sat 12 Sep 2026 · 5:00 PM UTC$/)
+})
+
+it('deliveryCopy: premiere, live, and default', () => {
+  const premiere = { eyebrow: 'Webcast · Premiere with live Q&A · Free', where: 'YouTube Premiere · questions in live chat',
+    badge: 'PREMIERING NOW', badgeShort: 'PREMIERE', watch: 'Watch & ask in chat', startsIn: 'Premieres in', og: 'Webcast premiere · Free' }
+  expect(deliveryCopy({ delivery: 'premiere' })).toEqual(premiere)
+  expect(deliveryCopy({})).toEqual(premiere)
+  expect(deliveryCopy({ delivery: 'live' })).toEqual({ eyebrow: 'Tech talk · Online · Free', where: 'Online · YouTube Live',
+    badge: 'LIVE NOW', badgeShort: 'LIVE', watch: 'Watch live', startsIn: 'Starts in', og: 'Online · Free' })
+})
+it('seriesRows inserts a break for gaps > 8 days', () => {
+  const rows = seriesRows(events, 'framework-of-the-week')
+  expect(rows).toHaveLength(8)
+  expect(rows[2].type).toBe('break')
+  expect(rows[2].resumes.slug).toBe('zero-egress')
+  const sessions = rows.filter((r) => r.type === 'session').map((r) => r.event)
+  expect(sessions).toHaveLength(7)
+  expect(sessions.map((e) => e.week)).toEqual([1, 2, 3, 4, 5, 6, 7])
+})
+it('rowState covers each state', () => {
+  const [liveE, next, , past, noVideo] = [E[0], E[1], null, E[2], E[3]]
+  expect(rowState(liveE, NOW, next)).toBe('premiering')
+  expect(rowState(next, NOW, next)).toBe('next')
+  expect(rowState(next, NOW, null)).toBe('upcoming')
+  expect(rowState(past, NOW, next)).toBe('watch')
+  expect(rowState(noVideo, NOW, next)).toBe('recording-soon')
+})
+it('sessionForFramework prefers live, then upcoming, then past, else null', () => {
+  const now = new Date('2026-12-09T16:30:00Z')
+  expect(sessionForFramework(events, 'mergelock', now).slug).toBe('mergelock')
+  expect(sessionForFramework(events, 'controlgate', new Date('2026-11-18T00:00:00Z')).slug).toBe('ocbc-controlgate')
+  expect(sessionForFramework(events, 'ocbc', new Date('2026-11-18T00:00:00Z')).slug).toBe('ocbc-controlgate')
+  expect(sessionForFramework(events, 'unasked', new Date('2028-01-01T00:00:00Z')).slug).toBe('unasked')
+  expect(sessionForFramework(events, 'nope', NOW)).toBeNull()
+})
+it('toIcs LOCATION is the talk page URL', () => {
+  expect(toIcs(live).split('\r\n')).toContain('LOCATION:https://openastra.org/events/merge-conflicts/')
 })

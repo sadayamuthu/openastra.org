@@ -66,7 +66,7 @@ export function toIcs(event, siteUrl = 'https://openastra.org') {
     `SUMMARY:${icsText(event.title)}`,
     `DESCRIPTION:${icsText(event.summary)}`,
     `URL:${siteUrl}/events/${event.slug}`,
-    'LOCATION:Online',
+    `LOCATION:${siteUrl}/events/${event.slug}/`,
     'END:VEVENT',
     'END:VCALENDAR',
   ].join('\r\n')
@@ -95,4 +95,61 @@ export function videoFor(event, now) {
   if (status === 'live') return { kind: 'stream', embed: youtubeEmbedUrl(event.streamUrl) }
   const embed = youtubeEmbedUrl(event.recordingUrl) || youtubeEmbedUrl(event.streamUrl)
   return embed ? { kind: 'recording', embed } : { kind: 'none', embed: null }
+}
+
+const DELIVERY = {
+  premiere: {
+    eyebrow: 'Webcast · Premiere with live Q&A · Free',
+    where: 'YouTube Premiere · questions in live chat',
+    badge: 'PREMIERING NOW',
+    badgeShort: 'PREMIERE',
+    watch: 'Watch & ask in chat',
+    startsIn: 'Premieres in',
+    og: 'Webcast premiere · Free',
+  },
+  live: {
+    eyebrow: 'Tech talk · Online · Free',
+    where: 'Online · YouTube Live',
+    badge: 'LIVE NOW',
+    badgeShort: 'LIVE',
+    watch: 'Watch live',
+    startsIn: 'Starts in',
+    og: 'Online · Free',
+  },
+}
+
+export const deliveryCopy = (event) => DELIVERY[event?.delivery] || DELIVERY.premiere
+
+export const seriesEvents = (list, seriesId) =>
+  list.filter((e) => e.series === seriesId).sort((a, b) => a.week - b.week)
+
+const DAY = 24 * 60 * MIN
+
+export function seriesRows(list, seriesId) {
+  const rows = []
+  let prev = null
+  for (const event of seriesEvents(list, seriesId)) {
+    if (prev && startMs(event) - startMs(prev) > 8 * DAY) rows.push({ type: 'break', resumes: event })
+    rows.push({ type: 'session', event })
+    prev = event
+  }
+  return rows
+}
+
+export function rowState(event, now, featured) {
+  const status = eventStatus(event, now)
+  if (status === 'live') return 'premiering'
+  if (featured?.slug === event.slug) return 'next'
+  if (status === 'upcoming') return 'upcoming'
+  return videoFor(event, now).kind !== 'none' ? 'watch' : 'recording-soon'
+}
+
+export function sessionForFramework(list, frameworkSlug, now) {
+  const mine = list.filter((e) => e.frameworks?.includes(frameworkSlug))
+  return (
+    mine.find((e) => eventStatus(e, now) === 'live') ||
+    upcomingEvents(mine, now)[0] ||
+    pastEvents(mine, now)[0] ||
+    null
+  )
 }

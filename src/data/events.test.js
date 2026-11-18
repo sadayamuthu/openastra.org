@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import { events } from './events'
 import { FIXTURE_EVENTS } from '../test/eventsFixture'
 import { getAuthor } from './authors'
-import { getFramework } from './frameworks'
+import { getFramework, shippedFrameworks } from './frameworks'
 import { youtubeEmbedUrl } from '../lib/events'
 
 describe.each([
@@ -45,6 +45,27 @@ describe.each([
   it('uses https registration links', () => {
     list.forEach((e) => {
       if (e.registerUrl) expect(e.registerUrl.startsWith('https://')).toBe(true)
+    })
+  })
+})
+
+describe('framework-of-the-week series', () => {
+  const series = events.filter((e) => e.series === 'framework-of-the-week')
+  it('delivery is premiere or live when present', () => {
+    events.forEach((e) => { if (e.delivery) expect(['premiere', 'live']).toContain(e.delivery) })
+  })
+  it('weeks are unique and run 1..N', () => {
+    expect(series.map((e) => e.week).sort((a, b) => a - b)).toEqual(series.map((_, i) => i + 1))
+  })
+  it('every session is a Wednesday at 16:00:00Z', () => {
+    series.forEach((e) => {
+      expect(new Date(e.start).getUTCDay(), e.slug).toBe(3)
+      expect(e.start.slice(11), e.slug).toBe('16:00:00Z')
+    })
+  })
+  it('every shipped framework appears in exactly one session', () => {
+    shippedFrameworks().forEach((f) => {
+      expect(series.filter((e) => e.frameworks.includes(f.slug)).length, f.slug).toBe(1)
     })
   })
 })
