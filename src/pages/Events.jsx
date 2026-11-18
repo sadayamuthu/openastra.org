@@ -6,7 +6,7 @@ import { events, LUMA_CALENDAR_URL } from '../data/events'
 import { getAuthor } from '../data/authors'
 import { getFramework } from '../data/frameworks'
 import {
-  eventStatus, featuredEvent, formatShortDate, formatWhen, pastEvents, upcomingEvents, videoFor,
+  deliveryCopy, eventStatus, featuredEvent, formatShortDate, formatWhen, pastEvents, upcomingEvents, videoFor,
 } from '../lib/events'
 import { useNow } from '../lib/useNow'
 
@@ -67,7 +67,7 @@ function Featured({ event, now }) {
           )}
         </div>
       </div>
-      {!live && <Countdown event={event} now={now} className="self-start" />}
+      {!live && <Countdown event={event} now={now} label={deliveryCopy(event).startsIn} className="self-start" />}
     </div>
   )
 }

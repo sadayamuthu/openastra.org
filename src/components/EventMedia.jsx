@@ -1,5 +1,5 @@
 import Countdown from './Countdown'
-import { eventStatus, videoFor } from '../lib/events'
+import { deliveryCopy, eventStatus, videoFor } from '../lib/events'
 
 export default function EventMedia({ event, now }) {
   const { kind, embed } = videoFor(event, now)
@@ -7,7 +7,7 @@ export default function EventMedia({ event, now }) {
 
   if (kind === 'countdown') {
     return (
-      <Countdown event={event} now={now} />
+      <Countdown event={event} now={now} label={deliveryCopy(event).startsIn} />
     )
   }
 
@@ -16,7 +16,7 @@ export default function EventMedia({ event, now }) {
       <div className="relative aspect-video bg-ink rounded-sm overflow-hidden">
         {live && (
           <span className="absolute top-3 left-3 z-10 bg-rust text-paper text-[11px] font-medium tracking-[0.14em] px-2 py-1 rounded-sm">
-            <span aria-hidden="true">●</span> LIVE
+            <span aria-hidden="true">●</span> {deliveryCopy(event).badgeShort}
           </span>
         )}
         <iframe

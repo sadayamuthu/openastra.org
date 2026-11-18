@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { events } from '../src/data/events.js'
-import { MONTHS } from '../src/lib/events.js'
+import { MONTHS, deliveryCopy } from '../src/lib/events.js'
 
 const SITE = 'https://openastra.org'
 
@@ -67,7 +67,7 @@ function utcWhen(iso) {
 export function eventMeta(event, site = SITE) {
   return {
     title: `${event.title} · OpenAstra Talks`,
-    description: `${utcWhen(event.start)} · Online · Free.${event.summary ? ` ${event.summary}` : ''}`,
+    description: `${utcWhen(event.start)} · ${deliveryCopy(event).og}.${event.summary ? ` ${event.summary}` : ''}`,
     url: `${site}/events/${event.slug}/`,
     image: event.image ? `${site}/events/${event.image}` : `${site}/og-image.png`,
   }
@@ -77,7 +77,7 @@ export function hubMeta(site = SITE) {
   return {
     title: 'Events · OpenAstra',
     description:
-      "Talks from the people who build OpenAstra's frameworks. Live online, with recordings afterwards.",
+      'One OpenAstra framework a week: recorded sessions that premiere Wednesdays 11 AM ET with live Q&A in chat, then stay on demand.',
     url: `${site}/events/`,
     image: `${site}/og-image.png`,
   }

@@ -69,9 +69,54 @@ describe('EventPage', () => {
   it('live talk embeds the stream', () => {
     const { container } = renderAt('merge-conflicts')
     expect(container.querySelector('iframe')).toHaveAttribute('src', 'https://www.youtube-nocookie.com/embed/abc123DEF45')
-    expect(screen.getByText(/LIVE/)).toBeInTheDocument()
-    expect(screen.getByText('●')).toHaveAttribute('aria-hidden', 'true')
+    expect(screen.getByText('PREMIERING NOW')).toBeInTheDocument()
+    expect(screen.getByText('PREMIERE')).toBeInTheDocument()
+    screen.getAllByText('●').forEach((d) => expect(d).toHaveAttribute('aria-hidden', 'true'))
     expect(screen.getAllByRole('link', { name: /Register on Luma/ })[0]).toHaveAttribute('href', 'https://lu.ma/oa-merge')
+  })
+
+  it('delivery live shows LIVE NOW wording', () => {
+    const live = { ...ev('merge-conflicts'), delivery: 'live' }
+    const { container } = render(<EventMedia event={live} now={FIXTURE_NOW} />)
+    expect(screen.getByText('LIVE')).toBeInTheDocument()
+    expect(container.querySelector('iframe')).not.toBeNull()
+  })
+
+  it('upcoming week talk shows premiere eyebrow, countdown label and where', () => {
+    const e = FIXTURE_EVENTS.find((x) => x.slug === 'controls-as-code')
+    e.week = 4
+    try {
+      renderAt('controls-as-code')
+    } finally {
+      delete e.week
+    }
+    expect(screen.getByText('Week 4 · Webcast · Premiere with live Q&A · Free')).toBeInTheDocument()
+    expect(screen.getByText('Premieres in')).toBeInTheDocument()
+    expect(screen.getByText('YouTube Premiere · questions in live chat')).toBeInTheDocument()
+  })
+
+  it('without registerUrl there is no Register link but calendar remains', () => {
+    const e = FIXTURE_EVENTS.find((x) => x.slug === 'controls-as-code')
+    const saved = e.registerUrl
+    e.registerUrl = null
+    try {
+      renderAt('controls-as-code')
+    } finally {
+      e.registerUrl = saved
+    }
+    expect(screen.queryByRole('link', { name: /Register/ })).toBeNull()
+    expect(screen.getAllByRole('link', { name: /Add to calendar/ }).length).toBeGreaterThan(0)
+  })
+
+  it('titles the related list for multiple frameworks', () => {
+    const e = FIXTURE_EVENTS.find((x) => x.slug === 'controls-as-code')
+    e.frameworks = ['controlgate', 'mergelock']
+    try {
+      renderAt('controls-as-code')
+    } finally {
+      e.frameworks = ['controlgate']
+    }
+    expect(screen.getByText('Frameworks in this session')).toBeInTheDocument()
   })
 
   it('live talk without a stream shows a placeholder', () => {

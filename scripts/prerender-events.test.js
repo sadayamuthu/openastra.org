@@ -13,7 +13,7 @@ describe('prerender-events', () => {
     )
     expect(out).toContain('<meta property="og:url" content="https://openastra.org/events/merge-conflicts/" />')
     expect(out).toContain('<link rel="canonical" href="https://openastra.org/events/merge-conflicts/" />')
-    expect(out).toContain('og:description" content="Sat 12 Dec 2026, 17:00 UTC · Online · Free.')
+    expect(out).toContain('og:description" content="Sat 12 Dec 2026, 17:00 UTC · Webcast premiere · Free.')
     for (const k of ['og:title', 'og:description', 'twitter:title']) {
       expect(out.match(new RegExp(`(?:property|name)="${k}"`, 'g')), k).toHaveLength(1)
     }
@@ -46,13 +46,19 @@ describe('prerender-events', () => {
 
   it('omits the summary sentence when there is none', () => {
     const m = eventMeta({ ...FIXTURE_EVENTS[0], summary: undefined }, site)
-    expect(m.description).toBe('Sat 12 Dec 2026, 17:00 UTC · Online · Free.')
+    expect(m.description).toBe('Sat 12 Dec 2026, 17:00 UTC · Webcast premiere · Free.')
     expect(m.description).not.toContain('undefined')
   })
 
   it('uses a fixed month abbreviation in the OG date', () => {
     const m = eventMeta({ ...FIXTURE_EVENTS[0], start: '2026-09-12T17:00:00Z' }, site)
     expect(m.description).toContain('Sat 12 Sep 2026, 17:00 UTC')
+  })
+
+  it('hub description describes the premiere series', () => {
+    expect(hubMeta(site).description).toBe(
+      'One OpenAstra framework a week: recorded sessions that premiere Wednesdays 11 AM ET with live Q&A in chat, then stay on demand.',
+    )
   })
 
   it('hub url has a trailing slash', () => {

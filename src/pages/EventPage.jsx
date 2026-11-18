@@ -6,7 +6,7 @@ import { Button, DoiTag, Eyebrow } from '../components/ui'
 import { events } from '../data/events'
 import { authorPath, getAuthor } from '../data/authors'
 import { getFramework } from '../data/frameworks'
-import { eventStatus, findEvent, formatDuration, formatWhen } from '../lib/events'
+import { deliveryCopy, eventStatus, findEvent, formatDuration, formatWhen } from '../lib/events'
 import { useNow } from '../lib/useNow'
 import NotFound from './NotFound'
 
@@ -28,9 +28,11 @@ export default function EventPage() {
   const past = eventStatus(event, now) === 'past'
   const speakers = event.speakers.map(getAuthor).filter(Boolean)
   const fws = (event.frameworks || []).map(getFramework).filter(Boolean)
+  const copy = deliveryCopy(event)
+  const live = eventStatus(event, now) === 'live'
   const facts = [
     ['When', formatWhen(event)],
-    ['Where', 'Online · YouTube Live'],
+    ['Where', copy.where],
     ['Cost', 'Free'],
     ['Length', formatDuration(event)],
   ]
@@ -41,7 +43,12 @@ export default function EventPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mt-8">
         <div className="lg:col-span-2">
-          <Eyebrow className="text-rust">Tech talk · Online · Free</Eyebrow>
+          {live && (
+            <p className="mb-3 text-[11px] font-medium tracking-[0.14em] text-rust">
+              <span aria-hidden="true">●</span> {copy.badge}
+            </p>
+          )}
+          <Eyebrow className="text-rust">{event.week ? `Week ${event.week} · ${copy.eyebrow}` : copy.eyebrow}</Eyebrow>
           <h1 className="font-serif text-4xl sm:text-5xl mt-3">{event.title}</h1>
           {event.subtitle && <p className="font-serif italic text-xl text-ink-muted mt-3">{event.subtitle}</p>}
           {!past && (
@@ -87,7 +94,7 @@ export default function EventPage() {
 
           {fws.length > 0 && (
             <section>
-              <Label>{fws.length > 1 ? 'Related frameworks' : 'Related framework'}</Label>
+              <Label>{fws.length > 1 ? 'Frameworks in this session' : 'Related framework'}</Label>
               <ul className="flex flex-col gap-2">
                 {fws.map((f) => (
                   <li key={f.slug} className="flex items-center gap-2">
