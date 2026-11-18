@@ -48,6 +48,16 @@ export function formatShortDate(event, { timeZone } = {}) {
   return `${p.day} ${MONTHS[p.month - 1]} ${p.year}`.toUpperCase()
 }
 
+export function formatDayMonth(event, { timeZone } = {}) {
+  const tz = timeZone ? { timeZone } : {}
+  const p = Object.fromEntries(
+    new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'numeric', ...tz })
+      .formatToParts(new Date(event.start))
+      .map((x) => [x.type, x.value]),
+  )
+  return `${p.weekday} ${Number(p.day)} ${MONTHS[p.month - 1]}`
+}
+
 export const formatDuration = (event) => `${event.durationMin} min, incl. Q&A`
 
 const icsDate = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')

@@ -17,7 +17,9 @@ describe('Events hub, empty', () => {
     expect(screen.getByText('Announced soon')).toBeInTheDocument()
     expect(screen.getByText('The first talk will be announced here.')).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /Follow on Luma/ })).toBeNull()
-    expect(screen.getByText('Recordings appear here after each talk')).toBeInTheDocument()
+    expect(screen.getByText('Recordings build up here')).toBeInTheDocument()
+    expect(screen.getByText('Each premiere stays available right after it airs.')).toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: /The series/ })).toBeNull()
   })
 
   it('with a Luma calendar shows a Follow button', async () => {

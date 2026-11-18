@@ -1,6 +1,6 @@
 import { FIXTURE_EVENTS as E, FIXTURE_NOW as NOW } from '../test/eventsFixture'
 import { eventStatus, upcomingEvents, pastEvents, featuredEvent, findEvent, formatWhen,
-  formatDuration, formatShortDate, toIcs, youtubeEmbedUrl, videoFor, deliveryCopy, seriesRows, rowState,
+  formatDuration, formatShortDate, formatDayMonth, toIcs, youtubeEmbedUrl, videoFor, deliveryCopy, seriesRows, rowState,
   sessionForFramework } from './events'
 import { events } from '../data/events'
 const at = (iso) => new Date(iso)
@@ -104,4 +104,8 @@ it('sessionForFramework prefers live, then upcoming, then past, else null', () =
 })
 it('toIcs LOCATION is the talk page URL', () => {
   expect(toIcs(live).split('\r\n')).toContain('LOCATION:https://openastra.org/events/merge-conflicts/')
+})
+it('formatDayMonth is weekday day month in the given zone', () => {
+  expect(formatDayMonth({ start: '2026-01-06T16:00:00Z' }, { timeZone: 'UTC' })).toBe('Tue 6 Jan')
+  expect(formatDayMonth({ start: '2026-01-06T16:00:00Z' }, { timeZone: 'Pacific/Auckland' })).toBe('Wed 7 Jan')
 })

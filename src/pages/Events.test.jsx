@@ -26,15 +26,15 @@ afterEach(() => vi.useRealTimers())
 describe('Events hub', () => {
   it('features the live talk', () => {
     renderAt()
-    expect(screen.getByText('LIVE NOW', { exact: false })).toBeInTheDocument()
+    expect(screen.getByText('PREMIERING NOW', { exact: false })).toBeInTheDocument()
     expect(screen.getByText('●')).toHaveAttribute('aria-hidden', 'true')
-    expect(screen.getByRole('link', { name: /Watch live/ })).toHaveAttribute('href', '/events/merge-conflicts')
+    expect(screen.getByRole('link', { name: /Watch & ask in chat/ })).toHaveAttribute('href', '/events/merge-conflicts')
   })
 
   it('features an upcoming (not live) talk with register, calendar, details and countdown', () => {
     vi.setSystemTime(new Date('2026-12-01T00:00:00Z'))
     renderAt()
-    expect(screen.queryByText('LIVE NOW', { exact: false })).toBeNull()
+    expect(screen.queryByText('PREMIERING NOW', { exact: false })).toBeNull()
     expect(screen.getByRole('link', { name: /Register on Luma/ })).toHaveAttribute('href', 'https://lu.ma/oa-merge')
     expect(screen.getByRole('link', { name: /Add to calendar/ })).toHaveAttribute('download', 'merge-conflicts.ics')
     expect(screen.getByRole('link', { name: /Details/ })).toHaveAttribute('href', '/events/merge-conflicts')
@@ -56,7 +56,7 @@ describe('Events hub', () => {
     expect(hasLink('controls-as-code')).toBeNull()
     expect(screen.getByRole('region', { name: 'On demand' })).toBeInTheDocument()
     a.unmount()
-    const b = renderAt('/events?tab=live')
+    const b = renderAt('/events?tab=upcoming')
     expect(screen.queryByRole('region', { name: 'On demand' })).toBeNull()
     expect(hasLink('controls-as-code')).toBeInTheDocument()
     b.unmount()
@@ -65,9 +65,18 @@ describe('Events hub', () => {
     expect(hasLink('controls-as-code')).toBeInTheDocument()
   })
 
-  it('call for papers is shown as soon, not clickable', () => {
+  it('has exactly the three tabs and no call for papers', () => {
     renderAt()
-    expect(screen.getByText('Call for papers · soon').closest('button')).toBeNull()
-    expect(screen.queryByText(/conference/i)).toBeNull()
+    const labels = within(screen.getByRole('group', { name: 'Filter events' })).getAllByRole('button').map((b) => b.textContent)
+    expect(labels).toEqual(['All', 'Upcoming', 'On demand'])
+    expect(screen.queryByText(/call for papers/i)).toBeNull()
+  })
+
+  it('hides the series on the on-demand tab and on-demand on the upcoming tab', () => {
+    const a = renderAt('/events?tab=on-demand')
+    expect(screen.queryByRole('region', { name: /The series/ })).toBeNull()
+    a.unmount()
+    renderAt('/events?tab=upcoming')
+    expect(screen.queryByRole('region', { name: 'On demand' })).toBeNull()
   })
 })
