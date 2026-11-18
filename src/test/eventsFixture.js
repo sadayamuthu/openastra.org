@@ -1,0 +1,55 @@
+const base = { kind: 'talk', format: 'online', speakers: ['karthikeyan-sadayamuthu'], durationMin: 60 }
+
+export const FIXTURE_NOW = new Date('2026-12-12T17:10:00Z')
+
+export const FIXTURE_EVENTS = [
+  {
+    ...base,
+    slug: 'merge-conflicts',
+    title: "Merge conflicts git can't see",
+    subtitle: 'Securing parallel coding agents',
+    start: '2026-12-12T17:00:00Z',
+    summary: 'How parallel coding agents create semantic conflicts that git cannot detect.',
+    speakers: ['karthikeyan-sadayamuthu', 'vinodh-kannan-sadayamuthu'],
+    frameworks: ['mergelock'],
+    registerUrl: 'https://lu.ma/oa-merge',
+    streamUrl: 'https://www.youtube.com/watch?v=abc123DEF45',
+    recordingUrl: null,
+  },
+  {
+    ...base,
+    slug: 'controls-as-code',
+    title: 'Controls as code',
+    subtitle: 'Compliance checks in the pull request',
+    start: '2027-01-16T17:00:00Z',
+    summary: 'Turning compliance controls into checks that run in CI.',
+    frameworks: ['controlgate'],
+    registerUrl: 'https://lu.ma/oa-controls',
+    streamUrl: null,
+    recordingUrl: null,
+  },
+  {
+    ...base,
+    slug: 'introducing-openastra',
+    title: 'Introducing OpenAstra',
+    subtitle: 'What we are building and why',
+    start: '2026-11-14T17:00:00Z',
+    summary: 'An introduction to OpenAstra and its open research agenda.',
+    frameworks: ['mergelock'],
+    registerUrl: 'https://lu.ma/oa-intro',
+    streamUrl: null,
+    recordingUrl: 'https://youtu.be/rec11111111',
+  },
+  {
+    ...base,
+    slug: 'research-agenda',
+    title: 'The open research agenda',
+    subtitle: 'Areas we want help with',
+    start: '2026-11-01T17:00:00Z',
+    summary: 'A walk through the open research areas.',
+    frameworks: [],
+    registerUrl: 'https://lu.ma/oa-agenda',
+    streamUrl: null,
+    recordingUrl: null,
+  },
+]
