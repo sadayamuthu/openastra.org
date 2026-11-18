@@ -27,6 +27,7 @@ describe('routes', () => {
     ['/research', 'Research'],
     ['/lab', "What we're building next."],
     ['/about', 'About'],
+    ['/events', 'Events'],
     ['/does-not-exist', 'Not found'],
   ])('%s renders its page', (path, h1) => {
     renderAt(path)

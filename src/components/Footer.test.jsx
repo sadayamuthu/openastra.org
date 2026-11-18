@@ -15,6 +15,7 @@ describe('Footer', () => {
     renderFooter()
     expect(screen.getByRole('link', { name: 'Frameworks' })).toHaveAttribute('href', '/frameworks')
     expect(screen.getByRole('link', { name: 'Research' })).toHaveAttribute('href', '/research')
+    expect(screen.getByRole('link', { name: 'Events' })).toHaveAttribute('href', '/events')
     expect(screen.queryByRole('link', { name: 'Patents' })).not.toBeInTheDocument()
   })
 })
