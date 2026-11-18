@@ -70,6 +70,7 @@ describe('Events hub', () => {
     const labels = within(screen.getByRole('group', { name: 'Filter events' })).getAllByRole('button').map((b) => b.textContent)
     expect(labels).toEqual(['All', 'Upcoming', 'On demand'])
     expect(screen.queryByText(/call for papers/i)).toBeNull()
+    expect(screen.queryByText(/conference/i)).toBeNull()
   })
 
   it('hides the series on the on-demand tab and on-demand on the upcoming tab', () => {

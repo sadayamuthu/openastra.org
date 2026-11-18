@@ -25,6 +25,7 @@ describe('launch-day hub (real data)', () => {
     expect(within(region).getByText(/Holiday break · back/)).toBeInTheDocument()
     expect(within(sessions[0]).getByText('NEXT')).toBeInTheDocument()
     expect(within(sessions[0]).getByText('Week 1')).toBeInTheDocument()
+    expect(sessions[0].textContent).toMatch(/\d{1,2}:\d{2} [AP]M/)
     for (const li of sessions.slice(1)) expect(within(li).getByText('UPCOMING')).toBeInTheDocument()
 
     const od = screen.getByRole('region', { name: 'On demand' })

@@ -124,7 +124,7 @@ function SeriesRow({ row, now, featured }) {
       <div>
         <Link to={`/events/${event.slug}`} className="font-serif text-xl hover:text-rust">{event.title}</Link>
         {sub && <p className="text-sm text-ink-muted">{sub}</p>}
-        <p className="font-mono text-xs text-ink-muted mt-1 sm:hidden">{formatWhen(event)}</p>
+        <p className="font-mono text-xs text-ink-muted mt-1">{formatWhen(event)}</p>
       </div>
       <span className={`col-start-2 sm:col-start-auto justify-self-start sm:justify-self-end font-mono text-[10px] tracking-wide border rounded px-1.5 py-px ${tone}`}>
         {state === 'premiering' ? <><span aria-hidden="true">●</span> PREMIERING</> : label}
