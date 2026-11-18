@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # The ocbc and oebc repos send this after publishing a new baseline-* release.
+  repository_dispatch:
+    types: [catalog-published]
 
 concurrency:
   group: pages
@@ -34,8 +37,10 @@ jobs:
       - name: Fix SPA routing (copy index.html to 404.html)
         run: cp dist/index.html dist/404.html
 
-      - name: Publish OCBC catalog (served at /ocbc/catalog/v0.1/latest.json)
-        run: mkdir -p dist/ocbc && cp -r ocbc/catalog dist/ocbc/
+      - name: Fetch latest catalogs from GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: scripts/fetch-catalogs.sh dist
 
       - name: Write CNAME file
         run: echo "openastra.org" > dist/CNAME
@@ -45,3 +50,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          # Keep a single commit on gh-pages; the catalogs would otherwise add ~35 MB to its history on every deploy.
+          force_orphan: true
