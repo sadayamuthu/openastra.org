@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Citation from '../components/Citation'
+import FrameworkSession from '../components/FrameworkSession'
 import { Button, CodeBlock, Eyebrow } from '../components/ui'
 import { doiUrl, frameworks, getCategory, getFramework } from '../data/frameworks'
 import NotFound from './NotFound'
@@ -48,6 +49,7 @@ export default function FrameworkPage({ slug }) {
           <Eyebrow>{fw.lab ? `In the lab · ${category.name}` : `${String(fw.number).padStart(2, '0')} · ${category.name}`}</Eyebrow>
           <h1 className="font-serif text-5xl sm:text-6xl tracking-tight mt-3">{fw.name}</h1>
           <p className="font-serif text-xl sm:text-2xl mt-4 leading-snug">{fw.tagline}</p>
+          <FrameworkSession slug={fw.slug} />
           <p className="text-ink-muted mt-4 leading-relaxed max-w-2xl">{fw.description}</p>
           <div className="flex flex-wrap gap-3 mt-6">
             <Button href={fw.links.github} variant="solid">GitHub</Button>

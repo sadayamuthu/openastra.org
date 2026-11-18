@@ -1,0 +1,31 @@
+import { Link } from 'react-router-dom'
+import { events } from '../data/events'
+import { deliveryCopy, eventStatus, formatWhen, sessionForFramework } from '../lib/events'
+import { useNow } from '../lib/useNow'
+
+export default function FrameworkSession({ slug }) {
+  const now = useNow()
+  const session = sessionForFramework(events, slug, now)
+  if (!session) return null
+
+  const status = eventStatus(session, now)
+  const past = status === 'past'
+
+  return (
+    <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 border border-dashed border-rust/60 rounded-sm px-3 py-2 text-sm">
+      <span className="text-[10px] font-medium tracking-[0.14em] text-rust">WEBCAST</span>
+      <span className="text-ink">
+        {status === 'live' ? (
+          <span className="font-medium"><span aria-hidden="true">● </span>{deliveryCopy(session).badge}</span>
+        ) : past ? (
+          'Framework of the week · Watch the session'
+        ) : (
+          `Framework of the week · Premieres ${formatWhen(session)}`
+        )}
+      </span>
+      <Link to={`/events/${session.slug}`} className="ml-auto text-rust hover:underline">
+        {past ? 'Watch →' : 'Details →'}
+      </Link>
+    </div>
+  )
+}
