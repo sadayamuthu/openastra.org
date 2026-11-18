@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Button, Eyebrow, Pill } from '../components/ui'
 import { GITHUB, frameworksByCategory } from '../data/frameworks'
 import { AUTHORS, authorPath } from '../data/authors'
+import { MotionMark } from '../components/Logo'
 
 function PersonCard({ person }) {
   return (
@@ -65,6 +66,26 @@ export default function About() {
           </ul>
         </aside>
       </div>
+
+      <section id="the-mark" aria-labelledby="mark-heading" className="scroll-mt-24 mt-20 border-t border-rule pt-12 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-10 items-center">
+        <MotionMark
+          variant="intro"
+          size={256}
+          alt="The OpenAstra mark: an open ring draws in and a star turns into the gap"
+          className="w-48 h-48 sm:w-64 sm:h-64 border border-rule rounded-sm"
+        />
+        <div className="max-w-xl">
+          <Eyebrow>The mark</Eyebrow>
+          <h2 id="mark-heading" className="font-serif text-4xl mt-3">Open Orbit</h2>
+          <p className="font-serif text-xl leading-snug mt-4">
+            An “O” left open, with a star (<em>astra</em>) in the gap.
+          </p>
+          <p className="text-ink-muted mt-3 leading-relaxed">
+            The ring is a boundary with a way through, which is what our gates do: they hold a
+            line around autonomous agents while leaving a verified path for work to pass.
+          </p>
+        </div>
+      </section>
 
       <section id="authors" aria-labelledby="authors-heading" className="mt-20">
         <Eyebrow>People</Eyebrow>

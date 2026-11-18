@@ -4,6 +4,7 @@ import Pipeline from '../components/Pipeline'
 import Citation from '../components/Citation'
 import { Button, ComingSoon, Eyebrow, Pill } from '../components/ui'
 import LabCard from '../components/LabCard'
+import { Mark } from '../components/Logo'
 import { LAB_GROUPS, citedFrameworks, doiUrl, getFramework, labProjects, shippedFrameworks } from '../data/frameworks'
 
 function Section({ label, children, className = '' }) {
@@ -27,25 +28,29 @@ export default function Home() {
   return (
     <div className="max-w-page mx-auto px-4 sm:px-6">
       {/* Hero */}
-      <section className="py-14 sm:py-20 max-w-3xl">
-        <Eyebrow>Independent research lab · Autonomous systems security</Eyebrow>
-        <h1 className="font-serif text-4xl sm:text-6xl leading-[1.05] tracking-tight mt-4">
-          Security research for the age of <em className="text-rust">autonomous agents</em>.
-        </h1>
-        <p className="text-lg text-ink-muted mt-6 max-w-2xl leading-relaxed">
-          Open frameworks with citable, versioned releases that make AI agents, and the code
-          they write, verifiable, governable, and compliant.
-        </p>
-        <div className="flex flex-wrap gap-2 mt-6">
-          <Pill>{shippedFrameworks().length} open frameworks</Pill>
-          <Pill>{cited.length} Zenodo DOIs</Pill>
-          <Pill soon>{lab.length} in the lab</Pill>
-          <Pill soon>Patents coming soon</Pill>
+      <section className="py-14 sm:py-20 flex items-center justify-between gap-12">
+        <div className="max-w-3xl">
+          <Eyebrow>Independent research lab · Autonomous systems security</Eyebrow>
+          <h1 className="font-serif text-4xl sm:text-6xl leading-[1.05] tracking-tight mt-4">
+            Security research for the age of <em className="text-rust">autonomous agents</em>.
+          </h1>
+          <p className="text-lg text-ink-muted mt-6 max-w-2xl leading-relaxed">
+            Open frameworks with citable, versioned releases that make AI agents, and the code
+            they write, verifiable, governable, and compliant.
+          </p>
+          <div className="flex flex-wrap gap-2 mt-6">
+            <Pill>{shippedFrameworks().length} open frameworks</Pill>
+            <Pill>{cited.length} Zenodo DOIs</Pill>
+            <Pill soon>{lab.length} in the lab</Pill>
+          </div>
+          <div className="flex flex-wrap gap-3 mt-8">
+            <Button to="/frameworks" variant="solid">Browse frameworks</Button>
+            <Button to="/research">Research &amp; citations</Button>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-3 mt-8">
-          <Button to="/frameworks" variant="solid">Browse frameworks</Button>
-          <Button to="/research">Research &amp; citations</Button>
-        </div>
+        <span className="oa-logo hidden lg:block shrink-0 text-ink" data-testid="hero-mark">
+          <Mark size={280} intro />
+        </span>
       </section>
 
       <Section label="The index">
@@ -116,7 +121,6 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-4">
             <ComingSoon label="White papers" />
-            <ComingSoon label="Patents" />
           </div>
         </div>
       </Section>

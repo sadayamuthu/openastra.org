@@ -418,6 +418,12 @@ function buildMotion() {
   renderMotion('openastra-intro-1080', introState, 3.2, { size: 1080, formats: ['mp4'], loops: 3 })
   renderMotion('openastra-intro-dark-1080', introState, 3.2, { size: 1080, theme: 'ink', formats: ['mp4'], loops: 3 })
   renderMotion('openastra-story-1080x1920', introState, 3.2, { size: 700, w: 1080, h: 1920, formats: ['mp4'], loops: 3 })
+
+  // Site copies: About uses the intro GIF, 404 the pulse; the static mark is the reduced-motion fallback.
+  const site = join(PUBLIC, 'brand'); mkdirSync(site, { recursive: true })
+  for (const f of ['motion/openastra-intro-512.gif', 'motion/openastra-pulse-256.gif', 'logo/png/openastra-mark-512.png'])
+    copyFileSync(join(ROOT, f), join(site, f.split('/').pop()))
+  log('✓ motion (+ public/brand/)')
 }
 
 // ── Run ───────────────────────────────────────────────────────────────────

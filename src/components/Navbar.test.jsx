@@ -20,7 +20,7 @@ describe('Navbar', () => {
     expect(screen.getByRole('link', { name: 'Frameworks' })).toHaveAttribute('href', '/frameworks')
     expect(screen.getByRole('link', { name: 'Lab' })).toHaveAttribute('href', '/lab')
     expect(screen.getByRole('link', { name: 'Research' })).toHaveAttribute('href', '/research')
-    expect(screen.getByRole('link', { name: 'Patents' })).toHaveAttribute('href', '/patents')
+    expect(screen.queryByRole('link', { name: 'Patents' })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about')
   })
 

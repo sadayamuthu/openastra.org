@@ -48,3 +48,15 @@ export default function Logo({ size = 28, intro = false, className = '', wordmar
     </span>
   )
 }
+
+// Looping brand GIF (brand/motion) with the static mark under prefers-reduced-motion.
+const MOTION = { intro: '/brand/openastra-intro-512.gif', pulse: '/brand/openastra-pulse-256.gif' }
+
+export function MotionMark({ variant = 'intro', size = 256, alt = '', className = '' }) {
+  return (
+    <picture>
+      <source media="(prefers-reduced-motion: reduce)" srcSet="/brand/openastra-mark-512.png" />
+      <img src={MOTION[variant]} width={size} height={size} alt={alt} loading="lazy" decoding="async" className={className} />
+    </picture>
+  )
+}

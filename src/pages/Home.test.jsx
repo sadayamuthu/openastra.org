@@ -31,11 +31,12 @@ describe('Home page', () => {
     expect(screen.getAllByRole('link', { name: 'https://doi.org/10.5281/zenodo.23637443' }).length).toBeGreaterThan(0)
   })
 
-  it('shows White papers and Patents as Coming soon', () => {
+  it('shows White papers as Coming soon and no Patents', () => {
     renderHome()
     const latest = within(screen.getByRole('region', { name: 'Latest on Zenodo' }))
-    expect(latest.getAllByText('Coming soon')).toHaveLength(2)
+    expect(latest.getAllByText('Coming soon')).toHaveLength(1)
     expect(latest.getByText('White papers')).toBeInTheDocument()
+    expect(screen.queryByText(/Patents/)).not.toBeInTheDocument()
   })
 
   it('maps frameworks onto the pipeline', () => {
@@ -66,5 +67,13 @@ describe('Home — In the lab', () => {
     render(<MemoryRouter><Home /></MemoryRouter>)
     expect(screen.getByText('9 open frameworks')).toBeInTheDocument()
     expect(screen.getByText('8 in the lab')).toBeInTheDocument()
+  })
+})
+
+describe('Home hero mark', () => {
+  it('shows the large drawn-in OpenAstra mark beside the headline', () => {
+    render(<MemoryRouter><Home /></MemoryRouter>)
+    const mark = screen.getByTestId('hero-mark')
+    expect(mark.querySelector('svg.oa-mark--intro')).toHaveAttribute('width', '280')
   })
 })
