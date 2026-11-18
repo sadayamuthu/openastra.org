@@ -18,7 +18,7 @@ export const categories = [
     id: 'security-catalog',
     numeral: 'III',
     name: 'Security Catalog',
-    blurb: 'Machine-readable baselines of controls and exposures, rebuilt daily, that the gates read from.',
+    blurb: 'Machine-readable baselines of controls and exposures, rebuilt weekly, that the gates read from.',
   },
   {
     id: 'observability',
@@ -321,7 +321,7 @@ export const frameworks = [
     features: [
       { title: 'Zero configuration', text: 'Downloads source OSCAL profiles directly from NIST and GSA FedRAMP automation repos. No local data files to maintain.' },
       { title: 'Enriched output', text: 'Every control gets severity (LOW / MEDIUM / HIGH / CRITICAL) and non_negotiable (boolean) fields derived from configurable rules.' },
-      { title: 'CI-ready', text: 'Ships with a GitHub Actions workflow that regenerates the baseline daily and commits the result automatically.' },
+      { title: 'CI-ready', text: 'Ships with a GitHub Actions workflow that regenerates the baseline weekly and commits the result automatically.' },
     ],
     quickstart: [
       { comment: 'Download the latest catalog (no install)', lines: ['curl -s https://openastra.org/ocbc/catalog/v0.1/latest.json -o catalog.json'] },
@@ -359,7 +359,7 @@ export const frameworks = [
     features: [
       { title: 'Zero configuration', text: 'Downloads from NVD, OSV, and GitHub Advisory. No local data files to maintain.' },
       { title: 'Enriched output', text: 'Every CVE gets severity (LOW / MEDIUM / HIGH / CRITICAL) and exploitability fields derived from configurable rules.' },
-      { title: 'CI-ready', text: 'Ships with a GitHub Actions workflow that regenerates the baseline daily and commits the result automatically.' },
+      { title: 'CI-ready', text: 'Ships with a GitHub Actions workflow that regenerates the baseline weekly and commits the result automatically.' },
     ],
     quickstart: [
       { comment: 'Download the latest catalog (no install)', lines: ['curl -L https://openastra.org/oebc/catalog/v0.1/latest.json.gz | gunzip > oebc_catalog.json'] },
