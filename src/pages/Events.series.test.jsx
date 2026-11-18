@@ -1,0 +1,34 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { render, screen, within } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import Events from './Events'
+import { events } from '../data/events'
+
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ['Date'] })
+  vi.setSystemTime(new Date('2026-11-20T00:00:00Z'))
+})
+afterEach(() => vi.useRealTimers())
+
+describe('launch-day hub (real data)', () => {
+  it('shows the featured week 1, the 7-week schedule with a break, and empty on-demand', () => {
+    render(<MemoryRouter><Events /></MemoryRouter>)
+    expect(screen.getByText('Week 1 · Next premiere')).toBeInTheDocument()
+    expect(screen.getAllByText("Merge conflicts git can't see").length).toBeGreaterThan(0)
+
+    const region = screen.getByRole('region', { name: 'The series · 7 weeks' })
+    const items = within(region).getAllByRole('listitem')
+    const sessions = items.filter((li) => within(li).queryByRole('link'))
+    const weeks = [...events].sort((a, b) => a.week - b.week)
+    expect(sessions.map((li) => within(li).getByRole('link').getAttribute('href')))
+      .toEqual(weeks.map((e) => `/events/${e.slug}`))
+    expect(within(region).getByText(/Holiday break · back/)).toBeInTheDocument()
+    expect(within(sessions[0]).getByText('NEXT')).toBeInTheDocument()
+    expect(within(sessions[0]).getByText('Week 1')).toBeInTheDocument()
+    expect(sessions[0].textContent).toMatch(/[A-Z][a-z]{2} \d{1,2} [A-Z][a-z]{2} · \d{1,2}:\d{2} [AP]M/)
+    for (const li of sessions.slice(1)) expect(within(li).getByText('UPCOMING')).toBeInTheDocument()
+
+    const od = screen.getByRole('region', { name: 'On demand' })
+    expect(within(od).getByText('Recordings build up here')).toBeInTheDocument()
+  })
+})

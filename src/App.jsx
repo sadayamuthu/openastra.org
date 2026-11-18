@@ -9,6 +9,8 @@ import Research from './pages/Research'
 import About from './pages/About'
 import Profile from './pages/Profile'
 import Lab from './pages/Lab'
+import Events from './pages/Events'
+import EventPage from './pages/EventPage'
 import NotFound from './pages/NotFound'
 import { frameworks } from './data/frameworks'
 
@@ -18,6 +20,7 @@ const TITLES = {
   '/lab': 'In the lab · OpenAstra',
   '/research': 'Research · OpenAstra',
   '/about': 'About · OpenAstra',
+  '/events': 'Events · OpenAstra',
 }
 
 function ScrollAndTitle() {
@@ -26,7 +29,8 @@ function ScrollAndTitle() {
     const target = hash && document.getElementById(hash.slice(1))
     if (target) target.scrollIntoView?.({ block: 'start' })
     else window.scrollTo?.(0, 0)
-    if (TITLES[pathname]) document.title = TITLES[pathname]
+    const path = pathname.replace(/\/+$/, '') || '/'
+    if (TITLES[path]) document.title = TITLES[path]
   }, [pathname, hash])
   return null
 }
@@ -42,6 +46,8 @@ export function AppRoutes() {
         <Route path="/research" element={<Research />} />
         <Route path="/about" element={<About />} />
         <Route path="/about/:slug" element={<Profile />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/events/:slug" element={<EventPage />} />
         {frameworks.map((f) => (
           <Route key={f.slug} path={`/${f.slug}`} element={<FrameworkPage slug={f.slug} />} />
         ))}
