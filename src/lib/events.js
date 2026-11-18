@@ -26,21 +26,26 @@ export function featuredEvent(list, now) {
 
 export const findEvent = (list, slug) => list.find((e) => e.slug === slug)
 
+export const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
 export function formatWhen(event, { timeZone } = {}) {
   const d = new Date(event.start)
   const tz = timeZone ? { timeZone } : {}
   const parts = (opts, locale) =>
     Object.fromEntries(new Intl.DateTimeFormat(locale, { ...opts, ...tz }).formatToParts(d).map((p) => [p.type, p.value]))
-  const date = parts({ weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }, 'en-GB')
+  const date = parts({ weekday: 'short', day: 'numeric', month: 'numeric', year: 'numeric' }, 'en-GB')
   const time = parts({ hour: 'numeric', minute: '2-digit', hour12: true, timeZoneName: 'short' }, 'en-US')
-  return `${date.weekday} ${date.day} ${date.month} ${date.year} · ${time.hour}:${time.minute} ${time.dayPeriod} ${time.timeZoneName}`
+  return `${date.weekday} ${date.day} ${MONTHS[date.month - 1]} ${date.year} · ${time.hour}:${time.minute} ${time.dayPeriod} ${time.timeZoneName}`
 }
 
 export function formatShortDate(event, { timeZone } = {}) {
   const tz = timeZone ? { timeZone } : {}
-  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', ...tz })
-    .format(new Date(event.start))
-    .toUpperCase()
+  const p = Object.fromEntries(
+    new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'numeric', year: 'numeric', ...tz })
+      .formatToParts(new Date(event.start))
+      .map((x) => [x.type, x.value]),
+  )
+  return `${p.day} ${MONTHS[p.month - 1]} ${p.year}`.toUpperCase()
 }
 
 export const formatDuration = (event) => `${event.durationMin} min, incl. Q&A`
@@ -73,7 +78,7 @@ export function youtubeEmbedUrl(url) {
   if (!url) return null
   let u
   try { u = new URL(url) } catch { return null }
-  const host = u.hostname.replace(/^www\./, '')
+  const host = u.hostname.replace(/^(www|m|music)\./, '')
   let id = null
   if (host === 'youtu.be') id = u.pathname.split('/')[1]
   else if (host === 'youtube.com') {

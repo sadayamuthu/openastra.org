@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import Countdown from '../components/Countdown'
 import { Button, ComingSoon, Eyebrow, Pill } from '../components/ui'
-import { events } from '../data/events'
+import { events, LUMA_CALENDAR_URL } from '../data/events'
 import { getAuthor } from '../data/authors'
 import { getFramework } from '../data/frameworks'
 import {
@@ -33,7 +33,14 @@ function Featured({ event, now }) {
       <div className="border border-dashed border-ink/30 rounded-sm p-8 mt-8">
         <Eyebrow className="text-rust">Next talk</Eyebrow>
         <p className="font-serif text-3xl mt-2">Announced soon</p>
-        <p className="mt-2 text-ink-muted">Follow the OpenAstra calendar on Luma to hear about new talks first.</p>
+        {LUMA_CALENDAR_URL ? (
+          <>
+            <p className="mt-2 text-ink-muted">Follow the OpenAstra calendar on Luma to hear about new talks first.</p>
+            <div className="mt-5"><Button href={LUMA_CALENDAR_URL} variant="solid">Follow on Luma</Button></div>
+          </>
+        ) : (
+          <p className="mt-2 text-ink-muted">The first talk will be announced here.</p>
+        )}
       </div>
     )
   }
@@ -43,7 +50,7 @@ function Featured({ event, now }) {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 border border-rule bg-card rounded-sm p-6 mt-8">
       <div className="lg:col-span-2">
         <Eyebrow className="text-rust">
-          {live ? <span className="bg-rust text-paper px-2 py-1 rounded-sm">● LIVE NOW</span> : 'Next talk · Online'}
+          {live ? <span className="bg-rust text-paper px-2 py-1 rounded-sm"><span aria-hidden="true">●</span> LIVE NOW</span> : 'Next talk · Online'}
         </Eyebrow>
         <h2 className="font-serif text-3xl sm:text-4xl mt-3">{event.title}</h2>
         {event.subtitle && <p className="font-serif italic text-xl text-ink-muted mt-2">{event.subtitle}</p>}
@@ -75,13 +82,13 @@ function Featured({ event, now }) {
 function Row({ event }) {
   const sub = [...names(event.frameworks || [], getFramework), ...names(event.speakers, getAuthor)].join(' · ')
   return (
-    <li className="grid grid-cols-[7.5rem_1fr_auto] items-baseline gap-4 py-4 border-t border-rule">
+    <li className="grid grid-cols-[5.5rem_1fr] sm:grid-cols-[7.5rem_1fr_auto] items-baseline gap-4 py-4 border-t border-rule">
       <span className="font-mono text-xs text-ink-muted">{formatShortDate(event)}</span>
       <div>
         <Link to={`/events/${event.slug}`} className="font-serif text-xl hover:text-rust">{event.title}</Link>
         {sub && <p className="text-sm text-ink-muted">{sub}</p>}
       </div>
-      <span className="font-mono text-[10px] tracking-wide border border-ink/25 rounded px-1.5 py-px text-ink-muted">ONLINE</span>
+      <span className="hidden sm:inline-flex font-mono text-[10px] tracking-wide border border-ink/25 rounded px-1.5 py-px text-ink-muted">ONLINE</span>
     </li>
   )
 }

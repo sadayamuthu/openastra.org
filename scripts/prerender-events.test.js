@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs'
-import { escapeHtml, withMeta, eventMeta, renderPages, sitemap } from './prerender-events.mjs'
+import { escapeHtml, withMeta, eventMeta, hubMeta, renderPages, sitemap } from './prerender-events.mjs'
 import { FIXTURE_EVENTS } from '../src/test/eventsFixture.js'
 
 const html = readFileSync('index.html', 'utf8')
@@ -11,10 +11,12 @@ describe('prerender-events', () => {
     expect(out).toContain(
       '<meta property="og:title" content="Merge conflicts git can&#39;t see · OpenAstra Talks" />',
     )
-    expect(out).toContain('<meta property="og:url" content="https://openastra.org/events/merge-conflicts" />')
-    expect(out).toContain('<link rel="canonical" href="https://openastra.org/events/merge-conflicts" />')
+    expect(out).toContain('<meta property="og:url" content="https://openastra.org/events/merge-conflicts/" />')
+    expect(out).toContain('<link rel="canonical" href="https://openastra.org/events/merge-conflicts/" />')
     expect(out).toContain('og:description" content="Sat 12 Dec 2026, 17:00 UTC · Online · Free.')
-    expect(out).toContain('name="twitter:title"')
+    for (const k of ['og:title', 'og:description', 'twitter:title']) {
+      expect(out.match(new RegExp(`(?:property|name)="${k}"`, 'g')), k).toHaveLength(1)
+    }
   })
 
   it('escapes HTML in meta', () => {
@@ -42,14 +44,33 @@ describe('prerender-events', () => {
     expect(pages.map((p) => p.path)).toContain('events/merge-conflicts/index.html')
   })
 
-  it('sitemap lists events and frameworks', () => {
-    const xml = sitemap(site, {
-      navPaths: ['/events', '/about'],
-      frameworkSlugs: ['mergelock'],
-      eventSlugs: ['merge-conflicts'],
-    })
-    expect(xml).toContain('<loc>https://openastra.org/events/merge-conflicts</loc>')
-    expect(xml).toContain('<loc>https://openastra.org/mergelock</loc>')
-    expect(xml).toContain('<loc>https://openastra.org/events</loc>')
+  it('omits the summary sentence when there is none', () => {
+    const m = eventMeta({ ...FIXTURE_EVENTS[0], summary: undefined }, site)
+    expect(m.description).toBe('Sat 12 Dec 2026, 17:00 UTC · Online · Free.')
+    expect(m.description).not.toContain('undefined')
+  })
+
+  it('uses a fixed month abbreviation in the OG date', () => {
+    const m = eventMeta({ ...FIXTURE_EVENTS[0], start: '2026-09-12T17:00:00Z' }, site)
+    expect(m.description).toContain('Sat 12 Sep 2026, 17:00 UTC')
+  })
+
+  it('hub url has a trailing slash', () => {
+    expect(hubMeta(site).url).toBe('https://openastra.org/events/')
+  })
+
+  it('sitemap lists only served, trailing-slash URLs', () => {
+    const xml = sitemap(site, { eventSlugs: ['merge-conflicts'] })
+    expect(xml).toContain('<loc>https://openastra.org/</loc>')
+    expect(xml).toContain('<loc>https://openastra.org/events/</loc>')
+    expect(xml).toContain('<loc>https://openastra.org/events/merge-conflicts/</loc>')
+    expect(xml.match(/<loc>/g)).toHaveLength(3)
+  })
+
+  it('robots.txt points at the sitemap', () => {
+    const txt = readFileSync('public/robots.txt', 'utf8')
+    expect(txt).toContain('User-agent: *')
+    expect(txt).toContain('Allow: /')
+    expect(txt).toContain('Sitemap: https://openastra.org/sitemap.xml')
   })
 })

@@ -4,8 +4,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { events } from '../src/data/events.js'
-import { frameworks } from '../src/data/frameworks.js'
-import { NAV_LINKS } from '../src/data/nav.js'
+import { MONTHS } from '../src/lib/events.js'
 
 const SITE = 'https://openastra.org'
 
@@ -53,7 +52,7 @@ const dateFmt = new Intl.DateTimeFormat('en-GB', {
   timeZone: 'UTC',
   weekday: 'short',
   day: 'numeric',
-  month: 'short',
+  month: 'numeric',
   year: 'numeric',
   hour: '2-digit',
   minute: '2-digit',
@@ -62,14 +61,14 @@ const dateFmt = new Intl.DateTimeFormat('en-GB', {
 
 function utcWhen(iso) {
   const p = Object.fromEntries(dateFmt.formatToParts(new Date(iso)).map((x) => [x.type, x.value]))
-  return `${p.weekday} ${p.day} ${p.month} ${p.year}, ${p.hour}:${p.minute} UTC`
+  return `${p.weekday} ${p.day} ${MONTHS[p.month - 1]} ${p.year}, ${p.hour}:${p.minute} UTC`
 }
 
 export function eventMeta(event, site = SITE) {
   return {
     title: `${event.title} · OpenAstra Talks`,
-    description: `${utcWhen(event.start)} · Online · Free. ${event.summary}`,
-    url: `${site}/events/${event.slug}`,
+    description: `${utcWhen(event.start)} · Online · Free.${event.summary ? ` ${event.summary}` : ''}`,
+    url: `${site}/events/${event.slug}/`,
     image: event.image ? `${site}/events/${event.image}` : `${site}/og-image.png`,
   }
 }
@@ -79,7 +78,7 @@ export function hubMeta(site = SITE) {
     title: 'Events · OpenAstra',
     description:
       "Talks from the people who build OpenAstra's frameworks. Live online, with recordings afterwards.",
-    url: `${site}/events`,
+    url: `${site}/events/`,
     image: `${site}/og-image.png`,
   }
 }
@@ -94,16 +93,9 @@ export function renderPages(html, evts, site = SITE) {
   ]
 }
 
-export function sitemap(site, { navPaths, frameworkSlugs, eventSlugs }) {
-  const paths = [
-    '/',
-    ...navPaths,
-    ...frameworkSlugs.map((s) => `/${s}`),
-    ...eventSlugs.map((s) => `/events/${s}`),
-  ]
-  const urls = [...new Set(paths)]
-    .map((p) => `  <url><loc>${escapeHtml(site + (p === '/' ? '/' : p))}</loc></url>`)
-    .join('\n')
+export function sitemap(site, { eventSlugs }) {
+  const paths = ['/', '/events/', ...eventSlugs.map((s) => `/events/${s}/`)]
+  const urls = paths.map((p) => `  <url><loc>${escapeHtml(site + p)}</loc></url>`).join('\n')
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`
 }
 
@@ -114,11 +106,7 @@ function main() {
   const files = renderPages(html, events, SITE)
   files.push({
     path: 'sitemap.xml',
-    html: sitemap(SITE, {
-      navPaths: NAV_LINKS.map((l) => l.to),
-      frameworkSlugs: frameworks.map((f) => f.slug),
-      eventSlugs: events.map((e) => e.slug),
-    }),
+    html: sitemap(SITE, { eventSlugs: events.map((e) => e.slug) }),
   })
   for (const f of files) {
     const target = join(dist, f.path)

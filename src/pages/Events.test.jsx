@@ -26,8 +26,19 @@ afterEach(() => vi.useRealTimers())
 describe('Events hub', () => {
   it('features the live talk', () => {
     renderAt()
-    expect(screen.getByText('● LIVE NOW')).toBeInTheDocument()
+    expect(screen.getByText('LIVE NOW', { exact: false })).toBeInTheDocument()
+    expect(screen.getByText('●')).toHaveAttribute('aria-hidden', 'true')
     expect(screen.getByRole('link', { name: /Watch live/ })).toHaveAttribute('href', '/events/merge-conflicts')
+  })
+
+  it('features an upcoming (not live) talk with register, calendar, details and countdown', () => {
+    vi.setSystemTime(new Date('2026-12-01T00:00:00Z'))
+    renderAt()
+    expect(screen.queryByText('LIVE NOW', { exact: false })).toBeNull()
+    expect(screen.getByRole('link', { name: /Register on Luma/ })).toHaveAttribute('href', 'https://lu.ma/oa-merge')
+    expect(screen.getByRole('link', { name: /Add to calendar/ })).toHaveAttribute('download', 'merge-conflicts.ics')
+    expect(screen.getByRole('link', { name: /Details/ })).toHaveAttribute('href', '/events/merge-conflicts')
+    expect(screen.getByTestId('countdown')).toBeInTheDocument()
   })
 
   it('lists upcoming and on-demand talks', () => {

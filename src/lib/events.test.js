@@ -46,11 +46,12 @@ it('toIcs escapes text fields', () => {
 it('youtubeEmbedUrl accepts the common forms and rejects others', () => {
   const id = 'abc123DEF45', out = `https://www.youtube-nocookie.com/embed/${id}`
   ;[`https://www.youtube.com/watch?v=${id}`, `https://youtu.be/${id}`, `https://www.youtube.com/live/${id}?si=x`,
-    `https://www.youtube.com/embed/${id}`].forEach((u) => expect(youtubeEmbedUrl(u)).toBe(out))
+    `https://www.youtube.com/embed/${id}`, `https://m.youtube.com/watch?v=${id}`,
+    `https://music.youtube.com/watch?v=${id}`].forEach((u) => expect(youtubeEmbedUrl(u)).toBe(out))
   ;[null, '', 'https://vimeo.com/1', 'not a url'].forEach((u) => expect(youtubeEmbedUrl(u)).toBeNull())
 })
 it('videoFor picks countdown, stream, recording or none', () => {
-  expect(videoFor(E[1], NOW).kind).toBe('countdown')
+  expect(videoFor(E.find((e) => e.slug === 'controls-as-code'), NOW).kind).toBe('countdown')
   expect(videoFor(live, NOW)).toEqual({ kind: 'stream', embed: 'https://www.youtube-nocookie.com/embed/abc123DEF45' })
   expect(videoFor(E.find((e) => e.slug === 'introducing-openastra'), NOW).embed).toContain('rec11111111')
   expect(videoFor(live, at('2026-12-13T00:00:00Z')).kind).toBe('recording') // overrun: stream URL kept
@@ -59,4 +60,9 @@ it('videoFor picks countdown, stream, recording or none', () => {
 it('formatShortDate is uppercase day-month-year in the given zone', () => {
   expect(formatShortDate(live, { timeZone: 'UTC' })).toBe('12 DEC 2026')
   expect(formatShortDate(live, { timeZone: 'Pacific/Auckland' })).toBe('13 DEC 2026')
+})
+it('uses fixed English month abbreviations (never ICU "Sept")', () => {
+  const sep = { ...live, start: '2026-09-12T17:00:00Z' }
+  expect(formatShortDate(sep, { timeZone: 'UTC' })).toBe('12 SEP 2026')
+  expect(formatWhen(sep, { timeZone: 'UTC' })).toMatch(/^Sat 12 Sep 2026 · 5:00 PM UTC$/)
 })

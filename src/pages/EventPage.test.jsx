@@ -30,17 +30,37 @@ describe('EventPage', () => {
     const { container } = renderAt('controls-as-code')
     expect(screen.getByTestId('countdown')).toBeInTheDocument()
     expect(container.querySelector('iframe')).toBeNull()
-    const cal = screen.getByRole('link', { name: /Add to calendar/ })
+    const cal = screen.getAllByRole('link', { name: /Add to calendar/ })[0]
     expect(cal).toHaveAttribute('download', 'controls-as-code.ics')
     expect(cal.getAttribute('href')).toMatch(/^data:text\/calendar/)
-    expect(screen.getByRole('link', { name: /Register on Luma/ })).toHaveAttribute('href', 'https://lu.ma/oa-controls')
+    expect(screen.getAllByRole('link', { name: /Register on Luma/ })[0]).toHaveAttribute('href', 'https://lu.ma/oa-controls')
+  })
+
+  it('puts register and calendar before the video on small screens', () => {
+    const { container } = renderAt('controls-as-code')
+    const h1 = screen.getByRole('heading', { level: 1 })
+    const mobile = container.querySelector('.lg\\:hidden')
+    expect(mobile).toBeTruthy()
+    expect(mobile.textContent).toContain('Sat 16 Jan 2027')
+    expect(mobile.textContent).toContain('60 min')
+    expect(mobile.querySelector('a[href="https://lu.ma/oa-controls"]')).toBeTruthy()
+    expect(mobile.querySelector('a[download]')).toBeTruthy()
+    const after = (a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING
+    expect(after(h1, mobile)).toBeTruthy()
+    expect(after(mobile, screen.getByTestId('countdown'))).toBeTruthy()
+  })
+
+  it('past talk has no mobile register block', () => {
+    const { container } = renderAt('introducing-openastra')
+    expect(container.querySelector('.lg\\:hidden')).toBeNull()
   })
 
   it('live talk embeds the stream', () => {
     const { container } = renderAt('merge-conflicts')
     expect(container.querySelector('iframe')).toHaveAttribute('src', 'https://www.youtube-nocookie.com/embed/abc123DEF45')
     expect(screen.getByText(/LIVE/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Register on Luma/ })).toHaveAttribute('href', 'https://lu.ma/oa-merge')
+    expect(screen.getByText('●')).toHaveAttribute('aria-hidden', 'true')
+    expect(screen.getAllByRole('link', { name: /Register on Luma/ })[0]).toHaveAttribute('href', 'https://lu.ma/oa-merge')
   })
 
   it('live talk without a stream shows a placeholder', () => {

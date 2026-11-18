@@ -1,7 +1,9 @@
+import { existsSync } from 'node:fs'
 import { events } from './events'
 import { FIXTURE_EVENTS } from '../test/eventsFixture'
 import { getAuthor } from './authors'
 import { getFramework } from './frameworks'
+import { youtubeEmbedUrl } from '../lib/events'
 
 describe.each([
   ['events', events],
@@ -23,6 +25,21 @@ describe.each([
     list.forEach((e) => {
       e.speakers.forEach((s) => expect(getAuthor(s), s).toBeTruthy())
       e.frameworks.forEach((f) => expect(getFramework(f), f).toBeTruthy())
+    })
+  })
+  it('has a title and summary', () => {
+    list.forEach((e) => {
+      expect(typeof e.title).toBe('string')
+      expect(e.title.trim()).not.toBe('')
+      expect(typeof e.summary).toBe('string')
+      expect(e.summary.trim()).not.toBe('')
+    })
+  })
+  it('has playable stream/recording URLs and an existing image', () => {
+    list.forEach((e) => {
+      if (e.streamUrl) expect(youtubeEmbedUrl(e.streamUrl), e.slug + ' streamUrl').toBeTruthy()
+      if (e.recordingUrl) expect(youtubeEmbedUrl(e.recordingUrl), e.slug + ' recordingUrl').toBeTruthy()
+      if (e.image) expect(existsSync('public/events/' + e.image), e.slug + ' image').toBe(true)
     })
   })
   it('uses https registration links', () => {

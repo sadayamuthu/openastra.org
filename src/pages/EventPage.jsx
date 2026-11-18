@@ -43,6 +43,21 @@ export default function EventPage() {
           <Eyebrow className="text-rust">Tech talk · Online · Free</Eyebrow>
           <h1 className="font-serif text-4xl sm:text-5xl mt-3">{event.title}</h1>
           {event.subtitle && <p className="font-serif italic text-xl text-ink-muted mt-3">{event.subtitle}</p>}
+          {!past && (
+            <div className="lg:hidden mt-5">
+              <p className="text-sm text-ink-muted">{formatWhen(event)} · {formatDuration(event)}</p>
+              <div className="flex flex-wrap gap-3 mt-4">
+                {event.registerUrl && <Button href={event.registerUrl} variant="solid">Register on Luma</Button>}
+                <a
+                  href={icsHref(event)}
+                  download={`${event.slug}.ics`}
+                  className="inline-flex items-center px-4 py-2 rounded-sm border border-ink text-sm font-medium hover:bg-ink hover:text-paper transition-colors"
+                >
+                  Add to calendar
+                </a>
+              </div>
+            </div>
+          )}
           <div className="mt-8">
             <EventMedia event={event} now={now} />
           </div>

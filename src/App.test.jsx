@@ -21,6 +21,11 @@ describe('routes', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(name)
   })
 
+  it('sets the title for a trailing-slash URL', () => {
+    renderAt('/events/')
+    expect(document.title).toBe('Events · OpenAstra')
+  })
+
   it.each([
     ['/', /Security research/],
     ['/frameworks', 'Frameworks'],

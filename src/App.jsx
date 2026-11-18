@@ -29,7 +29,8 @@ function ScrollAndTitle() {
     const target = hash && document.getElementById(hash.slice(1))
     if (target) target.scrollIntoView?.({ block: 'start' })
     else window.scrollTo?.(0, 0)
-    if (TITLES[pathname]) document.title = TITLES[pathname]
+    const path = pathname.replace(/\/+$/, '') || '/'
+    if (TITLES[path]) document.title = TITLES[path]
   }, [pathname, hash])
   return null
 }
