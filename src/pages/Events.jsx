@@ -6,7 +6,7 @@ import { events, LUMA_CALENDAR_URL } from '../data/events'
 import { getAuthor } from '../data/authors'
 import { getFramework } from '../data/frameworks'
 import {
-  deliveryCopy, eventStatus, featuredEvent, formatDayMonth, formatShortDate, formatTime, formatWhen, pastEvents, rowState,
+  deliveryCopy, eventStatus, featuredForHub, formatDayMonth, formatShortDate, formatTime, formatWhen, pastEvents, rowState,
   seriesRows, upcomingEvents, videoFor,
 } from '../lib/events'
 import { useNow } from '../lib/useNow'
@@ -53,7 +53,10 @@ function Featured({ event, now, hasEvents }) {
       </div>
     )
   }
-  const live = eventStatus(event, now) === 'live'
+  const status = eventStatus(event, now)
+  const live = status === 'live'
+  const recorded = event.delivery === 'recorded'
+  const released = recorded && status !== 'upcoming'
   const copy = deliveryCopy(event)
   const speakers = names(event.speakers, getAuthor)
   return (
@@ -62,23 +65,27 @@ function Featured({ event, now, hasEvents }) {
         <Eyebrow className="text-rust">
           {live ? (
             <span className="bg-rust text-paper px-2 py-1 rounded-sm"><span aria-hidden="true">●</span> {copy.badge}</span>
+          ) : recorded ? (
+            `Week ${event.week} · ${released ? 'New this week' : `Coming ${formatDayMonth(event)}`}`
           ) : event.week ? `Week ${event.week} · Next premiere` : 'Next talk · Online'}
         </Eyebrow>
         <h2 className="font-serif text-3xl sm:text-4xl mt-3">{event.title}</h2>
         {event.subtitle && <p className="font-serif italic text-xl text-ink-muted mt-2">{event.subtitle}</p>}
-        <p className="text-sm text-ink-muted mt-3">{formatWhen(event)}</p>
+        <p className="text-sm text-ink-muted mt-3">{released ? formatDayMonth(event) : formatWhen(event)}</p>
         {speakers.length > 0 && <p className="text-sm mt-1">{speakers.join(' · ')}</p>}
         <div className="flex flex-wrap items-center gap-3 mt-6">
-          {live ? (
+          {released ? (
+            <Button to={`/events/${event.slug}`} variant="solid">▶ Watch</Button>
+          ) : live ? (
             <Button to={`/events/${event.slug}`} variant="solid">{copy.watch}</Button>
           ) : (
-            <TalkActions event={event} className="flex">
+            <TalkActions event={event} now={now} className="flex">
               <Link to={`/events/${event.slug}`} className="text-sm hover:text-rust">Details →</Link>
             </TalkActions>
           )}
         </div>
       </div>
-      {!live && <Countdown event={event} now={now} label={copy.startsIn} className="self-start" />}
+      {!live && !recorded && <Countdown event={event} now={now} label={copy.startsIn} className="self-start" />}
     </div>
   )
 }
@@ -100,6 +107,7 @@ function Row({ event }) {
 const STATE = {
   next: ['NEXT', 'border-rust text-rust'],
   upcoming: ['UPCOMING', 'border-ink/25 text-ink-muted'],
+  'video-soon': ['VIDEO COMING SOON', 'border-ink/25 text-ink-muted'],
   premiering: [null, 'bg-rust border-rust text-paper'],
   watch: ['WATCH', 'border-ink text-ink'],
   'recording-soon': ['RECORDING SOON', 'border-ink/25 text-ink-muted'],
@@ -115,7 +123,9 @@ function SeriesRow({ row, now, featured }) {
   }
   const { event } = row
   const state = rowState(event, now, featured)
-  const [label, tone] = STATE[state]
+  const [label, tone] = state === 'coming'
+    ? [`COMING ${formatDayMonth(event).toUpperCase()}`, 'border-ink/25 text-ink-muted']
+    : STATE[state]
   const sub = names(event.frameworks || [], getFramework).join(' · ')
   return (
     <li className="grid grid-cols-[5.5rem_1fr] sm:grid-cols-[7.5rem_1fr_auto] items-baseline gap-4 py-4 border-t border-rule">
@@ -128,7 +138,9 @@ function SeriesRow({ row, now, featured }) {
         {sub && <p className="text-sm text-ink-muted">{sub}</p>}
       </div>
       <span className={`col-start-2 sm:col-start-auto justify-self-start sm:justify-self-end font-mono text-[10px] tracking-wide border rounded px-1.5 py-px ${tone}`}>
-        {state === 'premiering' ? <><span aria-hidden="true">●</span> PREMIERING</> : label}
+        {state === 'premiering' ? <><span aria-hidden="true">●</span> PREMIERING</>
+          : state === 'watch' && event.delivery === 'recorded' ? <><span aria-hidden="true">▶</span> WATCH</>
+          : label}
       </span>
     </li>
   )
@@ -140,7 +152,7 @@ function Recording({ event, now }) {
   return (
     <div className="bg-card border border-rule rounded-sm overflow-hidden">
       <div className="aspect-video bg-ink text-paper flex items-center justify-center">
-        {none ? <span className="text-sm">Recording soon</span> : <span aria-hidden="true" className="text-3xl">▶</span>}
+        {none ? <span className="text-sm">{event.delivery === 'recorded' ? 'Video coming soon' : 'Recording soon'}</span> : <span aria-hidden="true" className="text-3xl">▶</span>}
       </div>
       <div className="p-4">
         <Eyebrow>{formatShortDate(event)} · Recording</Eyebrow>
@@ -158,7 +170,7 @@ export default function Events() {
   const tab = TABS.some(([id]) => id === requested) ? requested : 'all'
   const select = (id) => setParams(id === 'all' ? {} : { tab: id }, { replace: true })
 
-  const featured = featuredEvent(events, now)
+  const featured = featuredForHub(events, now)
   const rows = seriesRows(events, SERIES)
   const seriesCount = rows.filter((r) => r.type === 'session').length
   const upcoming = upcomingEvents(events, now).filter((e) => e !== featured && e.series !== SERIES)
@@ -168,11 +180,11 @@ export default function Events() {
 
   return (
     <div className="max-w-page mx-auto px-4 sm:px-6 py-14">
-      <Eyebrow>Framework of the week · Wednesdays 11 AM ET · 16:00 UTC · Free</Eyebrow>
+      <Eyebrow>Framework of the week · New every Wednesday · Free</Eyebrow>
       <h1 className="font-serif text-5xl mt-3">Events</h1>
       <p className="text-ink-muted text-lg max-w-2xl mt-3">
-        One OpenAstra framework a week, in a recorded session that premieres with live Q&amp;A in the chat. Ask the
-        author anything while it plays, or watch on demand afterwards.
+        One OpenAstra framework a week: a recorded session published every Wednesday on YouTube. Watch it here and ask
+        questions in the YouTube comments.
       </p>
       <div className="flex flex-wrap gap-2 mt-6" role="group" aria-label="Filter events">
         {TABS.map(([id, label]) => (

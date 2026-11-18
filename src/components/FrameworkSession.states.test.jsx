@@ -38,4 +38,23 @@ describe('FrameworkSession banner states', () => {
     expect(screen.getByText('Framework of the week · Recording coming soon')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Details/ })).toHaveAttribute('href', '/events/sess')
   })
+
+  describe('recorded', () => {
+    const rec = { delivery: 'recorded' }
+    it('upcoming says new video with the date', () => {
+      setup('2026-11-20T00:00:00Z', { ...rec, start: '2026-12-09T16:00:00Z' })
+      expect(screen.getByText('Framework of the week · New video Wed 9 Dec')).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /Details/ })).toHaveAttribute('href', '/events/sess')
+    })
+    it('past with video offers Watch', () => {
+      setup('2026-12-20T00:00:00Z', { ...rec, videoUrl: 'https://youtu.be/vid11111111' })
+      expect(screen.getByText('Framework of the week · Watch the session')).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /Watch/ })).toHaveAttribute('href', '/events/sess')
+    })
+    it('past without video says video coming soon', () => {
+      setup('2026-12-20T00:00:00Z', rec)
+      expect(screen.getByText('Framework of the week · Video coming soon')).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /Details/ })).toHaveAttribute('href', '/events/sess')
+    })
+  })
 })

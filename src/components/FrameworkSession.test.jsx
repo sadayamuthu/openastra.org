@@ -11,10 +11,9 @@ describe('FrameworkSession banner', () => {
   })
   afterEach(() => vi.useRealTimers())
 
-  it('links MergeLock to its premiere', () => {
+  it('links MergeLock to its recorded session', () => {
     renderSlug('mergelock')
-    expect(screen.getByText(/Premieres/)).toBeInTheDocument()
-    expect(screen.getByText('WEBCAST')).toBeInTheDocument()
+    expect(screen.getByText('Framework of the week · New video Wed 9 Dec')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Details/ })).toHaveAttribute('href', '/events/mergelock')
   })
 

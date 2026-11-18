@@ -22,8 +22,21 @@ describe('Events hub, empty', () => {
     expect(screen.queryByRole('region', { name: /The series/ })).toBeNull()
   })
 
-  // Real data is now recorded; the hub renders it only after Task 3.
-  it.todo('after the series ends says the next series is coming (Task 3)')
+  it('after the series ends says the next series is coming (real data)', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2027-03-01T00:00:00Z'))
+    try {
+      vi.resetModules()
+      vi.doUnmock('../data/events')
+      const { default: Events } = await import('./Events')
+      render(<MemoryRouter><Events /></MemoryRouter>)
+      expect(screen.getByText('Announced soon')).toBeInTheDocument()
+      expect(screen.getByText('The next series will be announced here.')).toBeInTheDocument()
+      expect(screen.getAllByText('Video coming soon').length).toBe(7)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
 
   it('with a Luma calendar shows a Follow button', async () => {
     await renderHub('https://lu.ma/openastra')
