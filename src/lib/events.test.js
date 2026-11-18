@@ -1,6 +1,6 @@
 import { FIXTURE_EVENTS as E, FIXTURE_NOW as NOW } from '../test/eventsFixture'
 import { eventStatus, upcomingEvents, pastEvents, featuredEvent, findEvent, formatWhen,
-  formatDuration, toIcs, youtubeEmbedUrl, videoFor } from './events'
+  formatDuration, formatShortDate, toIcs, youtubeEmbedUrl, videoFor } from './events'
 const at = (iso) => new Date(iso)
 const live = E.find((e) => e.slug === 'merge-conflicts')
 
@@ -55,4 +55,8 @@ it('videoFor picks countdown, stream, recording or none', () => {
   expect(videoFor(E.find((e) => e.slug === 'introducing-openastra'), NOW).embed).toContain('rec11111111')
   expect(videoFor(live, at('2026-12-13T00:00:00Z')).kind).toBe('recording') // overrun: stream URL kept
   expect(videoFor(E.find((e) => e.slug === 'research-agenda'), NOW)).toEqual({ kind: 'none', embed: null })
+})
+it('formatShortDate is uppercase day-month-year in the given zone', () => {
+  expect(formatShortDate(live, { timeZone: 'UTC' })).toBe('12 DEC 2026')
+  expect(formatShortDate(live, { timeZone: 'Pacific/Auckland' })).toBe('13 DEC 2026')
 })

@@ -36,6 +36,13 @@ export function formatWhen(event, { timeZone } = {}) {
   return `${date.weekday} ${date.day} ${date.month} ${date.year} · ${time.hour}:${time.minute} ${time.dayPeriod} ${time.timeZoneName}`
 }
 
+export function formatShortDate(event, { timeZone } = {}) {
+  const tz = timeZone ? { timeZone } : {}
+  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', ...tz })
+    .format(new Date(event.start))
+    .toUpperCase()
+}
+
 export const formatDuration = (event) => `${event.durationMin} min, incl. Q&A`
 
 const icsDate = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
