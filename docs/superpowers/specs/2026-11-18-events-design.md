@@ -2,6 +2,53 @@
 
 Date: 2026-11-18 · Status: revision 2 draft for approval (revision 1 is built in PR #11)
 
+## Revision 3: start simple, with recorded videos (supersedes Revision 2's premiere format)
+
+Decided with the owner on 2026-11-18. The owner wants to start simple: **no Premiere, no live chat,
+no countdown.** Each Wednesday at 11 AM ET / 16:00 UTC, the owner publishes the recorded session on
+YouTube, either published by hand or scheduled in YouTube Studio, and pastes the link into
+`events.js`. Questions go in the YouTube comments. Luma is optional and used only for reminders.
+Revision 2's schedule, pairing, series list, holiday break, tabs, framework banners and
+Call-for-papers removal all stay. Only the delivery format changes. Premiere and live modes stay in
+the code, switched off, so a later season can turn them on per session.
+
+**New delivery mode `recorded`** (the 7 sessions use it):
+- **No live window.** Status is `upcoming` before `start` and `past` from `start` on.
+  `durationMin` is optional for recorded sessions and is shown only if set, as "N min".
+- **Video:** a new field, `videoUrl` (a YouTube link). Once released, the page embeds
+  `recordingUrl || videoUrl || streamUrl`. If none is set, it shows "Video coming soon".
+- **Wording (`deliveryCopy`):**
+  - eyebrow *Recorded session · Free*
+  - Where *YouTube · recorded session*
+  - Q&A *In the YouTube comments*
+  - watch button *Watch on YouTube* (opens the YouTube video so people can comment)
+  - og *Recorded session · Free*
+  - There is no badge and no countdown label.
+  - Premiere and live gain a `qa` line: *In the YouTube live chat*.
+- **Talk page, before release:** a dashed box reading "Coming Wed 9 Dec", with the publish time in the
+  visitor's zone underneath. No countdown and no Add to calendar. If `registerUrl` is set, a
+  **Get a reminder on Luma** button.
+- **Talk page, after release:** the embedded video, then **Watch on YouTube ↗**, then the line
+  "Questions? Ask in the YouTube comments." With no video yet, the "Video coming soon" box.
+- **Hub:**
+  - Eyebrow *Framework of the week · New every Wednesday · Free*.
+  - Lede: "One OpenAstra framework a week: a recorded session published every Wednesday on YouTube. Watch it here and ask questions in the YouTube comments."
+  - Featured card: the most recent recorded session released in the last 7 days, shown as
+    "Week N · New this week" with a ▶ Watch button. Otherwise the next upcoming session, shown as
+    "Week N · Coming Wed 9 Dec" with the reminder button (if set) and Details. No countdown.
+  - Series row tags: **▶ WATCH** (released, with video), **COMING WED 16 DEC** (upcoming, date in
+    the visitor's zone) and **VIDEO COMING SOON** (released, no video).
+- **Framework banner:** "Framework of the week · New video Wed 9 Dec" with Details →, then
+  "Framework of the week · Watch the session" with Watch →, or "Video coming soon".
+- **Link previews:** `Wed 9 Dec 2026 · Recorded session · Free. <summary>`. The date is in UTC,
+  with no time, for recorded sessions.
+- **Data:** the 7 sessions get `delivery: 'recorded'` and `videoUrl: null`, and lose `durationMin`
+  and `streamUrl`. Data tests accept `recorded`, require `durationMin` only for premiere and live,
+  and check that `videoUrl` embeds when set.
+
+**Owner's weekly routine:** publish or schedule the video for Wednesday 11 AM ET, then paste its
+link as that week's `videoUrl`. A Luma link is optional.
+
 ## Revision 2: "Framework of the week" webcast premieres
 
 Decided with the owner on 2026-11-18. Where this section conflicts with the rest of the
