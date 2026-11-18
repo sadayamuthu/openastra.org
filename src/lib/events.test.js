@@ -1,5 +1,5 @@
 import { FIXTURE_EVENTS as E, FIXTURE_NOW as NOW } from '../test/eventsFixture'
-import { eventStatus, upcomingEvents, pastEvents, featuredEvent, findEvent, formatWhen,
+import { eventStatus, upcomingEvents, pastEvents, featuredEvent, findEvent, formatWhen, formatTime,
   formatDuration, formatShortDate, formatDayMonth, toIcs, youtubeEmbedUrl, videoFor, deliveryCopy, seriesRows, rowState,
   sessionForFramework } from './events'
 import { events } from '../data/events'
@@ -31,13 +31,17 @@ it("formatWhen shows the visitor's zone and date", () => {
   expect(formatWhen(live, { timeZone: 'Pacific/Auckland' })).toMatch(/Sun 13 Dec 2026 · 6:00 AM/)
   expect(formatWhen(live, { timeZone: 'UTC' })).toMatch(/5:00 PM UTC/)
 })
+it('formatTime shows time with the visitor zone', () => {
+  expect(formatTime(live, { timeZone: 'Asia/Kolkata' })).toMatch(/^10:30 PM (IST|GMT\+5:30)$/)
+  expect(formatTime(live, { timeZone: 'UTC' })).toBe('5:00 PM UTC')
+})
 it('formats duration including Q&A', () => {
   expect(formatDuration(live)).toBe('60 min, incl. Q&A')
 })
 it('toIcs builds a valid event', () => {
   const ics = toIcs(live)
   ;['BEGIN:VCALENDAR', 'BEGIN:VEVENT', 'UID:merge-conflicts@openastra.org', 'DTSTART:20261212T170000Z',
-    'DTEND:20261212T180000Z', 'URL:https://openastra.org/events/merge-conflicts', 'END:VCALENDAR']
+    'DTEND:20261212T180000Z', 'URL:https://openastra.org/events/merge-conflicts/', 'END:VCALENDAR']
     .forEach((l) => expect(ics.split('\r\n')).toContain(l))
 })
 it('toIcs escapes text fields', () => {

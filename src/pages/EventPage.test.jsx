@@ -36,6 +36,17 @@ describe('EventPage', () => {
     expect(screen.getAllByRole('link', { name: /Register on Luma/ })[0]).toHaveAttribute('href', 'https://lu.ma/oa-controls')
   })
 
+  it('upcoming premiere explains where it plays', () => {
+    renderAt('controls-as-code')
+    expect(screen.getByText('The premiere plays here, with live chat on YouTube')).toBeInTheDocument()
+  })
+
+  it('live premiere links to the YouTube chat', () => {
+    renderAt('merge-conflicts')
+    expect(screen.getByRole('link', { name: /Watch & ask in chat on YouTube/ }))
+      .toHaveAttribute('href', 'https://www.youtube.com/watch?v=abc123DEF45')
+  })
+
   it('shows exactly one set of talk actions per breakpoint', () => {
     renderAt('controls-as-code')
     const [mobile, desktop] = screen.getAllByTestId('talk-actions')

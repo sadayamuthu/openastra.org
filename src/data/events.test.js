@@ -63,9 +63,13 @@ describe('framework-of-the-week series', () => {
       expect(e.start.slice(11), e.slug).toBe('16:00:00Z')
     })
   })
+  it('week order equals start order', () => {
+    const by = (k) => [...series].sort((a, b) => (a[k] < b[k] ? -1 : a[k] > b[k] ? 1 : 0)).map((e) => e.slug)
+    expect(by('week')).toEqual(by('start'))
+  })
   it('every shipped framework appears in exactly one session', () => {
     shippedFrameworks().forEach((f) => {
-      expect(series.filter((e) => e.frameworks.includes(f.slug)).length, f.slug).toBe(1)
+      expect(series.filter((e) => e.frameworks.includes(f.slug)).length, `framework ${f.slug} needs exactly one framework-of-the-week session`).toBe(1)
     })
   })
 })

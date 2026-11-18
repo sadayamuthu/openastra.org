@@ -22,6 +22,20 @@ describe('Events hub, empty', () => {
     expect(screen.queryByRole('region', { name: /The series/ })).toBeNull()
   })
 
+  it('after the series ends says the next series is coming', async () => {
+    vi.resetModules()
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2027-03-01T00:00:00Z'))
+    vi.doUnmock('../data/events')
+    const { default: Events } = await import('./Events')
+    render(<MemoryRouter><Events /></MemoryRouter>)
+    expect(screen.getByText('Next premiere')).toBeInTheDocument()
+    expect(screen.getByText('Announced soon')).toBeInTheDocument()
+    expect(screen.getByText('The next series will be announced here.')).toBeInTheDocument()
+    expect(screen.queryByText(/first talk/)).toBeNull()
+    vi.useRealTimers()
+  })
+
   it('with a Luma calendar shows a Follow button', async () => {
     await renderHub('https://lu.ma/openastra')
     expect(screen.getByText(/Follow the OpenAstra calendar on Luma/)).toBeInTheDocument()

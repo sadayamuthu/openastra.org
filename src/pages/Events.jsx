@@ -6,7 +6,7 @@ import { events, LUMA_CALENDAR_URL } from '../data/events'
 import { getAuthor } from '../data/authors'
 import { getFramework } from '../data/frameworks'
 import {
-  deliveryCopy, eventStatus, featuredEvent, formatDayMonth, formatShortDate, formatWhen, pastEvents, rowState,
+  deliveryCopy, eventStatus, featuredEvent, formatDayMonth, formatShortDate, formatTime, formatWhen, pastEvents, rowState,
   seriesRows, upcomingEvents, videoFor,
 } from '../lib/events'
 import { useNow } from '../lib/useNow'
@@ -34,11 +34,11 @@ function Section({ label, children, className = '', aside = null }) {
 
 const names = (list, get) => list.map(get).filter(Boolean).map((x) => x.name)
 
-function Featured({ event, now }) {
+function Featured({ event, now, hasEvents }) {
   if (!event) {
     return (
       <div className="border border-dashed border-ink/30 rounded-sm p-8 mt-8">
-        <Eyebrow className="text-rust">Next talk</Eyebrow>
+        <Eyebrow className="text-rust">{hasEvents ? 'Next premiere' : 'Next talk'}</Eyebrow>
         <p className="font-serif text-3xl mt-2">Announced soon</p>
         {LUMA_CALENDAR_URL ? (
           <>
@@ -46,7 +46,9 @@ function Featured({ event, now }) {
             <div className="mt-5"><Button href={LUMA_CALENDAR_URL} variant="solid">Follow on Luma</Button></div>
           </>
         ) : (
-          <p className="mt-2 text-ink-muted">The first talk will be announced here.</p>
+          <p className="mt-2 text-ink-muted">
+            {hasEvents ? 'The next series will be announced here.' : 'The first talk will be announced here.'}
+          </p>
         )}
       </div>
     )
@@ -119,12 +121,11 @@ function SeriesRow({ row, now, featured }) {
     <li className="grid grid-cols-[5.5rem_1fr] sm:grid-cols-[7.5rem_1fr_auto] items-baseline gap-4 py-4 border-t border-rule">
       <div className="font-mono text-xs text-ink-muted">
         <span className="block text-ink">Week {event.week}</span>
-        <span>{formatShortDate(event)}</span>
+        <span>{formatDayMonth(event)} · {formatTime(event)}</span>
       </div>
       <div>
         <Link to={`/events/${event.slug}`} className="font-serif text-xl hover:text-rust">{event.title}</Link>
         {sub && <p className="text-sm text-ink-muted">{sub}</p>}
-        <p className="font-mono text-xs text-ink-muted mt-1">{formatWhen(event)}</p>
       </div>
       <span className={`col-start-2 sm:col-start-auto justify-self-start sm:justify-self-end font-mono text-[10px] tracking-wide border rounded px-1.5 py-px ${tone}`}>
         {state === 'premiering' ? <><span aria-hidden="true">●</span> PREMIERING</> : label}
@@ -179,7 +180,7 @@ export default function Events() {
         ))}
       </div>
 
-      {showUpcoming && <Featured event={featured} now={now} />}
+      {showUpcoming && <Featured event={featured} now={now} hasEvents={events.length > 0} />}
 
       {showUpcoming && seriesCount > 0 && (
         <Section

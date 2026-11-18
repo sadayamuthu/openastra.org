@@ -38,6 +38,16 @@ export function formatWhen(event, { timeZone } = {}) {
   return `${date.weekday} ${date.day} ${MONTHS[date.month - 1]} ${date.year} · ${time.hour}:${time.minute} ${time.dayPeriod} ${time.timeZoneName}`
 }
 
+export function formatTime(event, { timeZone } = {}) {
+  const tz = timeZone ? { timeZone } : {}
+  const t = Object.fromEntries(
+    new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZoneName: 'short', ...tz })
+      .formatToParts(new Date(event.start))
+      .map((p) => [p.type, p.value]),
+  )
+  return `${t.hour}:${t.minute} ${t.dayPeriod} ${t.timeZoneName}`
+}
+
 export function formatShortDate(event, { timeZone } = {}) {
   const tz = timeZone ? { timeZone } : {}
   const p = Object.fromEntries(
@@ -75,7 +85,7 @@ export function toIcs(event, siteUrl = 'https://openastra.org') {
     `DTEND:${icsDate(eventEnd(event))}`,
     `SUMMARY:${icsText(event.title)}`,
     `DESCRIPTION:${icsText(event.summary)}`,
-    `URL:${siteUrl}/events/${event.slug}`,
+    `URL:${siteUrl}/events/${event.slug}/`,
     `LOCATION:${siteUrl}/events/${event.slug}/`,
     'END:VEVENT',
     'END:VCALENDAR',

@@ -1,4 +1,5 @@
 import Countdown from './Countdown'
+import { Button } from './ui'
 import { deliveryCopy, eventStatus, videoFor } from '../lib/events'
 
 export default function EventMedia({ event, now }) {
@@ -7,12 +8,18 @@ export default function EventMedia({ event, now }) {
 
   if (kind === 'countdown') {
     return (
-      <Countdown event={event} now={now} label={deliveryCopy(event).startsIn} />
+      <>
+        <Countdown event={event} now={now} label={deliveryCopy(event).startsIn} />
+        <p className="text-sm text-ink-muted mt-3">
+          {event.delivery === 'live' ? 'The live stream plays here' : 'The premiere plays here, with live chat on YouTube'}
+        </p>
+      </>
     )
   }
 
   if (embed) {
     return (
+      <>
       <div className="relative aspect-video bg-ink rounded-sm overflow-hidden">
         {live && (
           <span className="absolute top-3 left-3 z-10 bg-rust text-paper text-[11px] font-medium tracking-[0.14em] px-2 py-1 rounded-sm">
@@ -28,6 +35,12 @@ export default function EventMedia({ event, now }) {
           className="absolute inset-0 w-full h-full"
         />
       </div>
+      {live && event.streamUrl && (
+        <div className="mt-4">
+          <Button href={event.streamUrl} variant="solid">{deliveryCopy(event).watch} on YouTube</Button>
+        </div>
+      )}
+      </>
     )
   }
 
