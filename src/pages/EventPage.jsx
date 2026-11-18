@@ -33,9 +33,10 @@ export default function EventPage() {
   const facts = [
     ['When', formatWhen(event)],
     ['Where', copy.where],
+    ['Q&A', copy.qa],
     ['Cost', 'Free'],
     ['Length', formatDuration(event)],
-  ]
+  ].filter(([, v]) => v)
 
   return (
     <article className="max-w-page mx-auto px-4 sm:px-6 py-10">
@@ -53,8 +54,8 @@ export default function EventPage() {
           {event.subtitle && <p className="font-serif italic text-xl text-ink-muted mt-3">{event.subtitle}</p>}
           {!past && (
             <div className="lg:hidden mt-5">
-              <p className="text-sm text-ink-muted">{formatWhen(event)} · {formatDuration(event)}</p>
-              <TalkActions event={event} className="flex mt-4" />
+              <p className="text-sm text-ink-muted">{[formatWhen(event), formatDuration(event)].filter(Boolean).join(' · ')}</p>
+              <TalkActions event={event} now={now} className="flex mt-4" />
             </div>
           )}
           <div className="mt-8">
@@ -74,7 +75,7 @@ export default function EventPage() {
               ))}
             </dl>
             {!past && (
-              <TalkActions event={event} className="hidden lg:flex mt-5" />
+              <TalkActions event={event} now={now} className="hidden lg:flex mt-5" />
             )}
           </div>
 

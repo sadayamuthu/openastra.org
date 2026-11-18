@@ -19,6 +19,12 @@ describe('prerender-events', () => {
     }
   })
 
+  it('recorded sessions describe themselves as recorded', async () => {
+    const { events } = await import('../src/data/events.js')
+    const m = eventMeta(events.find((e) => e.slug === 'mergelock'), site)
+    expect(m.description).toContain('Wed 9 Dec 2026 · Recorded session · Free. When several')
+  })
+
   it('escapes HTML in meta', () => {
     const out = withMeta(html, { title: 'A "B" & <C>', description: 'd', url: site, image: site })
     expect(out).toContain('A &quot;B&quot; &amp; &lt;C&gt;')
@@ -55,9 +61,9 @@ describe('prerender-events', () => {
     expect(m.description).toContain('Sat 12 Sep 2026, 17:00 UTC')
   })
 
-  it('hub description describes the premiere series', () => {
+  it('hub description describes the recorded series', () => {
     expect(hubMeta(site).description).toBe(
-      'One OpenAstra framework a week: recorded sessions that premiere Wednesdays 11 AM ET with live Q&A in chat, then stay on demand.',
+      'One OpenAstra framework a week: a recorded session published every Wednesday on YouTube, with questions in the YouTube comments.',
     )
   })
 

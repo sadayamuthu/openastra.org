@@ -1,9 +1,20 @@
 import { Button } from './ui'
-import { icsHref } from '../lib/events'
+import { eventStatus, icsHref } from '../lib/events'
 
 // Register on Luma + Add to calendar (.ics download) for an upcoming talk.
 // `children` are extra actions appended after the pair (e.g. "Details →").
-export default function TalkActions({ event, className = '', children }) {
+export default function TalkActions({ event, now = new Date(), className = '', children }) {
+  if (event.delivery === 'recorded') {
+    // No calendar file: the video is just published. A reminder only while it is still to come.
+    const reminder = event.registerUrl && eventStatus(event, now) === 'upcoming'
+    if (!reminder && !children) return null
+    return (
+      <div className={`flex-wrap items-center gap-3 ${className}`} data-testid="talk-actions">
+        {reminder && <Button href={event.registerUrl} variant="solid">Get a reminder on Luma</Button>}
+        {children}
+      </div>
+    )
+  }
   return (
     <div className={`flex-wrap items-center gap-3 ${className}`} data-testid="talk-actions">
       {event.registerUrl && <Button href={event.registerUrl} variant="solid">Register on Luma</Button>}

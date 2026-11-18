@@ -1,7 +1,7 @@
 import { FIXTURE_EVENTS as E, FIXTURE_NOW as NOW } from '../test/eventsFixture'
 import { eventStatus, upcomingEvents, pastEvents, featuredEvent, findEvent, formatWhen, formatTime,
   formatDuration, formatShortDate, formatDayMonth, toIcs, youtubeEmbedUrl, videoFor, deliveryCopy, seriesRows, rowState,
-  sessionForFramework } from './events'
+  sessionForFramework, videoLink, featuredForHub } from './events'
 import { events } from '../data/events'
 const at = (iso) => new Date(iso)
 const live = E.find((e) => e.slug === 'merge-conflicts')
@@ -75,11 +75,12 @@ it('uses fixed English month abbreviations (never ICU "Sept")', () => {
 
 it('deliveryCopy: premiere, live, and default', () => {
   const premiere = { eyebrow: 'Webcast · Premiere with live Q&A · Free', where: 'YouTube Premiere · questions in live chat',
-    badge: 'PREMIERING NOW', badgeShort: 'PREMIERE', watch: 'Watch & ask in chat', startsIn: 'Premieres in', og: 'Webcast premiere · Free' }
+    badge: 'PREMIERING NOW', badgeShort: 'PREMIERE', watch: 'Watch & ask in chat', startsIn: 'Premieres in', og: 'Webcast premiere · Free',
+    qa: 'In the YouTube live chat' }
   expect(deliveryCopy({ delivery: 'premiere' })).toEqual(premiere)
   expect(deliveryCopy({})).toEqual(premiere)
   expect(deliveryCopy({ delivery: 'live' })).toEqual({ eyebrow: 'Tech talk · Online · Free', where: 'Online · YouTube Live',
-    badge: 'LIVE NOW', badgeShort: 'LIVE', watch: 'Watch live', startsIn: 'Starts in', og: 'Online · Free' })
+    badge: 'LIVE NOW', badgeShort: 'LIVE', watch: 'Watch live', startsIn: 'Starts in', og: 'Online · Free', qa: 'In the YouTube live chat' })
 })
 it('seriesRows inserts a break for gaps > 8 days', () => {
   const rows = seriesRows(events, 'framework-of-the-week')
@@ -112,4 +113,63 @@ it('toIcs LOCATION is the talk page URL', () => {
 it('formatDayMonth is weekday day month in the given zone', () => {
   expect(formatDayMonth({ start: '2026-01-06T16:00:00Z' }, { timeZone: 'UTC' })).toBe('Tue 6 Jan')
   expect(formatDayMonth({ start: '2026-01-06T16:00:00Z' }, { timeZone: 'Pacific/Auckland' })).toBe('Wed 7 Jan')
+})
+
+describe('recorded delivery', () => {
+  const rec = { slug: 'r', start: '2026-12-09T16:00:00Z', delivery: 'recorded', videoUrl: null, recordingUrl: null, streamUrl: null }
+  const vid = 'https://www.youtube.com/watch?v=abc123DEF45'
+  const emb = 'https://www.youtube-nocookie.com/embed/abc123DEF45'
+  it('eventStatus is upcoming then past, never live', () => {
+    expect(eventStatus(rec, at('2026-12-09T15:59:59.999Z'))).toBe('upcoming')
+    expect(eventStatus(rec, at('2026-12-09T16:00:00Z'))).toBe('past')
+    expect(eventStatus({ ...rec, durationMin: 60 }, at('2026-12-09T16:30:00Z'))).toBe('past')
+  })
+  it('videoFor: coming, none, recording', () => {
+    expect(videoFor(rec, at('2026-12-09T15:00:00Z'))).toEqual({ kind: 'coming', embed: null })
+    expect(videoFor(rec, at('2026-12-09T17:00:00Z'))).toEqual({ kind: 'none', embed: null })
+    expect(videoFor({ ...rec, videoUrl: vid }, at('2026-12-09T17:00:00Z'))).toEqual({ kind: 'recording', embed: emb })
+    expect(videoFor({ ...rec, videoUrl: vid }, at('2026-12-09T15:00:00Z'))).toEqual({ kind: 'coming', embed: null })
+  })
+  it('premiere past accepts videoUrl fallback', () => {
+    expect(videoFor({ start: '2026-01-01T00:00:00Z', durationMin: 60, videoUrl: vid }, at('2026-02-01T00:00:00Z')).embed).toBe(emb)
+  })
+  it('deliveryCopy recorded', () => {
+    expect(deliveryCopy(rec)).toEqual({ eyebrow: 'Recorded session · Free', where: 'YouTube · recorded session',
+      qa: 'In the YouTube comments', watch: 'Watch on YouTube', og: 'Recorded session · Free',
+      badge: null, badgeShort: null, startsIn: null })
+  })
+  it('formatDuration', () => {
+    expect(formatDuration({ ...rec, durationMin: 45 })).toBe('45 min')
+    expect(formatDuration(rec)).toBeNull()
+    expect(formatDuration(live)).toBe('60 min, incl. Q&A')
+  })
+  it('videoLink is null without an embeddable URL', () => {
+    expect(videoLink(rec)).toBeNull()
+    expect(videoLink({ ...rec, streamUrl: 'S', videoUrl: 'V', recordingUrl: 'R' })).toBeNull()
+  })
+
+  it('videoLink returns the first URL that embeds, same order as videoFor', () => {
+    const V = 'https://www.youtube.com/watch?v=abc123DEF45'
+    const R = 'https://youtu.be/rec11111111'
+    expect(videoLink({ ...rec, recordingUrl: 'https://vimeo.com/1', videoUrl: V })).toBe(V)
+    expect(videoLink({ ...rec, recordingUrl: R, videoUrl: V })).toBe(R)
+    expect(videoLink({ ...rec, streamUrl: V })).toBe(V)
+  })
+  it('rowState: watch, coming, video-soon', () => {
+    const now = at('2026-12-09T17:00:00Z')
+    expect(rowState({ ...rec, videoUrl: vid }, now, null)).toBe('watch')
+    expect(rowState(rec, now, null)).toBe('video-soon')
+    expect(rowState(rec, at('2026-12-09T10:00:00Z'), null)).toBe('coming')
+    expect(rowState(rec, at('2026-12-09T10:00:00Z'), rec)).toBe('coming')
+  })
+  it('featuredForHub: recent release, else next upcoming', () => {
+    const f = (iso) => featuredForHub(events, at(iso))?.slug
+    expect(f('2026-12-15T00:00:00Z')).toBe('mergelock')
+    expect(f('2026-12-17T00:00:00Z')).toBe('unasked')
+    expect(f('2026-12-24T00:00:00Z')).toBe('zero-egress')
+    expect(f('2026-11-20T00:00:00Z')).toBe('mergelock')
+    expect(f('2028-01-01T00:00:00Z')).toBeUndefined()
+    expect(f('2026-12-16T15:59:59Z')).toBe('mergelock')
+    expect(f('2026-12-16T16:00:00Z')).toBe('unasked')
+  })
 })

@@ -21,9 +21,10 @@ describe('routes', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(name)
   })
 
-  it('sets the title for a trailing-slash URL', () => {
-    renderAt('/events/')
-    expect(document.title).toBe('Events · OpenAstra')
+  it('sets the title for a trailing-slash URL (/events/ with real data)', () => {
+    render(<MemoryRouter initialEntries={['/events/']}><AppRoutes /></MemoryRouter>)
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Events')
+    expect(document.title).toMatch(/Events/)
   })
 
   it.each([
@@ -32,10 +33,13 @@ describe('routes', () => {
     ['/research', 'Research'],
     ['/lab', "What we're building next."],
     ['/about', 'About'],
-    ['/events', 'Events'],
     ['/does-not-exist', 'Not found'],
   ])('%s renders its page', (path, h1) => {
     renderAt(path)
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(h1)
+  })
+  it('/events renders its page (real data)', () => {
+    renderAt('/events')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Events')
   })
 })

@@ -14,11 +14,11 @@ describe.each([
     expect(new Set(slugs).size).toBe(slugs.length)
     slugs.forEach((s) => expect(s).toMatch(/^[a-z0-9-]+$/))
   })
-  it('has UTC ISO start times and positive durations', () => {
+  it('has UTC ISO start times and positive durations (not required for recorded)', () => {
     list.forEach((e) => {
       expect(e.start).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/)
       expect(Number.isNaN(new Date(e.start).getTime())).toBe(false)
-      expect(e.durationMin).toBeGreaterThan(0)
+      if (e.delivery !== 'recorded') expect(e.durationMin).toBeGreaterThan(0)
     })
   })
   it('resolves every speaker and framework', () => {
@@ -39,6 +39,7 @@ describe.each([
     list.forEach((e) => {
       if (e.streamUrl) expect(youtubeEmbedUrl(e.streamUrl), e.slug + ' streamUrl').toBeTruthy()
       if (e.recordingUrl) expect(youtubeEmbedUrl(e.recordingUrl), e.slug + ' recordingUrl').toBeTruthy()
+      if (e.videoUrl) expect(youtubeEmbedUrl(e.videoUrl), e.slug + ' videoUrl').toBeTruthy()
       if (e.image) expect(existsSync('public/events/' + e.image), e.slug + ' image').toBe(true)
     })
   })
@@ -51,8 +52,11 @@ describe.each([
 
 describe('framework-of-the-week series', () => {
   const series = events.filter((e) => e.series === 'framework-of-the-week')
-  it('delivery is premiere or live when present', () => {
-    events.forEach((e) => { if (e.delivery) expect(['premiere', 'live']).toContain(e.delivery) })
+  it('delivery is premiere, live or recorded when present', () => {
+    events.forEach((e) => { if (e.delivery) expect(['premiere', 'live', 'recorded']).toContain(e.delivery) })
+  })
+  it('all series sessions are recorded', () => {
+    series.forEach((e) => expect(e.delivery, e.slug).toBe('recorded'))
   })
   it('weeks are unique and run 1..N', () => {
     expect(series.map((e) => e.week).sort((a, b) => a - b)).toEqual(series.map((_, i) => i + 1))
