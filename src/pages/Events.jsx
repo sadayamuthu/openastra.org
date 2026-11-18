@@ -1,11 +1,12 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import Countdown from '../components/Countdown'
+import TalkActions from '../components/TalkActions'
 import { Button, ComingSoon, Eyebrow, Pill } from '../components/ui'
 import { events, LUMA_CALENDAR_URL } from '../data/events'
 import { getAuthor } from '../data/authors'
 import { getFramework } from '../data/frameworks'
 import {
-  eventStatus, featuredEvent, formatShortDate, formatWhen, icsHref, pastEvents, upcomingEvents, videoFor,
+  eventStatus, featuredEvent, formatShortDate, formatWhen, pastEvents, upcomingEvents, videoFor,
 } from '../lib/events'
 import { useNow } from '../lib/useNow'
 
@@ -60,17 +61,9 @@ function Featured({ event, now }) {
           {live ? (
             <Button to={`/events/${event.slug}`} variant="solid">Watch live</Button>
           ) : (
-            <>
-              {event.registerUrl && <Button href={event.registerUrl} variant="solid">Register on Luma</Button>}
-              <a
-                href={icsHref(event)}
-                download={`${event.slug}.ics`}
-                className="inline-flex items-center px-4 py-2 rounded-sm border border-ink text-sm font-medium hover:bg-ink hover:text-paper transition-colors"
-              >
-                Add to calendar
-              </a>
+            <TalkActions event={event} className="flex">
               <Link to={`/events/${event.slug}`} className="text-sm hover:text-rust">Details →</Link>
-            </>
+            </TalkActions>
           )}
         </div>
       </div>

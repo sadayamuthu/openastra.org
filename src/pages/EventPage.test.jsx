@@ -36,6 +36,17 @@ describe('EventPage', () => {
     expect(screen.getAllByRole('link', { name: /Register on Luma/ })[0]).toHaveAttribute('href', 'https://lu.ma/oa-controls')
   })
 
+  it('shows exactly one set of talk actions per breakpoint', () => {
+    renderAt('controls-as-code')
+    const [mobile, desktop] = screen.getAllByTestId('talk-actions')
+    // small screens: the block under the title (its wrapper is lg:hidden); desktop: the aside copy
+    expect(mobile.closest('.lg\\:hidden')).not.toBeNull()
+    expect(mobile.className).not.toMatch(/(^|\s)hidden(\s|$)/)
+    expect(desktop.className).toMatch(/(^|\s)hidden(\s|$)/)
+    expect(desktop.className).toMatch(/lg:flex/)
+    expect(desktop.closest('.lg\\:hidden')).toBeNull()
+  })
+
   it('puts register and calendar before the video on small screens', () => {
     const { container } = renderAt('controls-as-code')
     const h1 = screen.getByRole('heading', { level: 1 })

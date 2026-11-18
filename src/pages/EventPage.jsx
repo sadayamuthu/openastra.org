@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import EventMedia from '../components/EventMedia'
+import TalkActions from '../components/TalkActions'
 import { Button, DoiTag, Eyebrow } from '../components/ui'
 import { events } from '../data/events'
 import { authorPath, getAuthor } from '../data/authors'
 import { getFramework } from '../data/frameworks'
-import { eventStatus, findEvent, formatDuration, formatWhen, icsHref } from '../lib/events'
+import { eventStatus, findEvent, formatDuration, formatWhen } from '../lib/events'
 import { useNow } from '../lib/useNow'
 import NotFound from './NotFound'
 
@@ -46,16 +47,7 @@ export default function EventPage() {
           {!past && (
             <div className="lg:hidden mt-5">
               <p className="text-sm text-ink-muted">{formatWhen(event)} · {formatDuration(event)}</p>
-              <div className="flex flex-wrap gap-3 mt-4">
-                {event.registerUrl && <Button href={event.registerUrl} variant="solid">Register on Luma</Button>}
-                <a
-                  href={icsHref(event)}
-                  download={`${event.slug}.ics`}
-                  className="inline-flex items-center px-4 py-2 rounded-sm border border-ink text-sm font-medium hover:bg-ink hover:text-paper transition-colors"
-                >
-                  Add to calendar
-                </a>
-              </div>
+              <TalkActions event={event} className="flex mt-4" />
             </div>
           )}
           <div className="mt-8">
@@ -75,16 +67,7 @@ export default function EventPage() {
               ))}
             </dl>
             {!past && (
-              <div className="flex flex-wrap gap-3 mt-5">
-                {event.registerUrl && <Button href={event.registerUrl} variant="solid">Register on Luma</Button>}
-                <a
-                  href={icsHref(event)}
-                  download={`${event.slug}.ics`}
-                  className="inline-flex items-center px-4 py-2 rounded-sm border border-ink text-sm font-medium hover:bg-ink hover:text-paper transition-colors"
-                >
-                  Add to calendar
-                </a>
-              </div>
+              <TalkActions event={event} className="hidden lg:flex mt-5" />
             )}
           </div>
 
