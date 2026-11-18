@@ -2,7 +2,11 @@
 
 const MIN = 60 * 1000
 
-export const eventEnd = (event) => new Date(new Date(event.start).getTime() + event.durationMin * MIN)
+const isRecorded = (e) => e?.delivery === 'recorded'
+
+// Recorded sessions have no live window: they end the moment they start.
+export const eventEnd = (event) =>
+  new Date(new Date(event.start).getTime() + (isRecorded(event) ? 0 : event.durationMin * MIN))
 
 export function eventStatus(event, now) {
   const t = now.getTime()
@@ -68,7 +72,10 @@ export function formatDayMonth(event, { timeZone } = {}) {
   return `${p.weekday} ${Number(p.day)} ${MONTHS[p.month - 1]}`
 }
 
-export const formatDuration = (event) => `${event.durationMin} min, incl. Q&A`
+export function formatDuration(event) {
+  if (isRecorded(event)) return event.durationMin ? `${event.durationMin} min` : null
+  return `${event.durationMin} min, incl. Q&A`
+}
 
 const icsDate = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
 const icsText = (s) => String(s ?? '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n')
@@ -109,11 +116,21 @@ export function youtubeEmbedUrl(url) {
   return id && /^[\w-]+$/.test(id) ? `https://www.youtube-nocookie.com/embed/${id}` : null
 }
 
+const pastVideoUrl = (e) => e.recordingUrl || e.videoUrl || e.streamUrl || null
+
+// The YouTube URL to open for "Watch on YouTube".
+export const videoLink = (event) => pastVideoUrl(event)
+
 export function videoFor(event, now) {
   const status = eventStatus(event, now)
+  if (isRecorded(event)) {
+    if (status === 'upcoming') return { kind: 'coming', embed: null }
+    const embed = youtubeEmbedUrl(event.recordingUrl) || youtubeEmbedUrl(event.videoUrl) || youtubeEmbedUrl(event.streamUrl)
+    return embed ? { kind: 'recording', embed } : { kind: 'none', embed: null }
+  }
   if (status === 'upcoming') return { kind: 'countdown', embed: null }
   if (status === 'live') return { kind: 'stream', embed: youtubeEmbedUrl(event.streamUrl) }
-  const embed = youtubeEmbedUrl(event.recordingUrl) || youtubeEmbedUrl(event.streamUrl)
+  const embed = youtubeEmbedUrl(event.recordingUrl) || youtubeEmbedUrl(event.videoUrl) || youtubeEmbedUrl(event.streamUrl)
   return embed ? { kind: 'recording', embed } : { kind: 'none', embed: null }
 }
 
@@ -126,6 +143,7 @@ const DELIVERY = {
     watch: 'Watch & ask in chat',
     startsIn: 'Premieres in',
     og: 'Webcast premiere · Free',
+    qa: 'In the YouTube live chat',
   },
   live: {
     eyebrow: 'Tech talk · Online · Free',
@@ -135,6 +153,17 @@ const DELIVERY = {
     watch: 'Watch live',
     startsIn: 'Starts in',
     og: 'Online · Free',
+    qa: 'In the YouTube live chat',
+  },
+  recorded: {
+    eyebrow: 'Recorded session · Free',
+    where: 'YouTube · recorded session',
+    qa: 'In the YouTube comments',
+    watch: 'Watch on YouTube',
+    og: 'Recorded session · Free',
+    badge: null,
+    badgeShort: null,
+    startsIn: null,
   },
 }
 
@@ -156,8 +185,21 @@ export function seriesRows(list, seriesId) {
   return rows
 }
 
+// Hub feature: the newest recorded session released in the last 7 days, else the next upcoming one.
+export function featuredForHub(list, now) {
+  const t = now.getTime()
+  const recent = list
+    .filter((e) => isRecorded(e) && startMs(e) <= t && startMs(e) > t - 7 * DAY)
+    .sort((a, b) => startMs(b) - startMs(a))[0]
+  return recent || featuredEvent(list, now)
+}
+
 export function rowState(event, now, featured) {
   const status = eventStatus(event, now)
+  if (isRecorded(event)) {
+    if (status === 'upcoming') return 'coming'
+    return videoFor(event, now).kind !== 'none' ? 'watch' : 'video-soon'
+  }
   if (status === 'live') return 'premiering'
   if (featured?.slug === event.slug) return 'next'
   if (status === 'upcoming') return 'upcoming'
