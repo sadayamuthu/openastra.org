@@ -1,6 +1,71 @@
 # OpenAstra Events (`/events`): design
 
-Date: 2026-11-18 · Status: draft for approval
+Date: 2026-11-18 · Status: revision 2 draft for approval (revision 1 is built in PR #11)
+
+## Revision 2: "Framework of the week" webcast premieres
+
+Decided with the owner on 2026-11-18. Where this section conflicts with the rest of the
+document, this section wins.
+
+**What changes and why.** The series is mostly **recorded** sessions, not live talks.
+Each one is a **YouTube Premiere**: the video is uploaded ahead of time and plays at a
+scheduled time for everyone at once, with live chat beside it. The owner answers
+questions in the chat while it plays. Afterwards the same link is the on-demand
+recording. True live streaming comes later. This keeps the event feel (fixed time, Luma
+reminders, live Q&A) without the risk of presenting live, and every session becomes
+on-demand content.
+
+**Schedule.** Wednesdays 16:00 UTC (9:30 PM IST · 4 PM GMT · 11 AM ET · 8 AM PT). This
+is the best overlap for India, Europe and the US. There is a holiday break for the weeks of Dec 21 and 28.
+
+| Week | Date (UTC) | Session | Frameworks | Length |
+|---|---|---|---|---|
+| 1 | Wed 2026-12-09 16:00 | MergeLock | mergelock | 60 min |
+| 2 | Wed 2026-12-16 16:00 | Unasked | unasked | 60 min |
+| 3 | Wed 2027-01-06 16:00 | ZeroEgress | zero-egress | 60 min |
+| 4 | Wed 2027-01-13 16:00 | Compliance controls, from catalog to gate | ocbc, controlgate | 75 min |
+| 5 | Wed 2027-01-20 16:00 | Exploited vulnerabilities, from catalog to gate | oebc, exposuregate | 75 min |
+| 6 | Wed 2027-01-27 16:00 | anySQL | anysql | 60 min |
+| 7 | Wed 2027-02-03 16:00 | OpenGPL | opengpl | 60 min |
+
+"Length" is the premiere plus the chat Q&A, which is the `durationMin` live window.
+
+**Changes to the build in PR #11:**
+
+1. **Data.** `src/data/events.js` ships these 7 sessions: real titles, a one-paragraph
+   summary each (from the framework's tagline and description), speaker
+   `karthikeyan-sadayamuthu`, no `registerUrl` or `streamUrl` yet. The owner adds the
+   links as each Luma event and Premiere is created. New fields:
+   - `delivery: 'premiere' | 'live'` (default `'premiere'`): sets the wording below.
+   - `series: 'framework-of-the-week'` and `week: 1..7`.
+2. **Wording.** Premiere copy replaces "live talk" copy. The `live` variant keeps today's words for later.
+   - Talk page eyebrow: *Webcast · Premiere with live Q&A · Free*
+   - Facts "Where": *YouTube Premiere · questions in live chat*
+   - Badge while it plays: **● PREMIERING NOW**
+   - Hub button while it plays: **Watch & ask in chat**
+   - The `.ics` LOCATION is the talk page URL. The OG description reads "Webcast premiere · Free."
+   - Hub eyebrow: *Framework of the week · Wednesdays 11 AM ET · 16:00 UTC · Free* (owner chose ET as the headline time; every week of the series is EST, UTC−5). Lede: weekly recorded
+     sessions, one framework at a time, premiering with live Q&A in chat, then on demand.
+3. **Hub layout.** Next premiere (featured, with countdown), then **"The series"**: a
+   numbered list of all 7 weeks. Each row shows the week number, the date in the visitor's
+   zone, the title, the framework names, and a state: *Next*, *Upcoming*, *Watch*
+   (past, has video) or *Recording soon*. Then On demand. The Upcoming list is
+   replaced by the series list. Talks without a `series` still appear under Upcoming.
+4. **Tabs.** All · Upcoming · On demand (`?tab=upcoming|on-demand`). "Live & upcoming" is renamed.
+5. **Call for papers removed**: the tab, the hub card and every mention in code and copy.
+   The podcast "Later" card stays.
+6. **Framework pages** get a "Watch the session" link to their session (or "Premieres
+   Wed 9 Dec": the date in the visitor's zone, linking to the talk page) when a session lists that framework.
+7. **Empty Register.** Until `registerUrl` is set, the talk page and hub show no Register
+   button. Add to calendar still works, so people can save the date before Luma exists.
+
+**Unchanged:** routes, prerendered link previews, sitemap, nav, the status logic (a premiere is
+"live" for its `durationMin` window), `LUMA_CALENDAR_URL`.
+
+**Owner to-dos for week 1 (Dec 9):** verify the YouTube channel. Record MergeLock and upload it as
+a Premiere for Wed Dec 9 16:00 UTC; this gives the `streamUrl`. Create the Luma calendar
+(`LUMA_CALENDAR_URL`) and the week-1 event with the Premiere link (`registerUrl`).
+Target: by about Dec 6.
 
 ## Intent
 

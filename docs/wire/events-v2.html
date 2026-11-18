@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenAstra Events v2 wireframe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#F6F3EC;--card:#FFFDF8;--ink:#1B1B1B;--muted:#5E5B55;--rule:#D9D4C8;--rust:#B4441F}
+  *{box-sizing:border-box}
+  body{margin:0;background:#E9E5DC;color:var(--ink);font:14px/1.5 Inter,system-ui,sans-serif}
+  .serif{font-family:Newsreader,Georgia,serif}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+  em{font-style:italic}
+  a{color:inherit;text-decoration:none}
+
+  /* Wireframe chrome */
+  .doc{max-width:1180px;margin:0 auto;padding:32px 16px 80px}
+  .doc>header h1{font:500 28px Newsreader,Georgia,serif;margin:0}
+  .doc>header p{color:var(--muted);margin:6px 0 0;max-width:760px}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 8px}
+  .toc a{font-size:12px;border:1px solid #1B1B1B40;border-radius:99px;padding:3px 10px;background:var(--paper)}
+  .toc a:hover{border-color:var(--ink)}
+  .screen{margin-top:44px}
+  .screen>h2{font:600 11px Inter;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin:0 0 4px}
+  .screen>p.why{margin:0 0 12px;color:var(--muted);max-width:820px}
+  .frame{background:var(--paper);border:1px solid #bdb7aa;border-radius:6px;box-shadow:0 2px 10px #0001;overflow:hidden}
+  .urlbar{display:flex;align-items:center;gap:8px;background:#DDD8CD;padding:7px 12px;font:12px "JetBrains Mono",monospace;color:#555}
+  .urlbar i{width:9px;height:9px;border-radius:50%;background:#bbb;display:inline-block}
+  .note{display:inline-block;background:var(--rust);color:#fff;font:600 10px "JetBrains Mono",monospace;padding:2px 6px;border-radius:3px;vertical-align:middle;margin-left:6px}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .phone{max-width:390px}
+  @media (max-width:900px){.pair{grid-template-columns:1fr}}
+
+  /* Site styles */
+  .page{max-width:72rem;margin:0 auto;padding:0 24px}
+  .nav{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 32px;padding:16px 0;border-bottom:2px solid var(--ink)}
+  .brand{display:flex;align-items:center;gap:10px;font:400 23px Newsreader,Georgia,serif}
+  .links{display:flex;flex-wrap:wrap;gap:4px 24px;font-size:13px;color:var(--muted)}
+  .links .on{color:var(--ink);border-bottom:1px solid var(--rust)}
+  .eyebrow{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .eyebrow.rust{color:var(--rust)}
+  h1.h{font:400 48px/1.05 Newsreader,Georgia,serif;margin:10px 0 0;letter-spacing:-.01em}
+  .lede{color:var(--muted);font-size:17px;max-width:640px;margin:14px 0 0}
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 0}
+  .pill{display:inline-flex;align-items:center;padding:4px 12px;border:1px solid #1B1B1B40;border-radius:99px;font-size:12px}
+  .pill.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .pill.soon{border-style:dashed;border-color:#B4441F99;color:var(--rust)}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid var(--ink);border-radius:2px;font-size:13px;font-weight:500}
+  .btn.solid{background:var(--ink);color:var(--paper)}
+  .btn.rust{background:var(--rust);border-color:var(--rust);color:#fff}
+  .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .section{border-top:1px solid var(--rule);padding:28px 0}
+  .featured{background:var(--card);border:1px solid var(--rule);border-radius:2px;padding:24px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;margin-top:28px}
+  .featured h3{font:400 30px/1.15 Newsreader,Georgia,serif;margin:8px 0 6px}
+  .meta{color:var(--muted);font-size:14px}
+  .speakers{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13px}
+  .av{width:30px;height:30px;border-radius:50%;background:#CFC9BC;border:2px solid var(--card);display:inline-block}
+  .av+.av{margin-left:-12px}
+  .countdown{display:flex;gap:10px;text-align:center}
+  .countdown div{border:1px solid var(--rule);padding:8px 10px;min-width:58px;background:var(--paper)}
+  .countdown b{display:block;font:400 26px Newsreader,Georgia,serif}
+  .countdown span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .list{list-style:none;margin:10px 0 0;padding:0}
+  .list li{display:grid;grid-template-columns:96px 1fr auto;gap:16px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--rule)}
+  .list .date{font:12px "JetBrains Mono",monospace;color:var(--muted)}
+  .list .t{font:400 19px Newsreader,Georgia,serif}
+  .list .s{color:var(--muted);font-size:13px}
+  .tag{font:10px "JetBrains Mono",monospace;border:1px solid #1B1B1B40;border-radius:3px;padding:1px 6px;color:var(--muted);white-space:nowrap}
+  .tag.live{border-color:var(--rust);color:#fff;background:var(--rust)}
+  .empty{border:1px dashed #1B1B1B4d;border-radius:2px;padding:22px;text-align:center;color:var(--muted)}
+  .empty .serif{font-size:22px;color:var(--rust)}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:12px}
+  @media (max-width:900px){.grid3{grid-template-columns:1fr}.featured{grid-template-columns:1fr}}
+  .rec{border:1px solid var(--rule);background:var(--card);border-radius:2px;overflow:hidden}
+  .thumb{aspect-ratio:16/9;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:12px;position:relative}
+  .thumb .play{width:42px;height:42px;border-radius:50%;border:2px solid var(--paper);display:flex;align-items:center;justify-content:center}
+  .thumb .dur{position:absolute;right:8px;bottom:8px;font:10px "JetBrains Mono";background:#0008;padding:1px 5px}
+  .rec .b{padding:12px}
+  .rec .b .serif{font-size:17px}
+  .soonrow{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+  @media (max-width:700px){.soonrow{grid-template-columns:1fr}}
+
+  .talk{display:grid;grid-template-columns:1.6fr 1fr;gap:40px;padding:28px 0 40px}
+  @media (max-width:900px){.talk{grid-template-columns:1fr}}
+  .video{aspect-ratio:16/9;background:var(--ink);color:var(--paper);border-radius:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;margin-top:22px;position:relative}
+  .video .badge{position:absolute;left:12px;top:12px}
+  .video small{color:#B5B0A6}
+  .side h4{margin:0 0 8px}
+  .person{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule)}
+  .person .av{width:40px;height:40px}
+  .person .n{font:400 17px Newsreader,Georgia,serif}
+  .person .r{font-size:12px;color:var(--rust)}
+  .fw{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule)}
+  .facts{border:1px solid var(--rule);background:var(--card);padding:16px;margin-bottom:22px}
+  .facts dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px}
+  .facts dt{color:var(--muted)}
+  .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:2px solid var(--ink);padding:22px 0;font-size:13px;color:var(--muted);margin-top:10px}
+</style>
+<style>
+  .series{list-style:none;margin:10px 0 0;padding:0}
+  .series li{display:grid;grid-template-columns:64px 170px 1fr auto;gap:14px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--rule)}
+  .series .wk{font:500 11px Inter;letter-spacing:.12em;text-transform:uppercase;color:var(--rust)}
+  .state{font:10px "JetBrains Mono",monospace;border:1px solid #1B1B1B40;border-radius:3px;padding:1px 6px;white-space:nowrap;color:var(--muted)}
+  .state.next{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .chat{border:1px solid #3a3935;background:#232220;color:#d8d3c8;font-size:12px;padding:10px;display:flex;flex-direction:column;gap:6px}
+  .chat b{color:#E0724A;font-weight:500}
+  .phone .series li{grid-template-columns:52px 1fr}
+  .phone .series .d,.phone .series .state{grid-column:2}
+</style>
+</head>
+<body><div class="doc"><svg width="0" height="0" style="position:absolute"><symbol id="mark" viewBox="0 0 100 100"><path d="M83.48 44.10 A34 34 0 1 1 55.90 16.52" fill="none" stroke="#1B1B1B" stroke-width="13" stroke-linecap="round"/><path d="M78 6 Q81 19 95 22 Q81 25 78 38 Q75 25 61 22 Q75 19 78 6Z" fill="#B4441F"/></symbol></svg>
+<header><h1>OpenAstra Events v2: Framework of the week</h1>
+<p>Revision 2 of the <span class="mono">/events</span> wireframe: weekly recorded <b>webcast premieres</b> with live Q&amp;A in chat, Wednesdays 16:00 UTC from 9 Dec. Call for papers is removed. Times are shown here for a visitor in India; everyone else sees their own zone. The first version is <a href="events.html" style="text-decoration:underline">events.html</a>.</p>
+<nav class="toc"><a href="#a">1 · Hub</a><a href="#b">2 · Talk page, before</a><a href="#c">3 · Talk page, premiering</a><a href="#d">4 · Framework page link</a><a href="#e">5 · Mobile</a></nav></header>
+
+<section class="screen" id="a"><h2>1 · /events hub</h2>
+<p class="why">The next premiere is featured, followed by the whole 7-week series as a numbered schedule (with the holiday break), then recordings as they build up. Tabs: All · Upcoming · On demand. There is no Call for papers. Register appears only once that week's Luma event exists; Add to calendar always works.</p>
+<div class="frame"><div class="urlbar"><i></i><i></i><i></i> openastra.org/events</div><div class="page"><div class="nav"><span class="brand"><svg width="32" height="32"><use href="#mark"/></svg><span>Open<em>Astra</em></span></span><span class="links"><span>Frameworks</span><span>Lab</span><span>Research</span><span class="on">Events</span><span>About</span><span>GitHub ↗</span></span></div>
+<div style="padding:40px 0 8px"><p class="eyebrow">Framework of the week · Wednesdays 11 AM ET · 16:00 UTC · Free</p><h1 class="h">Events</h1>
+<p class="lede">One OpenAstra framework a week, in a recorded session that premieres with live Q&amp;A in the chat. Ask the author anything while it plays, or watch on demand afterwards.</p>
+<div class="tabs"><span class="pill on">All</span><span class="pill">Upcoming</span><span class="pill">On demand</span></div>
+<div class="featured"><div><p class="eyebrow rust">Week 1 · Next premiere</p><h3>Merge conflicts git can't see</h3><p class="meta">Wed 9 Dec 2026 · 9:30 PM IST · 60 min incl. live Q&amp;A</p>
+<div class="speakers"><span class="av"></span> Karthikeyan Sadayamuthu · <span style="color:var(--muted)">MergeLock</span></div>
+<div class="btns"><a class="btn solid">Register on Luma ↗</a><a class="btn">Add to calendar</a><a class="btn" style="border-color:transparent">Details →</a></div></div>
+<div class="countdown"><div><b>21</b><span>days</span></div><div><b>04</b><span>hrs</span></div><div><b>12</b><span>min</span></div></div></div></div>
+<div class="section"><div style="display:flex;justify-content:space-between;align-items:baseline"><p class="eyebrow">The series · 7 weeks</p><a style="font-size:13px">Follow on Luma ↗</a></div><ol class="series"><li><span class="wk">Week 1</span><span class="d mono" style="font-size:12px;color:var(--muted)">Wed 9 Dec · 9:30 PM IST</span><span><span class="serif" style="font-size:19px">Merge conflicts git can't see</span><br><span style="color:var(--muted);font-size:13px">MergeLock</span></span><span class="state next">NEXT</span></li><li><span class="wk">Week 2</span><span class="d mono" style="font-size:12px;color:var(--muted)">Wed 16 Dec · 9:30 PM IST</span><span><span class="serif" style="font-size:19px">The edits you never asked for</span><br><span style="color:var(--muted);font-size:13px">Unasked</span></span><span class="state ">UPCOMING</span></li><li style="grid-template-columns:1fr;color:var(--muted);font-size:12px;font-style:italic">Holiday break · back 6 Jan</li><li><span class="wk">Week 3</span><span class="d mono" style="font-size:12px;color:var(--muted)">Wed 6 Jan · 9:30 PM IST</span><span><span class="serif" style="font-size:19px">An AI code editor that works offline</span><br><span style="color:var(--muted);font-size:13px">ZeroEgress</span></span><span class="state ">UPCOMING</span></li><li><span class="wk">Week 4</span><span class="d mono" style="font-size:12px;color:var(--muted)">Wed 13 Jan · 9:30 PM IST</span><span><span class="serif" style="font-size:19px">Compliance controls, from catalog to gate</span><br><span style="color:var(--muted);font-size:13px">OCBC · ControlGate</span></span><span class="state ">UPCOMING</span></li><li><span class="wk">Week 5</span><span class="d mono" style="font-size:12px;color:var(--muted)">Wed 20 Jan · 9:30 PM IST</span><span><span class="serif" style="font-size:19px">Exploited vulnerabilities, from catalog to gate</span><br><span style="color:var(--muted);font-size:13px">OEBC · ExposureGate</span></span><span class="state ">UPCOMING</span></li><li><span class="wk">Week 6</span><span class="d mono" style="font-size:12px;color:var(--muted)">Wed 27 Jan · 9:30 PM IST</span><span><span class="serif" style="font-size:19px">SQL analytics for AI systems</span><br><span style="color:var(--muted);font-size:13px">anySQL</span></span><span class="state ">UPCOMING</span></li><li><span class="wk">Week 7</span><span class="d mono" style="font-size:12px;color:var(--muted)">Wed 3 Feb · 9:30 PM IST</span><span><span class="serif" style="font-size:19px">Governance policy for AI systems</span><br><span style="color:var(--muted);font-size:13px">OpenGPL</span></span><span class="state ">UPCOMING</span></li></ol></div>
+<div class="section"><p class="eyebrow">On demand</p><div class="grid3">
+<div class="empty" style="display:flex;flex-direction:column;justify-content:center"><p class="serif" style="margin:0 0 4px;font-size:18px">Recordings build up here</p><p style="font-size:12px;margin:0">Each premiere stays available right after it airs.</p></div>
+<div class="empty" style="display:flex;flex-direction:column;justify-content:center"><p class="eyebrow">Later</p><p class="serif" style="margin:4px 0">Podcast</p><p style="font-size:12px;margin:0">Episodes will appear here alongside recordings.</p></div></div></div>
+</div></div></section>
+
+<section class="screen" id="b"><h2>2 · Talk page before the premiere</h2>
+<p class="why">The labels now say webcast / premiere / live Q&amp;A, and the page shows the week number and both frameworks for paired sessions. Week 4 is shown here, before its Luma event exists.</p>
+<div class="frame"><div class="urlbar"><i></i><i></i><i></i> openastra.org/events/compliance-controls-catalog-to-gate</div><div class="page"><div class="talk"><div>
+<a style="font-size:13px;color:var(--muted)">← All events</a><p class="eyebrow rust" style="margin-top:18px">Week 4 · Webcast · Premiere with live Q&amp;A · Free</p>
+<h1 class="h" style="font-size:42px">Compliance controls, from catalog to gate</h1><p class="serif" style="font-size:20px;margin:6px 0 0;color:var(--muted)"><em>OCBC + ControlGate</em></p>
+<div class="video"><span class="eyebrow" style="color:#B5B0A6">Premieres in</span><div class="countdown" style="color:var(--ink)"><div><b>56</b><span>days</span></div><div><b>04</b><span>hrs</span></div><div><b>12</b><span>min</span></div></div><small>The premiere plays here, with live chat on YouTube</small></div>
+<p style="color:var(--muted);max-width:640px;margin-top:22px">How OCBC turns NIST SP 800-53 Rev. 5 into an enriched, machine-readable catalog, and how ControlGate enforces it before code merges, as a pre-commit and pre-merge gate.</p></div>
+<aside class="side"><div class="facts"><dl><dt>When</dt><dd>Wed 13 Jan 2027<br>9:30 PM IST</dd><dt>Where</dt><dd>YouTube Premiere · questions in live chat</dd><dt>Cost</dt><dd>Free</dd><dt>Length</dt><dd>75 min, incl. live Q&amp;A</dd></dl>
+<div class="btns"><a class="btn">Add to calendar</a></div><p style="font-size:11px;color:var(--muted);margin:8px 0 0">Register appears when the Luma event is created.</p></div>
+<p class="eyebrow">Speaker</p><div class="person"><span class="av"></span><span><span class="n">Karthikeyan Sadayamuthu</span><br><span class="r">Founder &amp; Principal Author</span></span></div>
+<p class="eyebrow" style="margin-top:22px">Frameworks in this session</p><div class="fw"><span><span class="mono" style="color:var(--muted);font-size:12px">06</span>&nbsp; OCBC</span><span class="tag">DOI</span></div><div class="fw"><span><span class="mono" style="color:var(--muted);font-size:12px">04</span>&nbsp; ControlGate</span><span class="tag">DOI</span></div></aside></div></div></div></section>
+
+<section class="screen" id="c"><h2>3 · Talk page while premiering</h2>
+<p class="why">The recorded video plays for everyone at once, and you answer questions in the YouTube live chat. When the window ends the page keeps the same video as the recording; nothing needs to be edited.</p>
+<div class="frame"><div class="urlbar"><i></i><i></i><i></i> openastra.org/events/merge-conflicts</div><div class="page" style="padding-bottom:28px"><div style="display:grid;grid-template-columns:1.7fr 1fr;gap:16px;max-width:980px">
+<div><p class="eyebrow rust" style="margin-top:22px"><span class="tag live">● PREMIERING NOW</span></p><h1 class="h" style="font-size:36px">Merge conflicts git can't see</h1>
+<div class="video"><span class="badge tag live">● PREMIERE</span><span style="width:60px;height:60px;border-radius:50%;border:2px solid #F6F3EC;display:flex;align-items:center;justify-content:center;font-size:22px">▶</span><small>YouTube Premiere embed</small></div>
+<div class="btns"><a class="btn rust">Watch &amp; ask in chat on YouTube ↗</a></div></div>
+<div style="padding-top:96px"><div class="chat"><span style="font-size:10px;letter-spacing:.12em;color:#B5B0A6">LIVE CHAT · on YouTube</span><span><b>dev_priya</b> does it work with squash merges?</span><span><b>OpenAstra ✓</b> yes, it checks the combined diff before merge</span><span><b>sam.k</b> monorepo support?</span><span style="color:#888">…</span></div><p style="font-size:11px;color:var(--muted)">Questions are asked in YouTube's chat; the button opens the premiere on YouTube with chat beside it.</p></div></div></div></div></section>
+
+<section class="screen" id="d"><h2>4 · Framework page: "Watch the session"</h2>
+<p class="why">Each framework page links to its weekly session: "Premieres Wed 9 Dec" before the session, "Watch the session" afterwards. Visitors who arrive at a framework find its video.</p>
+<div class="frame"><div class="urlbar"><i></i><i></i><i></i> openastra.org/mergelock</div><div class="page" style="padding:22px 24px">
+<p class="eyebrow">I. Agentic · 01</p><h1 class="h" style="font-size:40px">MergeLock</h1><p class="lede" style="font-size:15px">Catches the merge conflicts git can't see between parallel AI agent branches.</p>
+<div style="display:flex;gap:12px;align-items:center;margin-top:16px;border:1px dashed #B4441F99;padding:12px 14px;border-radius:2px;max-width:560px"><span class="tag live">WEBCAST</span><span style="flex:1">Framework of the week · <b>Premieres Wed 9 Dec, 9:30 PM IST</b></span><a style="font-size:13px;color:var(--rust)">Details →</a></div>
+<p class="meta" style="margin-top:10px">… rest of the existing framework page (unchanged) …</p></div></div></section>
+
+<section class="screen" id="e"><h2>5 · Mobile (390 px)</h2>
+<p class="why">The series list collapses to the week number plus a stacked title, date and state.</p>
+<div class="frame phone"><div class="urlbar"><i></i> /events</div><div style="padding:16px">
+<p class="eyebrow">Framework of the week · Wed 11 AM ET</p><h1 class="h" style="font-size:34px">Events</h1>
+<div class="tabs" style="gap:6px"><span class="pill on">All</span><span class="pill">Upcoming</span><span class="pill">On demand</span></div>
+<div class="featured" style="padding:16px;grid-template-columns:1fr"><div><p class="eyebrow rust">Week 1 · Next premiere</p><h3 style="font-size:22px">Merge conflicts git can't see</h3><p class="meta" style="font-size:13px">Wed 9 Dec · 9:30 PM IST</p><div class="btns"><a class="btn solid" style="width:100%;justify-content:center">Register on Luma ↗</a></div></div></div>
+<p class="eyebrow" style="margin-top:20px">The series</p><ol class="series"><li><span class="wk">Week 1</span><span class="d mono" style="font-size:12px;color:var(--muted)">Wed 9 Dec · 9:30 PM IST</span><span><span class="serif" style="font-size:19px">Merge conflicts git can't see</span><br><span style="color:var(--muted);font-size:13px">MergeLock</span></span><span class="state next">NEXT</span></li><li><span class="wk">Week 2</span><span class="d mono" style="font-size:12px;color:var(--muted)">Wed 16 Dec · 9:30 PM IST</span><span><span class="serif" style="font-size:19px">The edits you never asked for</span><br><span style="color:var(--muted);font-size:13px">Unasked</span></span><span class="state ">UPCOMING</span></li><li style="grid-template-columns:1fr;color:var(--muted);font-size:12px;font-style:italic">Holiday break · back 6 Jan</li><li><span class="wk">Week 3</span><span class="d mono" style="font-size:12px;color:var(--muted)">Wed 6 Jan · 9:30 PM IST</span><span><span class="serif" style="font-size:19px">An AI code editor that works offline</span><br><span style="color:var(--muted);font-size:13px">ZeroEgress</span></span><span class="state ">UPCOMING</span></li></ol></div></div></section>
+</div></body></html>
