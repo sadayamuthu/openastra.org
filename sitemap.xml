@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://openastra.org/</loc></url>
+  <url><loc>https://openastra.org/events/</loc></url>
+  <url><loc>https://openastra.org/events/mergelock/</loc></url>
+  <url><loc>https://openastra.org/events/unasked/</loc></url>
+  <url><loc>https://openastra.org/events/zero-egress/</loc></url>
+  <url><loc>https://openastra.org/events/ocbc-controlgate/</loc></url>
+  <url><loc>https://openastra.org/events/oebc-exposuregate/</loc></url>
+  <url><loc>https://openastra.org/events/anysql/</loc></url>
+  <url><loc>https://openastra.org/events/opengpl/</loc></url>
+</urlset>
