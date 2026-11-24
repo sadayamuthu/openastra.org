@@ -13,13 +13,6 @@ function Domain({ project }) {
       </Link>
     )
   }
-  if (project.repo) {
-    return (
-      <a href={project.repo} target="_blank" rel="noreferrer" aria-label={`${project.name} on GitHub`} className="font-mono text-xs text-ink-muted hover:text-rust">
-        GitHub ↗
-      </a>
-    )
-  }
   return <span className="font-mono text-xs text-ink-muted">{project.domain}</span>
 }
 

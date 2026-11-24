@@ -801,9 +801,22 @@ export function labProjects() {
   const fromFrameworks = frameworks
     .filter((f) => f.lab)
     .map((f) => ({ name: f.name, group: f.category, category: f.category, summary: f.summary, description: f.tagline, to: `/${f.slug}` }))
-  const openAreas = OPEN_AREA_PROJECTS.map((p) => ({ ...p, group: AREA_CATEGORY[p.area], category: AREA_CATEGORY[p.area] }))
-  const all = [...(SHOW_PAUSED_LAB ? [...NEW_LAB_PROJECTS, ...fromFrameworks] : []), ...openAreas]
+  const all = [...(SHOW_PAUSED_LAB ? [...NEW_LAB_PROJECTS, ...fromFrameworks] : []), ...openAreaProjects()]
   return GROUP_ORDER.flatMap((g) => all.filter((p) => p.group === g))
+}
+
+// Open-area lab projects with their category and page; each page lives at
+// /lab/<repo name>.
+export function openAreaProjects() {
+  return OPEN_AREA_PROJECTS.map((p) => {
+    const slug = p.repo.replace(`${GITHUB}/`, '')
+    const category = AREA_CATEGORY[p.area]
+    return { ...p, slug, group: category, category, to: `/lab/${slug}` }
+  })
+}
+
+export function getLabProject(slug) {
+  return openAreaProjects().find((p) => p.slug === slug)
 }
 
 // Lab groups that currently have at least one project.

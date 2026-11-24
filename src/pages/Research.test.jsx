@@ -48,8 +48,7 @@ describe('Research agenda', () => {
     const region = within(screen.getByRole('region', { name: 'Research agenda' }))
     expect(region.getByRole('link', { name: 'MergeLock' })).toHaveAttribute('href', '/mergelock')
     expect(region.getByRole('link', { name: 'OpenGPL' })).toHaveAttribute('href', '/opengpl')
-    expect(region.getByText('AgentTaint (lab)')).toBeInTheDocument()
-    expect(region.queryByRole('link', { name: /AgentTaint/ })).toBeNull()
+    expect(region.getByRole('link', { name: 'AgentTaint (lab)' })).toHaveAttribute('href', '/lab/agenttaint')
     expect(region.queryByText(/CyberLake|AgentID/)).toBeNull()
   })
 

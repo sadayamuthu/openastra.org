@@ -24,11 +24,10 @@ describe('Lab page', () => {
     expect(runtime.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual(['AgentLock', 'AgentTaint', 'AgentBox'])
   })
 
-  it('links each project to its GitHub repo', () => {
+  it('links each project to its own page', () => {
     renderAt()
-    const links = screen.getAllByRole('link', { name: /^\S+ on GitHub$/ })
-    expect(links).toHaveLength(11)
-    expect(screen.getByRole('link', { name: 'AgentBox on GitHub' })).toHaveAttribute('href', 'https://github.com/sadayamuthu/agentbox')
+    expect(screen.getAllByRole('link', { name: 'Details →' })).toHaveLength(11)
+    expect(screen.getByRole('link', { name: 'AgentBox' })).toHaveAttribute('href', '/lab/agentbox')
   })
 
   it('filters by group', () => {

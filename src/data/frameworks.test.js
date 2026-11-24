@@ -230,6 +230,12 @@ describe('In the lab', () => {
     })
   })
 
+  it('gives each one a page under /lab, named after its repo', () => {
+    const open = labProjects().filter((p) => p.repo)
+    expect(open).toHaveLength(11)
+    open.forEach((p) => expect(p.to).toBe(p.repo.replace('https://github.com/sadayamuthu', '/lab')))
+  })
+
 })
 
 describe('research agenda', () => {

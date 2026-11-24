@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation, useParams } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
@@ -9,6 +9,7 @@ import Research from './pages/Research'
 import About from './pages/About'
 import Profile from './pages/Profile'
 import Lab from './pages/Lab'
+import LabProjectPage from './pages/LabProjectPage'
 import Events from './pages/Events'
 import EventPage from './pages/EventPage'
 import NotFound from './pages/NotFound'
@@ -35,6 +36,11 @@ function ScrollAndTitle() {
   return null
 }
 
+function LabProjectRoute() {
+  const { slug } = useParams()
+  return <LabProjectPage slug={slug} />
+}
+
 export function AppRoutes() {
   return (
     <>
@@ -43,6 +49,7 @@ export function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/frameworks" element={<Frameworks />} />
         <Route path="/lab" element={<Lab />} />
+        <Route path="/lab/:slug" element={<LabProjectRoute />} />
         <Route path="/research" element={<Research />} />
         <Route path="/about" element={<About />} />
         <Route path="/about/:slug" element={<Profile />} />
