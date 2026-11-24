@@ -48,8 +48,7 @@ describe('Research agenda', () => {
     const region = within(screen.getByRole('region', { name: 'Research agenda' }))
     expect(region.getByRole('link', { name: 'MergeLock' })).toHaveAttribute('href', '/mergelock')
     expect(region.getByRole('link', { name: 'OpenGPL' })).toHaveAttribute('href', '/opengpl')
-    expect(region.getByText('AgentTaint (lab)')).toBeInTheDocument()
-    expect(region.queryByRole('link', { name: /AgentTaint/ })).toBeNull()
+    expect(region.getByRole('link', { name: 'AgentTaint (lab)' })).toHaveAttribute('href', '/lab/agenttaint')
     expect(region.queryByText(/CyberLake|AgentID/)).toBeNull()
   })
 
@@ -77,7 +76,7 @@ describe('Research agenda', () => {
 })
 
 describe('Research open source section', () => {
-  it('links each shipped project\'s docs and marks lab repos as not open yet', () => {
+  it('links every project\'s docs, lab repos included', () => {
     renderResearch()
     const region = within(screen.getByRole('region', { name: 'Open source' }))
     expect(region.getAllByRole('link', { name: 'switchyard Thesis' })[0])
@@ -86,8 +85,11 @@ describe('Research open source section', () => {
       .toHaveAttribute('href', 'https://github.com/sadayamuthu/mergelock/blob/main/LICENSE')
     expect(region.queryByText('Repo opens soon')).toBeNull()
     const agenttaint = region.getByRole('rowheader', { name: 'AgentTaint (lab)' }).closest('tr')
-    expect(within(agenttaint).getAllByText('–')).toHaveLength(8)
-    expect(region.queryByRole('link', { name: /AgentTaint (Code|Thesis)/ })).toBeNull()
+    expect(within(agenttaint).queryAllByText('–')).toHaveLength(0)
+    expect(region.getAllByRole('link', { name: 'AgentTaint Thesis' })[0])
+      .toHaveAttribute('href', 'https://github.com/sadayamuthu/agenttaint/blob/main/THESIS.md')
+    expect(region.getAllByRole('link', { name: 'AgentTaint Code' })[0])
+      .toHaveAttribute('href', 'https://github.com/sadayamuthu/agenttaint')
   })
 
   it('lists projects under their category, with no Area column', () => {

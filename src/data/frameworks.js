@@ -710,8 +710,8 @@ const NEW_LAB_PROJECTS = [
 
 // ───────────── Open-area lab projects ─────────────
 // Lab projects for agenda areas VII–X; each `area` is a category numeral. Their
-// repos are still private, so the cards don't link anywhere. switchyard (VIII) and
-// AgentChaos (X) shipped and are in the index.
+// repos are public (design stage, no code yet) and each card links to its repo.
+// switchyard (VIII) and AgentChaos (X) shipped and are in the index.
 const repo = (name) => `${GITHUB}/${name}`
 
 export const OPEN_AREA_PROJECTS = [
@@ -801,9 +801,22 @@ export function labProjects() {
   const fromFrameworks = frameworks
     .filter((f) => f.lab)
     .map((f) => ({ name: f.name, group: f.category, category: f.category, summary: f.summary, description: f.tagline, to: `/${f.slug}` }))
-  const openAreas = OPEN_AREA_PROJECTS.map((p) => ({ ...p, group: AREA_CATEGORY[p.area], category: AREA_CATEGORY[p.area] }))
-  const all = [...(SHOW_PAUSED_LAB ? [...NEW_LAB_PROJECTS, ...fromFrameworks] : []), ...openAreas]
+  const all = [...(SHOW_PAUSED_LAB ? [...NEW_LAB_PROJECTS, ...fromFrameworks] : []), ...openAreaProjects()]
   return GROUP_ORDER.flatMap((g) => all.filter((p) => p.group === g))
+}
+
+// Open-area lab projects with their category and page; each page lives at
+// /lab/<repo name>.
+export function openAreaProjects() {
+  return OPEN_AREA_PROJECTS.map((p) => {
+    const slug = p.repo.replace(`${GITHUB}/`, '')
+    const category = AREA_CATEGORY[p.area]
+    return { ...p, slug, group: category, category, to: `/lab/${slug}` }
+  })
+}
+
+export function getLabProject(slug) {
+  return openAreaProjects().find((p) => p.slug === slug)
 }
 
 // Lab groups that currently have at least one project.
@@ -814,8 +827,7 @@ export function activeLabGroups() {
 
 // ───────────── Repo docs ─────────────
 // What each public repo has at its root, checked against GitHub on 2026-11-24.
-// Update an entry when a repo adds a doc. Lab repos are private, so they have no
-// entry and get no links; add one when a repo goes public.
+// Update an entry when a repo adds a doc; add one for each new public repo.
 
 export const DOC_KINDS = [
   { id: 'thesis', label: 'Thesis', file: 'THESIS.md' },
@@ -843,6 +855,18 @@ const REPO_DOCS = {
   ocbc: { license: 'MIT', docs: ['contributing', 'citation'] },
   oebc: { license: 'MIT', docs: ['contributing', 'citation'] },
   anysql: { license: 'Apache-2.0', docs: ['roadmap', 'contributing', 'governance', 'maintainers', 'citation'] },
+  // Open-area lab repos (VII–X).
+  threatdiff: { license: 'Apache-2.0', docs: ALL_DOCS },
+  oatc: { license: 'Apache-2.0', docs: ALL_DOCS },
+  agentrisk: { license: 'Apache-2.0', docs: ALL_DOCS },
+  agentlock: { license: 'Apache-2.0', docs: ALL_DOCS },
+  agenttaint: { license: 'Apache-2.0', docs: ALL_DOCS },
+  agentbox: { license: 'Apache-2.0', docs: ALL_DOCS },
+  tripwire: { license: 'Apache-2.0', docs: ALL_DOCS },
+  acldrift: { license: 'Apache-2.0', docs: ALL_DOCS },
+  hubscan: { license: 'Apache-2.0', docs: ALL_DOCS },
+  agentrewind: { license: 'Apache-2.0', docs: ALL_DOCS },
+  agentfuse: { license: 'Apache-2.0', docs: ALL_DOCS },
 }
 
 const repoName = (url) => url.replace(`${GITHUB}/`, '')

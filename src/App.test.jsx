@@ -16,6 +16,8 @@ describe('routes', () => {
     ['/zero-egress', 'ZeroEgress'],
     ['/mergelock', 'MergeLock'],
     ['/unasked', 'Unasked'],
+    ['/lab/agentbox', 'AgentBox'],
+    ['/lab/threatdiff', 'ThreatDiff'],
   ])('%s renders %s', (path, name) => {
     renderAt(path)
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(name)
