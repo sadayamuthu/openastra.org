@@ -280,7 +280,7 @@ describe('repo docs', () => {
       .toBe('https://github.com/sadayamuthu/zero-egress/blob/main/LICENSE.txt')
   })
 
-  it('groups projects by category I to X, shipped first, lab projects with no links', () => {
+  it('groups projects by category I to X, shipped first, every row with its repo links', () => {
     const groups = openSourceGroups()
     expect(groups.map((g) => g.category.numeral)).toEqual(['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'])
     expect(groups.find((g) => g.category.id === 'runtime').rows.map((r) => r.name))
@@ -289,7 +289,10 @@ describe('repo docs', () => {
       .toEqual(['AgentChaos', 'AgentRewind', 'AgentFuse'])
     const rows = groups.flatMap((g) => g.rows)
     expect(rows).toHaveLength(shippedFrameworks().length + labProjects().length)
-    rows.filter((r) => r.lab).forEach((r) => expect(r.code).toBeUndefined())
-    rows.filter((r) => !r.lab).forEach((r) => expect(r.code).toBeTruthy())
+    rows.forEach((r) => expect(r.code, r.name).toBeTruthy())
+    rows.filter((r) => r.lab).forEach((r) => {
+      expect(r.docs.map((d) => d.id), r.name).toEqual(['thesis', 'roadmap', 'contributing', 'governance', 'maintainers', 'citation'])
+      expect(r.license.label).toBe('Apache 2.0')
+    })
   })
 })
