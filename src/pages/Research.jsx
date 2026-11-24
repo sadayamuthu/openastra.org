@@ -1,17 +1,22 @@
 import { Link } from 'react-router-dom'
 import Citation from '../components/Citation'
+import { OpenSourceTable } from '../components/ProjectDocs'
 import { ComingSoon, Eyebrow, Pill } from '../components/ui'
-import { agenda, citedFrameworks, frameworksByCategory } from '../data/frameworks'
+import { agenda, citedFrameworks, frameworksByCategory, openSourceRows, shippedFrameworks } from '../data/frameworks'
 
 // Areas with shipped work link to their /frameworks filter; lab-only areas to their /lab group.
 function areaLink(a) {
   if (a.shipped.length) return `/frameworks?category=${a.category}`
-  if (a.lab.length) return `/lab?group=${a.category}`
+  if (a.lab.length) return `/lab?group=${a.lab[0].group}`
   return null
 }
 
+const NUMBER_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten']
+
 export default function Research() {
   const total = citedFrameworks().length
+  const shipped = shippedFrameworks().length
+  const openCount = agenda().filter((a) => a.shipped.length === 0 && a.lab.length === 0).length
   const groups = frameworksByCategory()
     .map((g) => ({ ...g, frameworks: g.frameworks.filter((f) => f.zenodo) }))
     .filter((g) => g.frameworks.length > 0)
@@ -21,12 +26,15 @@ export default function Research() {
       <Eyebrow>Research</Eyebrow>
       <h1 className="font-serif text-5xl mt-3">Research</h1>
       <p className="text-ink-muted mt-4 max-w-2xl leading-relaxed">
-        All nine frameworks are archived on Zenodo with a permanent DOI. Cite the software today;
-        white papers are on the way.
+        {total === shipped
+          ? `All ${shipped} frameworks are archived on Zenodo with a permanent DOI.`
+          : `${total} of ${shipped} frameworks are archived on Zenodo with a permanent DOI; the rest get one with a later release.`}{' '}
+        Cite the software today; white papers are on the way.
       </p>
       <nav className="flex flex-wrap gap-2 mt-6" aria-label="Research sections">
         <a href="#citations"><Pill active>Citations</Pill></a>
         <a href="#agenda"><Pill>Agenda</Pill></a>
+        <a href="#open-source"><Pill>Open source</Pill></a>
         <a href="#white-papers"><Pill soon>White papers · soon</Pill></a>
       </nav>
 
@@ -54,7 +62,9 @@ export default function Research() {
         <h2 className="text-[11px] font-medium tracking-[0.14em] uppercase text-ink-muted">Research agenda · 10 areas</h2>
         <h3 className="font-serif text-3xl mt-3">Where we work, and where we're going next.</h3>
         <p className="text-ink-muted mt-2 max-w-2xl">
-          Six areas have projects today. Four are open: we're researching them, and there's nothing to ship yet.
+          {openCount === 0
+            ? 'Every area has projects today, shipped or in the lab.'
+            : `${NUMBER_WORDS[10 - openCount]} areas have projects today. ${NUMBER_WORDS[openCount]} ${openCount === 1 ? 'is' : 'are'} open: we're researching them, and there's nothing to ship yet.`}
         </p>
         <ol className="mt-6">
           {agenda().map((a) => {
@@ -90,6 +100,16 @@ export default function Research() {
             )
           })}
         </ol>
+      </section>
+
+      <section id="open-source" aria-label="Open source" className="mt-14 pt-6 border-t-2 border-ink scroll-mt-24">
+        <h2 className="text-[11px] font-medium tracking-[0.14em] uppercase text-ink-muted">Open source · repo docs</h2>
+        <h3 className="font-serif text-3xl mt-3">Read the thinking, follow the plan, help build it.</h3>
+        <p className="text-ink-muted mt-2 max-w-2xl">
+          Each project's code, thesis, roadmap and how to contribute, straight from its GitHub repo.
+          Lab repos open when their first release ships.
+        </p>
+        <OpenSourceTable rows={openSourceRows()} />
       </section>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-14">

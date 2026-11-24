@@ -33,7 +33,7 @@ describe('Events hub, empty', () => {
       expect(screen.getByText('Announced soon')).toBeInTheDocument()
       expect(screen.getByText('Next series')).toBeInTheDocument()
       expect(screen.getByText('The next series will be announced here.')).toBeInTheDocument()
-      expect(screen.getAllByText('Video coming soon').length).toBe(7)
+      expect(screen.getAllByText('Video coming soon').length).toBe(8)
     } finally {
       vi.useRealTimers()
     }

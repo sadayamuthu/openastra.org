@@ -1,11 +1,10 @@
 import { Link } from 'react-router-dom'
 import FrameworkIndex from '../components/FrameworkIndex'
 import Pipeline from '../components/Pipeline'
-import Citation from '../components/Citation'
 import { Button, ComingSoon, Eyebrow, Pill } from '../components/ui'
 import LabCard from '../components/LabCard'
 import { Mark } from '../components/Logo'
-import { LAB_GROUPS, citedFrameworks, doiUrl, getFramework, labProjects, shippedFrameworks } from '../data/frameworks'
+import { LAB_GROUPS, citedFrameworks, doiUrl, labProjects, shippedFrameworks } from '../data/frameworks'
 
 function Section({ label, children, className = '' }) {
   const id = label.toLowerCase().replace(/\W+/g, '-')
@@ -54,14 +53,7 @@ export default function Home() {
       </section>
 
       <Section label="The index">
-        <FrameworkIndex
-          aside={
-            <div className="bg-card border border-rule rounded-sm p-5">
-              <p className="text-[11px] font-medium tracking-[0.14em] uppercase text-ink-muted mb-3">Cite this · Featured</p>
-              <Citation framework={getFramework('mergelock')} compact />
-            </div>
-          }
-        />
+        <FrameworkIndex />
       </Section>
 
       <Section label="Where each framework fits">
@@ -75,8 +67,9 @@ export default function Home() {
           <Link to="/lab" className="text-sm hover:text-rust">All {lab.length} →</Link>
         </div>
         <p className="text-ink-muted max-w-2xl mb-6">
-          Early-stage projects. No code published yet. Each will join the index, with its own DOI, when it ships.
+          Early-stage projects. Most have no code published yet. Each will join the index, with its own DOI, when it ships.
         </p>
+        {suite && openq.length > 0 && (
         <div className="border border-dashed border-ink/30 rounded-sm p-4 mb-4">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <p className="font-serif text-xl">{suite.title}</p>
@@ -97,6 +90,7 @@ export default function Home() {
             ))}
           </ol>
         </div>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {others.map((p) => (
             <LabCard key={p.name} project={p} eyebrow={LAB_GROUPS.find((g) => g.id === p.group).title} />

@@ -1,6 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { frameworksByCategory, labProjects, shippedFrameworks } from '../data/frameworks'
 import { DoiTag, Eyebrow, Pill } from '../components/ui'
+import Pipeline from '../components/Pipeline'
 
 function Card({ fw }) {
   return (
@@ -35,7 +36,13 @@ export default function Frameworks() {
         <h1 className="font-serif text-5xl">Frameworks</h1>
         <Link to="/lab" className="text-sm hover:text-rust">{labProjects().length} more in the lab →</Link>
       </div>
-      <div className="flex flex-wrap gap-2 mt-6" role="group" aria-label="Filter by category">
+      <section aria-labelledby="where-each-fits" className="mt-8">
+        <h2 id="where-each-fits" className="text-[11px] font-medium tracking-[0.14em] uppercase text-ink-muted mb-2">Where each framework fits</h2>
+        <p className="font-serif text-2xl mb-6 max-w-2xl">Guardrails at every stage of the agent lifecycle.</p>
+        <Pipeline />
+      </section>
+
+      <div className="flex flex-wrap gap-2 mt-10 pt-6 border-t border-rule" role="group" aria-label="Filter by category">
         <Pill active={!active} onClick={() => select(null)}>All</Pill>
         {all.map(({ category: c }) => (
           <Pill key={c.id} active={active === c.id} onClick={() => select(c.id)}>{c.name}</Pill>

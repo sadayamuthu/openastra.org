@@ -1,46 +1,61 @@
 import {
-  categories, frameworks, getFramework, frameworksByCategory, shippedFrameworks, labProjects, LAB_GROUPS, HIDDEN_LAB_PROJECTS,
+  categories, frameworks, getFramework, frameworksByCategory, shippedFrameworks, labProjects, activeLabGroups, LAB_GROUPS, OPEN_AREA_PROJECTS, repoDocs, openSourceRows,
   doiUrl, citationText, bibtex, agenda,
 } from './frameworks'
 
 describe('frameworks data', () => {
-  it('indexes 9 shipped frameworks numbered 1..9, with unique slugs overall', () => {
+  it('indexes 12 shipped frameworks numbered 1..12, with unique slugs overall', () => {
     expect(new Set(frameworks.map((f) => f.slug)).size).toBe(frameworks.length)
-    expect(shippedFrameworks()).toHaveLength(9)
-    expect(shippedFrameworks().map((f) => f.number)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
-    shippedFrameworks().forEach((f) => expect(f.zenodo).toBeDefined())
+    expect(shippedFrameworks()).toHaveLength(12)
+    expect(shippedFrameworks().map((f) => f.number)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
   })
 
-  it('puts every framework in a known category and leaves no category empty', () => {
+  it('has one category per agenda area, and puts every framework in one', () => {
     const ids = categories.map((c) => c.id)
-    expect(ids).toEqual(['agentic', 'security-controls', 'security-catalog', 'observability', 'identity', 'governance'])
+    expect(ids).toEqual([
+      'agentic', 'security-controls', 'security-catalog', 'observability', 'identity', 'governance',
+      'threat-modeling', 'runtime', 'data-security', 'resilience',
+    ])
+    expect(categories.map((c) => c.numeral)).toEqual(agenda().map((a) => a.numeral))
+    expect(agenda().map((a) => a.category)).toEqual(ids)
     frameworks.forEach((f) => expect(ids).toContain(f.category))
     frameworksByCategory().forEach((g) => expect(g.frameworks.length).toBeGreaterThan(0))
   })
 
-  it('numbers shipped frameworks in category order, with OpenGPL under Governance', () => {
+  it('numbers shipped frameworks in category order, with OpenAPL under Identity and OpenGPL under Governance', () => {
     expect(shippedFrameworks().map((f) => f.slug)).toEqual(
-      ['mergelock', 'unasked', 'zero-egress', 'controlgate', 'exposuregate', 'ocbc', 'oebc', 'anysql', 'opengpl'])
+      ['mergelock', 'unasked', 'zero-egress', 'controlgate', 'exposuregate', 'ocbc', 'oebc', 'anysql', 'openapl', 'opengpl', 'switchyard', 'agentchaos'])
+    expect(getFramework('openapl').category).toBe('identity')
     expect(getFramework('opengpl').category).toBe('governance')
     expect(frameworksByCategory().map((g) => g.category.id)).toEqual(
-      ['agentic', 'security-controls', 'security-catalog', 'observability', 'governance'])
+      ['agentic', 'security-controls', 'security-catalog', 'observability', 'identity', 'governance', 'runtime', 'resilience'])
   })
 
-  it('puts AgentID in the Identity & Access lab group', () => {
-    const agentId = labProjects().find((p) => p.name === 'AgentID')
-    expect(agentId.group).toBe('identity')
-    expect(agentId.category).toBe('identity')
+  it('keeps an Identity & Access lab group for when AgentID returns', () => {
     expect(LAB_GROUPS.map((g) => g.id)).toContain('identity')
   })
 
-  it('orders the agentic category MergeLock, Unasked, ZeroEgress, CyberLake', () => {
+  it('orders the agentic category MergeLock, Unasked, ZeroEgress', () => {
     const agentic = frameworksByCategory().find((g) => g.category.id === 'agentic')
     expect(agentic.frameworks.map((f) => f.slug)).toEqual(['mergelock', 'unasked', 'zero-egress'])
   })
 
-  it('gives 9 frameworks a well-formed Zenodo DOI and none to CyberLake', () => {
+  it('puts switchyard under Runtime Security and AgentChaos under Resilience & Recovery', () => {
+    expect(getFramework('switchyard').category).toBe('runtime')
+    expect(getFramework('agentchaos').category).toBe('resilience')
+  })
+
+  it('ships switchyard and AgentChaos without a DOI yet', () => {
+    ;['switchyard', 'agentchaos'].forEach((slug) => {
+      expect(getFramework(slug).lab).toBeUndefined()
+      expect(getFramework(slug).zenodo).toBeUndefined()
+      expect(getFramework(slug).quickstart.length).toBeGreaterThan(0)
+    })
+  })
+
+  it('gives 10 frameworks a well-formed Zenodo DOI and none to CyberLake', () => {
     const withDoi = frameworks.filter((f) => f.zenodo)
-    expect(withDoi).toHaveLength(9)
+    expect(withDoi).toHaveLength(10)
     withDoi.forEach((f) => expect(f.zenodo.doi).toMatch(/^10\.5281\/zenodo\.\d+$/))
     expect(getFramework('cyberlake').zenodo).toBeUndefined()
     expect(getFramework('exposuregate').zenodo.doi).toBe('10.5281/zenodo.24241823')
@@ -171,10 +186,21 @@ describe('install commands match what is actually published', () => {
 })
 
 describe('In the lab', () => {
-  it('holds CyberLake and the 7 new projects', () => {
-    expect(labProjects().map((p) => p.name)).toEqual([
-      'OpenQR', 'OpenQS', 'OpenQO', 'OpenQA', 'CyberLake', 'OpenCIQ', 'OpenEQ', 'AgentID',
-    ])
+  const OPEN_AREA = [
+    'ThreatDiff', 'OATC', 'AgentRisk',
+    'IntentLock', 'Taintline', 'Airlock',
+    'Tripwire', 'ACLDrift', 'HubScan',
+    'Rewind', 'Fuse',
+  ]
+
+  it('holds the 11 open-area projects, in area order', () => {
+    expect(labProjects().map((p) => p.name)).toEqual(OPEN_AREA)
+  })
+
+  it('pauses the OpenQ suite, AgentID, OpenQA, OpenCIQ, OpenEQ and CyberLake', () => {
+    const names = labProjects().map((p) => p.name)
+    ;['OpenQR', 'OpenQS', 'OpenQO', 'AgentID', 'OpenQA', 'OpenCIQ', 'OpenEQ', 'CyberLake'].forEach((n) =>
+      expect(names).not.toContain(n))
   })
 
   it('keeps lab projects out of the numbered index', () => {
@@ -183,28 +209,27 @@ describe('In the lab', () => {
     expect(getFramework('exposuregate').lab).toBeUndefined()
   })
 
-  it('pairs each new project with its domain', () => {
-    const domains = Object.fromEntries(labProjects().filter((p) => p.domain).map((p) => [p.name, p.domain]))
-    expect(domains).toEqual({
-      OpenQR: 'openqr.dev', OpenQS: 'openqs.org', OpenQO: 'openqo.org', AgentID: 'openid.ai',
-      OpenQA: 'openqa.dev', OpenCIQ: 'openciq.com', OpenEQ: 'openeq.dev',
-    })
-  })
-
-  it('orders the OpenQ suite Know, Find, Fix', () => {
-    expect(labProjects().filter((p) => p.group === 'openq').map((p) => `${p.step} ${p.name}`)).toEqual([
-      'Know OpenQR', 'Find OpenQS', 'Fix OpenQO',
+  it('groups each project by its agenda area', () => {
+    expect(labProjects().map((p) => `${p.area} ${p.group}`)).toEqual([
+      ...Array(3).fill('VII threat-modeling'),
+      ...Array(3).fill('VIII runtime'),
+      ...Array(3).fill('IX data-security'),
+      ...Array(2).fill('X resilience'),
     ])
   })
 
-  it('gives every project a known group', () => {
-    const ids = LAB_GROUPS.map((g) => g.id)
-    labProjects().forEach((p) => expect(ids).toContain(p.group))
+  it('shows only groups that have projects', () => {
+    expect(activeLabGroups().map((g) => g.id)).toEqual(['threat-modeling', 'runtime', 'data-security', 'resilience'])
   })
 
-  it('links CyberLake to its existing page', () => {
-    expect(labProjects().find((p) => p.name === 'CyberLake').to).toBe('/cyberlake')
+  it('gives each one a repo, a summary and a description', () => {
+    OPEN_AREA_PROJECTS.forEach((p) => {
+      expect(p.repo).toMatch(/^https:\/\/github\.com\/sadayamuthu\/[a-z]+$/)
+      expect(p.summary).toBeTruthy()
+      expect(p.description).toBeTruthy()
+    })
   })
+
 })
 
 describe('research agenda', () => {
@@ -212,46 +237,53 @@ describe('research agenda', () => {
     expect(agenda().map((a) => a.numeral)).toEqual(['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'])
   })
 
-  it('leaves VII to X as open areas with no projects', () => {
-    agenda().slice(6).forEach((a) => {
-      expect(a.category).toBeUndefined()
-      expect(a.shipped).toEqual([])
-      expect(a.lab).toEqual([])
-    })
+  it('lists lab projects under VII to X by area', () => {
+    const [, , , , , , vii, viii, ix, x] = agenda()
+    expect(vii.lab.map((p) => p.name)).toEqual(['ThreatDiff', 'OATC', 'AgentRisk'])
+    expect(viii.lab.map((p) => p.name)).toEqual(['IntentLock', 'Taintline', 'Airlock'])
+    expect(ix.lab.map((p) => p.name)).toEqual(['Tripwire', 'ACLDrift', 'HubScan'])
+    expect(x.lab.map((p) => p.name)).toEqual(['Rewind', 'Fuse'])
+    expect(agenda().slice(6).map((a) => a.shipped.map((f) => f.name))).toEqual([[], ['switchyard'], [], ['AgentChaos']])
   })
 
   it('derives projects from categories', () => {
     const [, , , , v, vi] = agenda()
     expect(vi.shipped.map((f) => f.name)).toEqual(['OpenGPL'])
-    expect(v.shipped).toEqual([])
-    expect(v.lab.map((p) => p.name)).toEqual(['AgentID'])
+    expect(v.shipped.map((f) => f.name)).toEqual(['OpenAPL'])
+    expect(v.lab).toEqual([])
   })
 })
 
-describe('hidden lab projects', () => {
-  it('holds three projects for each open area, VII to X', () => {
-    expect(HIDDEN_LAB_PROJECTS.map((p) => `${p.area} ${p.name}`)).toEqual([
-      'VII ThreatDiff', 'VII OATC', 'VII AgentRisk',
-      'VIII IntentLock', 'VIII Taintline', 'VIII Airlock',
-      'IX Tripwire', 'IX ACLDrift', 'IX HubScan',
-      'X Rewind', 'X Fuse', 'X AgentChaos',
-    ])
-  })
-
-  it('gives each one a repo, a summary and a description', () => {
-    HIDDEN_LAB_PROJECTS.forEach((p) => {
-      expect(p.repo).toMatch(/^https:\/\/github\.com\/sadayamuthu\/[a-z]+$/)
-      expect(p.summary).toBeTruthy()
-      expect(p.description).toBeTruthy()
+describe('repo docs', () => {
+  it('gives every shipped framework its code, docs and license', () => {
+    shippedFrameworks().forEach((f) => {
+      const repo = repoDocs(f.links.github)
+      expect(repo, f.slug).not.toBeNull()
+      expect(repo.code).toBe(f.links.github)
+      expect(repo.license.url).toMatch(/\/blob\/main\/LICENSE/)
     })
   })
 
-  it('keeps them off the site', () => {
-    const hidden = HIDDEN_LAB_PROJECTS.map((p) => p.name)
-    const visible = [
-      ...labProjects().map((p) => p.name),
-      ...agenda().flatMap((a) => a.lab.map((p) => p.name)),
-    ]
-    hidden.forEach((name) => expect(visible).not.toContain(name))
+  it('lists all six docs for switchyard and AgentChaos, in a fixed order', () => {
+    ;['switchyard', 'agentchaos'].forEach((slug) => {
+      expect(repoDocs(getFramework(slug).links.github).docs.map((d) => d.label)).toEqual([
+        'Thesis', 'Roadmap', 'Contributing', 'Governance', 'Maintainers', 'Citation',
+      ])
+    })
+    expect(repoDocs(getFramework('switchyard').links.github).docs[0].url)
+      .toBe('https://github.com/sadayamuthu/switchyard/blob/main/THESIS.md')
+  })
+
+  it('names licenses and points at the right file', () => {
+    expect(repoDocs(getFramework('unasked').links.github).license.label).toBe('MIT')
+    expect(repoDocs(getFramework('zero-egress').links.github).license.url)
+      .toBe('https://github.com/sadayamuthu/zero-egress/blob/main/LICENSE.txt')
+  })
+
+  it('has one row per shipped framework, then one per lab project with no links', () => {
+    const rows = openSourceRows()
+    expect(rows).toHaveLength(shippedFrameworks().length + labProjects().length)
+    rows.filter((r) => r.lab).forEach((r) => expect(r.code).toBeUndefined())
+    rows.filter((r) => !r.lab).forEach((r) => expect(r.code).toBeTruthy())
   })
 })

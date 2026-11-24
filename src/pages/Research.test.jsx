@@ -11,7 +11,7 @@ describe('Research page', () => {
     expect(screen.getByRole('heading', { name: /Zenodo citations/ })).toBeInTheDocument()
     const hrefs = screen.getAllByRole('link', { name: /^https:\/\/doi\.org\// }).map((a) => a.getAttribute('href'))
     expect(hrefs.sort()).toEqual(citedFrameworks().map((f) => doiUrl(f.zenodo.doi)).sort())
-    expect(hrefs).toHaveLength(9)
+    expect(hrefs).toHaveLength(10)
   })
 
   it('keeps White papers as Coming soon and does not mention patents', () => {
@@ -35,11 +35,12 @@ describe('Research copy accuracy', () => {
 })
 
 describe('Research agenda', () => {
-  it('lists ten areas, four of them open', () => {
-    renderResearch()
+  it('lists ten areas, none of them open', () => {
+    const { container } = renderResearch()
     const region = within(screen.getByRole('region', { name: 'Research agenda' }))
     expect(region.getAllByRole('listitem')).toHaveLength(10)
-    expect(region.getAllByText('Open area')).toHaveLength(4)
+    expect(region.queryAllByText('Open area')).toHaveLength(0)
+    expect(container.textContent).toMatch(/Every area has projects today/)
   })
 
   it('links shipped projects and lab projects that have a page, and nothing else', () => {
@@ -47,18 +48,21 @@ describe('Research agenda', () => {
     const region = within(screen.getByRole('region', { name: 'Research agenda' }))
     expect(region.getByRole('link', { name: 'MergeLock' })).toHaveAttribute('href', '/mergelock')
     expect(region.getByRole('link', { name: 'OpenGPL' })).toHaveAttribute('href', '/opengpl')
-    expect(region.getByRole('link', { name: /CyberLake/ })).toHaveAttribute('href', '/cyberlake')
-    expect(region.getByText(/AgentID/)).toBeInTheDocument()
-    expect(region.queryByRole('link', { name: /AgentID/ })).toBeNull()
+    expect(region.getByText('Taintline (lab)')).toBeInTheDocument()
+    expect(region.queryByRole('link', { name: /Taintline/ })).toBeNull()
+    expect(region.queryByText(/CyberLake|AgentID/)).toBeNull()
   })
 
-  it('links areas I to VI to their category, and V (lab only) to its lab group', () => {
+  it('links each area to its category, or to the lab when nothing has shipped', () => {
     renderResearch()
     const region = within(screen.getByRole('region', { name: 'Research agenda' }))
     expect(region.getByRole('link', { name: 'Agentic AI Security' })).toHaveAttribute('href', '/frameworks?category=agentic')
     expect(region.getByRole('link', { name: 'AI Governance & Compliance' })).toHaveAttribute('href', '/frameworks?category=governance')
-    expect(region.getByRole('link', { name: 'AI Identity & Access' })).toHaveAttribute('href', '/lab?group=identity')
-    expect(region.queryByRole('link', { name: 'AI Runtime Security' })).toBeNull()
+    expect(region.getByRole('link', { name: 'AI Identity & Access' })).toHaveAttribute('href', '/frameworks?category=identity')
+    expect(region.getByRole('link', { name: 'AI Runtime Security' })).toHaveAttribute('href', '/frameworks?category=runtime')
+    expect(region.getByRole('link', { name: 'AI Resilience & Recovery' })).toHaveAttribute('href', '/frameworks?category=resilience')
+    expect(region.getByRole('link', { name: 'AI Threat Modeling & Risk Assessment' })).toHaveAttribute('href', '/lab?group=threat-modeling')
+    expect(region.getByRole('link', { name: 'AI Data Security & Privacy' })).toHaveAttribute('href', '/lab?group=data-security')
   })
 
   it('is reachable from the section links', () => {
@@ -66,8 +70,26 @@ describe('Research agenda', () => {
     expect(screen.getByRole('link', { name: 'Agenda' })).toHaveAttribute('href', '#agenda')
   })
 
-  it('says all nine frameworks are archived', () => {
+  it('says how many frameworks are archived', () => {
     const { container } = renderResearch()
-    expect(container.textContent).toMatch(/All nine frameworks are archived/)
+    expect(container.textContent).toMatch(/10 of 12 frameworks are archived on Zenodo/)
+  })
+})
+
+describe('Research open source section', () => {
+  it('links each shipped project\'s docs and marks lab repos as not open yet', () => {
+    renderResearch()
+    const region = within(screen.getByRole('region', { name: 'Open source' }))
+    expect(region.getAllByRole('link', { name: 'switchyard Thesis' })[0])
+      .toHaveAttribute('href', 'https://github.com/sadayamuthu/switchyard/blob/main/THESIS.md')
+    expect(region.getAllByRole('link', { name: 'MergeLock License' })[0])
+      .toHaveAttribute('href', 'https://github.com/sadayamuthu/mergelock/blob/main/LICENSE')
+    expect(region.getAllByText('Repo opens soon').length).toBeGreaterThan(0)
+    expect(region.queryByRole('link', { name: /Taintline (Code|Thesis)/ })).toBeNull()
+  })
+
+  it('is reachable from the section links', () => {
+    renderResearch()
+    expect(screen.getByRole('link', { name: 'Open source' })).toHaveAttribute('href', '#open-source')
   })
 })

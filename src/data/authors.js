@@ -21,8 +21,19 @@ export const AUTHORS = [
       { area: 'Private & observable AI', detail: 'Offline, local-model development environments (ZeroEgress) and SQL analytics over LLM responses, agent traces, and RAG pipelines (anySQL).' },
     ],
     service: [
-      'Peer reviewer, Cloud Security Alliance AI Safety Working Group: “Designing the AI-First Security Organization”',
-      'Peer reviewer, Cloud Security Alliance IAM Working Group: “Navigating Identity and Access Management (IAM): Standards and Protocols” (2026)',
+      {
+        role: 'Peer reviewer, Cloud Security Alliance AI Safety Working Group',
+        title: 'Designing the AI-First Security Organization',
+        url: 'https://cloudsecurityalliance.org/artifacts/designing-the-ai-first-security-organization',
+        download: 'https://cloudsecurityalliance.org/download/artifacts/designing-the-ai-first-security-organization',
+      },
+      {
+        role: 'Peer reviewer, Cloud Security Alliance IAM Working Group',
+        title: 'Navigating Identity and Access Management (IAM): Standards and Protocols',
+        year: 2026,
+        url: 'https://cloudsecurityalliance.org/artifacts/navigating-identity-and-access-management-iam',
+        download: 'https://cloudsecurityalliance.org/download/artifacts/navigating-identity-and-access-management-iam',
+      },
     ],
     expertise: ['FedRAMP', 'NIST SP 800-53', 'Zero Trust', 'AI agent governance', 'GDPR / CCPA', 'AWS & Azure security', 'Identity & access', 'Security data pipelines', 'Observability'],
     experience: [
@@ -33,10 +44,10 @@ export const AUTHORS = [
       { org: 'BNY Mellon', role: 'Application Developer', dates: '2010 – 2011' },
     ],
     credentials: [
-      'Trusted AI Safety Expert (TAISE), CSA',
-      'Certificate of Cloud Security Knowledge (CCSK), CSA',
-      'Certificate of Competence in Zero Trust (CCZT), CSA',
-      'SailPoint Identity Security Leader',
+      { name: 'Trusted AI Safety Expert (TAISE), CSA', url: 'https://www.credly.com/badges/adabf2d2-491d-4b36-a922-64049b6f6faa' },
+      { name: 'Certificate of Cloud Security Knowledge (CCSK), CSA', url: 'https://www.credly.com/badges/bbe29c0b-6c71-4c0a-8540-47c268771edc' },
+      { name: 'Certificate of Competence in Zero Trust (CCZT), CSA', url: 'https://www.credly.com/badges/1e311f66-1c46-4304-b468-4201fe5a0b77' },
+      { name: 'SailPoint Identity Security Leader' },
     ],
   },
   {

@@ -11,7 +11,7 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers())
 
 describe('launch-day hub (real data)', () => {
-  it('shows the featured week 1, the 7-week schedule with a break, and empty on-demand', () => {
+  it('shows the featured week 1, the 8-week schedule with a break, and empty on-demand', () => {
     render(<MemoryRouter><Events /></MemoryRouter>)
     expect(screen.getByText('Framework of the week · New every Wednesday · Free')).toBeInTheDocument()
     expect(screen.getByText(/a recorded session published every Wednesday on YouTube/)).toBeInTheDocument()
@@ -19,7 +19,7 @@ describe('launch-day hub (real data)', () => {
     expect(screen.queryByTestId('countdown')).toBeNull()
     expect(screen.getAllByText("Merge conflicts git can't see").length).toBeGreaterThan(0)
 
-    const region = screen.getByRole('region', { name: 'The series · 7 weeks' })
+    const region = screen.getByRole('region', { name: 'The series · 8 weeks' })
     const items = within(region).getAllByRole('listitem')
     const sessions = items.filter((li) => within(li).queryByRole('link'))
     const weeks = [...events].sort((a, b) => a.week - b.week)
