@@ -91,7 +91,21 @@ export default function Profile() {
 
             <Section title="Peer review & service">
               <ul className="list-disc pl-5 text-ink-muted flex flex-col gap-1">
-                {person.service.map((s) => <li key={s}>{s}</li>)}
+                {person.service.map((s) => (
+                  <li key={s.title}>
+                    {s.role}:{' '}
+                    <a href={s.url} target="_blank" rel="noreferrer" className="text-ink underline decoration-rule underline-offset-2 hover:text-rust">
+                      “{s.title}”
+                    </a>
+                    {s.year && ` (${s.year})`}
+                    {s.download && (
+                      <>
+                        {' · '}
+                        <a href={s.download} target="_blank" rel="noreferrer" className="hover:text-rust">Download</a>
+                      </>
+                    )}
+                  </li>
+                ))}
               </ul>
             </Section>
           </div>
@@ -117,7 +131,15 @@ export default function Profile() {
             </Section>
             <Section title="Credentials">
               <ul className="text-sm text-ink-muted flex flex-col gap-1">
-                {person.credentials.map((c) => <li key={c}>{c}</li>)}
+                {person.credentials.map((c) => (
+                  <li key={c.name}>
+                    {c.url ? (
+                      <a href={c.url} target="_blank" rel="noreferrer" className="hover:text-rust">
+                        {c.name} <span aria-hidden="true">↗</span>
+                      </a>
+                    ) : c.name}
+                  </li>
+                ))}
               </ul>
             </Section>
           </aside>

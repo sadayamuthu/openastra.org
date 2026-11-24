@@ -152,6 +152,23 @@ export const events = [
     videoUrl: null,
     recordingUrl: null,
   },
+  {
+    slug: 'openapl',
+    title: "Access policy for AI agents",
+    subtitle: "OpenAPL: who can do what, for whom, and the proof of it",
+    kind: 'talk',
+    format: 'online',
+    delivery: 'recorded',
+    series: 'framework-of-the-week',
+    week: 8,
+    start: '2027-02-10T16:00:00Z',
+    summary: "An access policy language for humans and AI agents. This session follows a refund through a support agent and a refund agent behind agentgateway, and shows how OpenAPL checks the whole delegation chain, asks for approval above a limit, and explains what a hijacked agent could reach.",
+    speakers: ['karthikeyan-sadayamuthu'],
+    frameworks: ['openapl'],
+    registerUrl: null,
+    videoUrl: null,
+    recordingUrl: null,
+  },
 ]
 
 // Set to your lu.ma calendar URL to show a Follow button when no talk is scheduled.

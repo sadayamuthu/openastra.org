@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { frameworksByCategory } from '../data/frameworks'
 import { DoiTag } from './ui'
+import { splitIndex } from '../lib/indexColumns'
 
 function Row({ fw }) {
   return (
@@ -31,15 +32,18 @@ function Category({ group }) {
   )
 }
 
+const ASIDE = 5 // the featured citation's height, in rows
+
 export default function FrameworkIndex({ aside }) {
   const groups = frameworksByCategory()
+  const k = splitIndex(groups, aside ? ASIDE : 0)
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
       <div>
-        {groups.slice(0, 2).map((g) => <Category key={g.category.id} group={g} />)}
+        {groups.slice(0, k).map((g) => <Category key={g.category.id} group={g} />)}
       </div>
       <div>
-        {groups.slice(2).map((g) => <Category key={g.category.id} group={g} />)}
+        {groups.slice(k).map((g) => <Category key={g.category.id} group={g} />)}
         {aside && <div className="mt-8">{aside}</div>}
       </div>
     </div>

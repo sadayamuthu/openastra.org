@@ -26,9 +26,12 @@ describe('Home page', () => {
     )
   })
 
-  it('features the MergeLock citation', () => {
+  it('keeps citations out of the index; they live under Latest on Zenodo', () => {
     renderHome()
-    expect(screen.getAllByRole('link', { name: 'https://doi.org/10.5281/zenodo.23637443' }).length).toBeGreaterThan(0)
+    const index = within(screen.getByRole('region', { name: 'The index' }))
+    expect(index.queryByText(/Cite this/)).toBeNull()
+    expect(index.queryByText(/doi\.org/)).toBeNull()
+    expect(screen.getByRole('region', { name: 'Latest on Zenodo' })).toBeInTheDocument()
   })
 
   it('shows White papers as Coming soon and no Patents', () => {
@@ -47,26 +50,21 @@ describe('Home page', () => {
 })
 
 describe('Home — In the lab', () => {
-  it('shows the lab with the OpenQ suite and all 8 projects', () => {
+  it('shows the 11 lab projects and hides the paused OpenQ suite', () => {
     render(<MemoryRouter><Home /></MemoryRouter>)
     const lab = within(screen.getByRole('region', { name: 'In the lab' }))
-    expect(lab.getByText('OpenQ: the quantum-safe suite')).toBeInTheDocument()
-    ;['OpenQR', 'OpenQS', 'OpenQO', 'AgentID', 'OpenQA', 'CyberLake', 'OpenCIQ', 'OpenEQ'].forEach((n) =>
+    expect(lab.queryByText('OpenQ: the quantum-safe suite')).toBeNull()
+    ;['ThreatDiff', 'Taintline', 'HubScan', 'Fuse'].forEach((n) =>
       expect(lab.getByText(n)).toBeInTheDocument()
     )
-    expect(lab.getByRole('link', { name: /All 8/ })).toHaveAttribute('href', '/lab')
-  })
-
-  it('does not link domains that have no site yet', () => {
-    render(<MemoryRouter><Home /></MemoryRouter>)
-    expect(screen.queryByRole('link', { name: /openqs\.org/ })).toBeNull()
-    expect(screen.getByText('openqs.org')).toBeInTheDocument()
+    expect(lab.queryByText('CyberLake')).toBeNull()
+    expect(lab.getByRole('link', { name: /All 11/ })).toHaveAttribute('href', '/lab')
   })
 
   it('counts shipped and lab projects in the hero', () => {
     render(<MemoryRouter><Home /></MemoryRouter>)
-    expect(screen.getByText('9 open frameworks')).toBeInTheDocument()
-    expect(screen.getByText('8 in the lab')).toBeInTheDocument()
+    expect(screen.getByText('12 open frameworks')).toBeInTheDocument()
+    expect(screen.getByText('11 in the lab')).toBeInTheDocument()
   })
 })
 

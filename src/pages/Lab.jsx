@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
 import LabCard from '../components/LabCard'
 import { Eyebrow, Pill } from '../components/ui'
-import { LAB_GROUPS, labProjects, getCategory } from '../data/frameworks'
+import { activeLabGroups, labProjects, getCategory } from '../data/frameworks'
 
 function eyebrowFor(p) {
   if (p.step) {
@@ -14,9 +14,10 @@ function eyebrowFor(p) {
 export default function Lab() {
   const [params, setParams] = useSearchParams()
   const requested = params.get('group')
-  const active = LAB_GROUPS.some((g) => g.id === requested) ? requested : null
+  const labGroups = activeLabGroups()
+  const active = labGroups.some((g) => g.id === requested) ? requested : null
   const all = labProjects()
-  const groups = LAB_GROUPS.filter((g) => !active || g.id === active)
+  const groups = labGroups.filter((g) => !active || g.id === active)
     .map((g) => ({ ...g, projects: all.filter((p) => p.group === g.id) }))
     .filter((g) => g.projects.length > 0)
 
@@ -27,12 +28,12 @@ export default function Lab() {
       <Eyebrow>In the lab · {all.length} projects</Eyebrow>
       <h1 className="font-serif text-5xl mt-3">What we're building next.</h1>
       <p className="text-ink-muted mt-4 max-w-2xl leading-relaxed">
-        Early-stage projects in our focus areas. Nothing is published yet. Each one joins the framework
-        index, with a citable release, when it ships.
+        Early-stage projects in our focus areas. Most have no code published yet. Each one joins the
+        framework index, with a citable release, when it ships.
       </p>
       <div className="flex flex-wrap gap-2 mt-6" role="group" aria-label="Filter by group">
         <Pill active={!active} onClick={() => select(null)}>All</Pill>
-        {LAB_GROUPS.map((g) => (
+        {labGroups.map((g) => (
           <Pill key={g.id} active={active === g.id} onClick={() => select(g.id)}>{g.name}</Pill>
         ))}
       </div>

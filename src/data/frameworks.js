@@ -38,6 +38,30 @@ export const categories = [
     name: 'Governance & Compliance',
     blurb: 'Machine-checkable policy for AI systems, mapped to ISO 42001 and the NIST AI RMF.',
   },
+  {
+    id: 'threat-modeling',
+    numeral: 'VII',
+    name: 'Threat Modeling & Risk',
+    blurb: 'Attack paths, threat catalogs and risk scores for agent deployments, mapped to OWASP and MITRE ATLAS.',
+  },
+  {
+    id: 'runtime',
+    numeral: 'VIII',
+    name: 'Runtime Security',
+    blurb: 'Checks on the agent\'s tool path while it runs: inspection, enforcement and isolation of every tool call.',
+  },
+  {
+    id: 'data-security',
+    numeral: 'IX',
+    name: 'Data Security & Privacy',
+    blurb: 'Keeping RAG and vector stores inside their permissions, and catching leaks and poisoning.',
+  },
+  {
+    id: 'resilience',
+    numeral: 'X',
+    name: 'Resilience & Recovery',
+    blurb: 'How agents fail, how to stop them, and how to undo what they did.',
+  },
 ]
 
 export const STAGES = [
@@ -169,6 +193,81 @@ export const frameworks = [
     zenodo: { doi: '10.5281/zenodo.23679808', title: 'ZeroEgress: an AI code editor that works offline', version: '0.1.0', year: 2026, date: '2026-10-26' },
   },
   {
+    slug: 'switchyard',
+    name: 'switchyard',
+    number: 11,
+    category: 'runtime',
+    stage: 'run',
+    summary: 'Shared MCP proxy core for runtime agent tools',
+    tagline: 'The shared MCP proxy core for OpenAstra runtime tools.',
+    description:
+      'A Go library that sits between an AI agent and its MCP tool servers, passes every message through untouched, and lets a tool plug in code that runs on each call: observe it, delay it, block it, answer it, or rewrite the result. AgentChaos, IntentLock, Taintline, Fuse, Rewind and Airlock are built on it, and stack by chaining.',
+    problem:
+      'Six tools need to sit on the agent\'s tool path. Without a shared core, each re-implements MCP framing, request matching, cancellation and pass-through, and the six proxies may interfere when stacked.',
+    steps: [
+      { title: 'Transparent by default', text: 'With no hooks, a client can\'t tell switchyard is there: same capabilities, tools, notifications and errors.' },
+      { title: 'Hook by MCP method', text: 'A hook sees each request before it goes upstream and the response on the way back, and can continue, rewrite, block, answer or hang.' },
+      { title: 'Trace every hop', text: 'Hooked requests, decisions and responses are written as versioned JSONL events, with a shared ID across a chain.' },
+    ],
+    highlights: {
+      title: 'A hook can',
+      items: ['observe', 'delay', 'block', 'answer', 'rewrite'],
+    },
+    quickstart: [
+      { comment: 'Add the library to your Go module', lines: ['go get github.com/sadayamuthu/switchyard@latest'] },
+      { comment: 'Or install the pass-through debug proxy', lines: ['go install github.com/sadayamuthu/switchyard/cmd/switchyard@latest'] },
+      { comment: 'Trace every call to an MCP server', lines: ['switchyard --trace trace.jsonl -- <cmd> [args...]'] },
+    ],
+    facts: [
+      ['Kind', 'Go library · debug binary'],
+      ['Transport', 'stdio (HTTP planned)'],
+      ['Traces', 'Versioned JSONL'],
+      ['Requires', 'Go 1.26+'],
+    ],
+    links: { github: `${GITHUB}/switchyard` },
+    packages: [
+      { label: 'Go package', url: 'https://pkg.go.dev/github.com/sadayamuthu/switchyard' },
+      { label: 'Release', url: 'https://github.com/sadayamuthu/switchyard/releases/latest' },
+    ],
+  },
+  {
+    slug: 'agentchaos',
+    name: 'AgentChaos',
+    number: 12,
+    category: 'resilience',
+    stage: 'run',
+    summary: 'Chaos engineering for AI agents',
+    tagline: 'Breaks the world around an agent and reports how it fails.',
+    description:
+      'agentchaos deliberately breaks the world around an agent (tool timeouts, malformed responses, partial failures) and reports how the agent fails: safely, by retrying forever, by making things up to fill the gap, or by passing the failure on to other agents. It runs the agent against its real tools through a fault-injecting MCP proxy built on switchyard.',
+    problem:
+      'Agents are tested on the happy path. In production, APIs time out, return half a page, or return an error the model reads as an instruction, and almost nobody tests how the agent behaves then.',
+    steps: [
+      { title: 'Wrap the tools', text: 'Runs the agent against its real tools through a fault-injecting MCP proxy (stdio in v0).' },
+      { title: 'Inject faults', text: 'YAML experiments make a tool hang, lag, fail, return partial results or return malformed data.' },
+      { title: 'Grade behaviour', text: 'Records what the agent did next and scores each experiment against the expected safe behaviour, in a JSON report.' },
+    ],
+    highlights: {
+      title: 'Faults in v0',
+      items: ['timeout', 'slow', 'error', 'partial', 'malformed'],
+    },
+    quickstart: [
+      { comment: 'Install the CLI', lines: ['go install github.com/sadayamuthu/agentchaos/cmd/agentchaos@latest'] },
+      { comment: 'Run an experiment file against a real agent', lines: ['agentchaos run experiments/support-agent.yaml'] },
+    ],
+    facts: [
+      ['Interfaces', 'CLI · MCP proxy'],
+      ['Report', 'JSON'],
+      ['Built on', 'switchyard'],
+      ['Requires', 'Go 1.26+'],
+    ],
+    links: { github: `${GITHUB}/agentchaos` },
+    packages: [
+      { label: 'Go package', url: 'https://pkg.go.dev/github.com/sadayamuthu/agentchaos/cmd/agentchaos' },
+      { label: 'Release', url: 'https://github.com/sadayamuthu/agentchaos/releases/latest' },
+    ],
+  },
+  {
     slug: 'cyberlake',
     name: 'CyberLake',
     lab: true,
@@ -269,10 +368,61 @@ export const frameworks = [
     ],
     zenodo: { doi: '10.5281/zenodo.24241823', title: 'ExposureGate: exploited-vulnerability gate for dependency lockfiles in pre-commit and CI', version: '0.1.0', year: 2026, date: '2026-11-15' },
   },
+  // ───────────── V. Identity & Access ─────────────
+  {
+    slug: 'openapl',
+    name: 'OpenAPL',
+    number: 9,
+    category: 'identity',
+    stage: 'run',
+    summary: 'Access policy language for humans and AI agents',
+    tagline: 'Who can do what, for whom, and the proof of it.',
+    description:
+      'An open, declarative access policy language for humans, agents and services, enforced at any gateway. It evaluates the whole delegation chain, from the human who started the work through every agent it passed through to the agent calling the tool, and returns ALLOW, DENY or REQUIRE_APPROVAL with the entitlements, policies and control references behind the decision. No LLM sits in the decision path.',
+    problem:
+      'A support agent hands a refund to a refund agent. The gateway sees only the last hop, so nobody can say which human the refund is for, whether that human could have done it, or what the agent could reach if it were hijacked.',
+    steps: [
+      { title: 'Declare access', text: 'Principals, owners, entitlements and delegation in .apl.yaml files; an agent declares the humans it acts_for.' },
+      { title: 'Decide at the gateway', text: 'A sidecar answers Envoy ext_authz and AuthZEN 1.0, so a gateway such as agentgateway checks every MCP tool call.' },
+      { title: 'Prove the decision', text: 'Each decision records the chain, entitlements and controls behind it; explain shows what a compromised agent could reach.' },
+    ],
+    highlights: {
+      title: 'Decisions',
+      items: ['ALLOW', 'DENY', 'REQUIRE_APPROVAL'],
+    },
+    quickstart: [
+      { comment: 'Install the SDK and CLI from a clone (Python 3.11+)', lines: ['pip install -e sdk', 'openapl validate spec/examples'] },
+      {
+        comment: 'Decide one request along a delegation chain',
+        lines: [
+          'openapl decide spec/examples \\',
+          '  --chain user:alice@acme.com,support-agent,refund-agent \\',
+          '  --origin-claims \'{"groups": ["support-staff"]}\' \\',
+          '  --action payments.refund --resource order/123 \\',
+          '  --attr order_id=123 --attr amount=150 --attr account_status=open \\',
+          '  --purpose customer-refund --task-id t1',
+          '# DECISION: ALLOW (with amount=350: REQUIRE_APPROVAL)',
+        ],
+      },
+      { comment: 'What could this agent reach if it were compromised?', lines: ['openapl explain spec/examples support-agent'] },
+    ],
+    facts: [
+      ['Decisions', 'Deterministic · no LLM'],
+      ['Wire', 'AuthZEN 1.0 · Envoy ext_authz'],
+      ['Ships as', 'Spec · Python SDK · CLI · sidecar'],
+      ['Licenses', 'CC BY 4.0 spec · Apache-2.0 code'],
+    ],
+    links: { github: `${GITHUB}/openapl` },
+    // TODO(openapl): paste the Zenodo DOI once the v0.1.0 deposit is published.
+    // The DOI test in frameworks.test.js fails until then, so this cannot merge without it.
+    zenodo: { doi: 'TODO', title: 'OpenAPL: Access Policy Language for humans and AI agents', version: '0.1.0', year: 2026, date: '2026-11-19' },
+  },
+
+  // ───────────── VI. Governance & Compliance ─────────────
   {
     slug: 'opengpl',
     name: 'OpenGPL',
-    number: 9,
+    number: 10,
     category: 'governance',
     stage: 'write',
     summary: 'Declarative governance policy language for AI',
@@ -467,7 +617,7 @@ export function bibtex(fw) {
 export const citedFrameworks = () => frameworks.filter((f) => f.zenodo)
 
 // ───────────── In the lab ─────────────
-// Early-stage projects: no published code yet, so no numbers and no DOIs.
+// Early-stage projects: no DOIs yet, so no numbers in the index.
 // Domains are shown as plain text until each site is live.
 
 export const LAB_GROUPS = [
@@ -481,7 +631,20 @@ export const LAB_GROUPS = [
   { id: 'security-controls', name: 'Security Controls', title: 'II. Security Controls' },
   { id: 'observability', name: 'Observability', title: 'IV. Observability' },
   { id: 'identity', name: 'Identity & Access', title: 'V. Identity & Access' },
+  { id: 'threat-modeling', name: 'Threat Modeling & Risk', title: 'VII. AI Threat Modeling & Risk Assessment' },
+  {
+    id: 'runtime',
+    name: 'Runtime Security',
+    title: 'VIII. AI Runtime Security',
+    blurb: 'Checks on the agent\'s tool path, built on the switchyard MCP proxy core and stacked in a chain.',
+  },
+  { id: 'data-security', name: 'Data Security & Privacy', title: 'IX. AI Data Security & Privacy' },
+  { id: 'resilience', name: 'Resilience & Recovery', title: 'X. AI Resilience & Recovery' },
 ]
+
+// Paused for now: the OpenQ suite, AgentID, OpenQA, OpenCIQ, OpenEQ and CyberLake
+// are kept here but left off the site. Set to true to show them again.
+const SHOW_PAUSED_LAB = false
 
 const NEW_LAB_PROJECTS = [
   {
@@ -545,14 +708,13 @@ const NEW_LAB_PROJECTS = [
   },
 ]
 
-// ───────────── Hidden lab projects ─────────────
-// Planned projects for the open agenda areas VII–X. Their repos are private, and
-// no page reads this list, so none of them appear on the site.
-// To show one: give its area a category (categories + AGENDA) and a LAB_GROUPS
-// entry, then move it into NEW_LAB_PROJECTS with that group and category.
+// ───────────── Open-area lab projects ─────────────
+// Lab projects for agenda areas VII–X; each `area` is a category numeral. Their
+// repos are still private, so the cards don't link anywhere. switchyard (VIII) and
+// AgentChaos (X) shipped and are in the index.
 const repo = (name) => `${GITHUB}/${name}`
 
-export const HIDDEN_LAB_PROJECTS = [
+export const OPEN_AREA_PROJECTS = [
   {
     name: 'ThreatDiff',
     area: 'VII',
@@ -630,28 +792,91 @@ export const HIDDEN_LAB_PROJECTS = [
     summary: 'Circuit breakers and kill switch for agent fleets',
     description: 'Rate, spend and blast-radius limits per agent and per fleet; a tripped limit revokes AgentID credentials in one step and halts dependent agents.',
   },
-  {
-    name: 'AgentChaos',
-    area: 'X',
-    repo: repo('agentchaos'),
-    summary: 'Chaos engineering for agents',
-    description: 'Injects tool timeouts, malformed and poisoned outputs and misbehaving peer agents, then reports whether the agent fails safe, loops, makes things up or cascades.',
-  },
 ]
 
 const GROUP_ORDER = LAB_GROUPS.map((g) => g.id)
+const AREA_CATEGORY = Object.fromEntries(categories.map((c) => [c.numeral, c.id]))
 
 export function labProjects() {
   const fromFrameworks = frameworks
     .filter((f) => f.lab)
     .map((f) => ({ name: f.name, group: f.category, category: f.category, summary: f.summary, description: f.tagline, to: `/${f.slug}` }))
-  const all = [...NEW_LAB_PROJECTS, ...fromFrameworks]
+  const openAreas = OPEN_AREA_PROJECTS.map((p) => ({ ...p, group: AREA_CATEGORY[p.area], category: AREA_CATEGORY[p.area] }))
+  const all = [...(SHOW_PAUSED_LAB ? [...NEW_LAB_PROJECTS, ...fromFrameworks] : []), ...openAreas]
   return GROUP_ORDER.flatMap((g) => all.filter((p) => p.group === g))
 }
 
+// Lab groups that currently have at least one project.
+export function activeLabGroups() {
+  const used = new Set(labProjects().map((p) => p.group))
+  return LAB_GROUPS.filter((g) => used.has(g.id))
+}
+
+// ───────────── Repo docs ─────────────
+// What each public repo has at its root, checked against GitHub on 2026-11-24.
+// Update an entry when a repo adds a doc. Lab repos are private, so they have no
+// entry and get no links; add one when a repo goes public.
+
+export const DOC_KINDS = [
+  { id: 'thesis', label: 'Thesis', file: 'THESIS.md' },
+  { id: 'roadmap', label: 'Roadmap', file: 'ROADMAP.md' },
+  { id: 'contributing', label: 'Contributing', file: 'CONTRIBUTING.md' },
+  { id: 'governance', label: 'Governance', file: 'GOVERNANCE.md' },
+  { id: 'maintainers', label: 'Maintainers', file: 'MAINTAINERS.md' },
+  { id: 'citation', label: 'Citation', file: 'CITATION.cff' },
+]
+
+const ALL_DOCS = DOC_KINDS.map((d) => d.id)
+const LICENSE_NAMES = { 'Apache-2.0': 'Apache 2.0', MIT: 'MIT' }
+
+// Keyed by lowercase repo name.
+const REPO_DOCS = {
+  mergelock: { license: 'Apache-2.0', docs: ['contributing'] },
+  unasked: { license: 'MIT', docs: ['contributing'] },
+  'zero-egress': { license: 'Apache-2.0', licenseFile: 'LICENSE.txt', docs: ['contributing'] },
+  switchyard: { license: 'Apache-2.0', docs: ALL_DOCS },
+  agentchaos: { license: 'Apache-2.0', docs: ALL_DOCS },
+  controlgate: { license: 'MIT', docs: ['contributing', 'citation'] },
+  exposuregate: { license: 'MIT', docs: ['contributing', 'citation'] },
+  openapl: { license: 'Apache-2.0', docs: ['contributing', 'citation'] },
+  opengpl: { license: 'Apache-2.0', docs: ['contributing', 'citation'] },
+  ocbc: { license: 'MIT', docs: ['contributing', 'citation'] },
+  oebc: { license: 'MIT', docs: ['contributing', 'citation'] },
+  anysql: { license: 'Apache-2.0', docs: ['roadmap', 'contributing', 'governance', 'maintainers', 'citation'] },
+}
+
+const repoName = (url) => url.replace(`${GITHUB}/`, '')
+
+// Code, docs and license links for one repo, or null when it has no public docs entry.
+export function repoDocs(url) {
+  const name = repoName(url)
+  const entry = REPO_DOCS[name.toLowerCase()]
+  if (!entry) return null
+  const file = (f) => `${GITHUB}/${name}/blob/main/${f}`
+  return {
+    code: `${GITHUB}/${name}`,
+    docs: DOC_KINDS.filter((d) => entry.docs.includes(d.id)).map((d) => ({ ...d, url: file(d.file) })),
+    license: { id: entry.license, label: LICENSE_NAMES[entry.license] ?? entry.license, url: file(entry.licenseFile ?? 'LICENSE') },
+  }
+}
+
+// One row per shipped framework (category order), then one per lab project.
+export function openSourceRows() {
+  const shipped = frameworksByCategory().flatMap(({ category, frameworks: list }) =>
+    list.map((f) => ({ name: f.name, to: `/${f.slug}`, numeral: category.numeral, lab: false, ...repoDocs(f.links.github) })))
+  const lab = labProjects().map((p) => ({
+    name: p.name,
+    to: p.to,
+    numeral: getCategory(p.category).numeral,
+    lab: true,
+    ...(p.repo && repoDocs(p.repo)),
+  }))
+  return [...shipped, ...lab]
+}
+
 // ───────────── Research agenda ─────────────
-// Ten focus areas. I–VI map to a site category; their projects are derived from
-// it so the agenda and the index never disagree. VII–X are open areas.
+// Ten focus areas, one per site category; their projects are derived from it so
+// the agenda and the index never disagree.
 
 export const AGENDA = [
   { numeral: 'I', name: 'Agentic AI Security', category: 'agentic', topics: 'Agent autonomy, multi-agent security, MCP and A2A, agent orchestration' },
@@ -660,17 +885,17 @@ export const AGENDA = [
   { numeral: 'IV', name: 'Observability & Monitoring', category: 'observability', topics: 'Agent tracing, audit logging, anomaly detection, behavioral monitoring' },
   { numeral: 'V', name: 'AI Identity & Access', category: 'identity', topics: 'Agent identities, workload identity, delegated authorization, least privilege' },
   { numeral: 'VI', name: 'AI Governance & Compliance', category: 'governance', topics: 'NIST AI RMF, ISO 42001, regulatory compliance, continuous assurance' },
-  { numeral: 'VII', name: 'AI Threat Modeling & Risk Assessment', topics: 'OWASP LLM and Agentic Top 10, MITRE ATLAS, risk scoring, attack paths' },
-  { numeral: 'VIII', name: 'AI Runtime Security', topics: 'Runtime guardrails, tool-call inspection, execution isolation, sandboxing' },
-  { numeral: 'IX', name: 'AI Data Security & Privacy', topics: 'RAG security, data leakage prevention, vector store security, data poisoning' },
-  { numeral: 'X', name: 'AI Resilience & Recovery', topics: 'Agent rollback, action recovery, kill switches, cascading failure prevention' },
+  { numeral: 'VII', name: 'AI Threat Modeling & Risk Assessment', category: 'threat-modeling', topics: 'OWASP LLM and Agentic Top 10, MITRE ATLAS, risk scoring, attack paths' },
+  { numeral: 'VIII', name: 'AI Runtime Security', category: 'runtime', topics: 'Runtime guardrails, tool-call inspection, execution isolation, sandboxing' },
+  { numeral: 'IX', name: 'AI Data Security & Privacy', category: 'data-security', topics: 'RAG security, data leakage prevention, vector store security, data poisoning' },
+  { numeral: 'X', name: 'AI Resilience & Recovery', category: 'resilience', topics: 'Agent rollback, action recovery, kill switches, cascading failure prevention' },
 ]
 
 export function agenda() {
   const lab = labProjects()
   return AGENDA.map((a) => ({
     ...a,
-    shipped: a.category ? shippedFrameworks().filter((f) => f.category === a.category) : [],
-    lab: a.category ? lab.filter((p) => p.category === a.category).map(({ name, to }) => ({ name, to })) : [],
+    shipped: shippedFrameworks().filter((f) => f.category === a.category),
+    lab: lab.filter((p) => p.category === a.category).map(({ name, to, group }) => ({ name, to, group })),
   }))
 }

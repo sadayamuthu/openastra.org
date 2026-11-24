@@ -6,38 +6,37 @@ const renderAt = (path = '/lab') => render(<MemoryRouter initialEntries={[path]}
 const names = () => screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)
 
 describe('Lab page', () => {
-  it('lists all 8 projects, each marked Coming soon', () => {
+  it('lists all 11 projects, each marked Coming soon', () => {
     renderAt()
-    expect(names()).toHaveLength(8)
-    expect(screen.getAllByText('Coming soon').length).toBe(8)
+    expect(names()).toHaveLength(11)
+    expect(screen.getAllByText('Coming soon').length).toBe(11)
   })
 
-  it('presents the OpenQ suite in Know, Find, Fix order', () => {
+  it('offers a filter only for groups with projects', () => {
     renderAt()
-    const suite = within(screen.getByRole('region', { name: /OpenQ/ }))
-    expect(suite.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual(['OpenQR', 'OpenQS', 'OpenQO'])
+    const pills = within(screen.getByRole('group', { name: 'Filter by group' })).getAllByRole('button').map((b) => b.textContent)
+    expect(pills).toEqual(['All', 'Threat Modeling & Risk', 'Runtime Security', 'Data Security & Privacy', 'Resilience & Recovery'])
   })
 
-  it('shows AgentID under ?group=identity', () => {
-    renderAt('/lab?group=identity')
-    expect(names()).toEqual(['AgentID'])
+  it('presents the runtime tools in order', () => {
+    renderAt()
+    const runtime = within(screen.getByRole('region', { name: /Runtime Security/ }))
+    expect(runtime.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual(['IntentLock', 'Taintline', 'Airlock'])
   })
 
   it('filters by group', () => {
     renderAt()
-    fireEvent.click(screen.getByRole('button', { name: 'Observability' }))
-    expect(names()).toEqual(['OpenCIQ', 'OpenEQ'])
+    fireEvent.click(screen.getByRole('button', { name: 'Resilience & Recovery' }))
+    expect(names()).toEqual(['Rewind', 'Fuse'])
   })
 
-  it('treats an unknown group as All', () => {
-    renderAt('/lab?group=bogus')
-    expect(names()).toHaveLength(8)
+  it('treats an unknown or paused group as All', () => {
+    renderAt('/lab?group=openq')
+    expect(names()).toHaveLength(11)
   })
 
-  it('links CyberLake to its page and shows domains as plain text', () => {
+  it('leaves out the paused projects and the ones that shipped', () => {
     renderAt()
-    expect(screen.getByRole('link', { name: /CyberLake/ })).toHaveAttribute('href', '/cyberlake')
-    expect(screen.getByText('openid.ai')).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /openid\.ai/ })).toBeNull()
+    ;['CyberLake', 'OpenQR', 'AgentID', 'switchyard', 'AgentChaos'].forEach((n) => expect(screen.queryByText(n)).toBeNull())
   })
 })

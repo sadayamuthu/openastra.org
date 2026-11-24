@@ -84,12 +84,12 @@ it('deliveryCopy: premiere, live, and default', () => {
 })
 it('seriesRows inserts a break for gaps > 8 days', () => {
   const rows = seriesRows(events, 'framework-of-the-week')
-  expect(rows).toHaveLength(8)
+  expect(rows).toHaveLength(9)
   expect(rows[2].type).toBe('break')
   expect(rows[2].resumes.slug).toBe('zero-egress')
   const sessions = rows.filter((r) => r.type === 'session').map((r) => r.event)
-  expect(sessions).toHaveLength(7)
-  expect(sessions.map((e) => e.week)).toEqual([1, 2, 3, 4, 5, 6, 7])
+  expect(sessions).toHaveLength(8)
+  expect(sessions.map((e) => e.week)).toEqual([1, 2, 3, 4, 5, 6, 7, 8])
 })
 it('rowState covers each state', () => {
   const [liveE, next, , past, noVideo] = [E[0], E[1], null, E[2], E[3]]

@@ -2,8 +2,9 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Citation from '../components/Citation'
 import FrameworkSession from '../components/FrameworkSession'
+import { DocLinks } from '../components/ProjectDocs'
 import { Button, CodeBlock, Eyebrow } from '../components/ui'
-import { doiUrl, frameworks, getCategory, getFramework } from '../data/frameworks'
+import { doiUrl, frameworks, getCategory, getFramework, repoDocs } from '../data/frameworks'
 import NotFound from './NotFound'
 
 function Block({ title, children }) {
@@ -26,6 +27,7 @@ export default function FrameworkPage({ slug }) {
 
   const category = getCategory(fw.category)
   const related = frameworks.filter((f) => f.category === fw.category && f.slug !== fw.slug && !f.lab)
+  const repo = repoDocs(fw.links.github)
   const facts = fw.zenodo ? [...fw.facts, ['DOI', fw.zenodo.doi]] : fw.facts
 
   return (
@@ -142,6 +144,12 @@ export default function FrameworkPage({ slug }) {
               </li>
             ))}
           </ul>
+        </Block>
+      )}
+
+      {repo && (
+        <Block title="Project docs">
+          <DocLinks repo={repo} />
         </Block>
       )}
 
