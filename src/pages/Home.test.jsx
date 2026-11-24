@@ -54,7 +54,7 @@ describe('Home — In the lab', () => {
     render(<MemoryRouter><Home /></MemoryRouter>)
     const lab = within(screen.getByRole('region', { name: 'In the lab' }))
     expect(lab.queryByText('OpenQ: the quantum-safe suite')).toBeNull()
-    ;['ThreatDiff', 'Taintline', 'HubScan', 'Fuse'].forEach((n) =>
+    ;['ThreatDiff', 'AgentTaint', 'HubScan', 'AgentFuse'].forEach((n) =>
       expect(lab.getByText(n)).toBeInTheDocument()
     )
     expect(lab.queryByText('CyberLake')).toBeNull()

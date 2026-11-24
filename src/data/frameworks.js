@@ -198,10 +198,10 @@ export const frameworks = [
     number: 11,
     category: 'runtime',
     stage: 'run',
-    summary: 'Shared MCP proxy core for runtime agent tools',
+    summary: 'The shared MCP proxy core for OpenAstra runtime tools',
     tagline: 'The shared MCP proxy core for OpenAstra runtime tools.',
     description:
-      'A Go library that sits between an AI agent and its MCP tool servers, passes every message through untouched, and lets a tool plug in code that runs on each call: observe it, delay it, block it, answer it, or rewrite the result. AgentChaos, IntentLock, Taintline, Fuse, Rewind and Airlock are built on it, and stack by chaining.',
+      'A Go library that sits between an AI agent and its MCP tool servers, passes every message through untouched, and lets a tool plug in code that runs on each call: observe it, delay it, block it, answer it, or rewrite the result. AgentChaos, AgentLock, AgentTaint, AgentFuse, AgentRewind and AgentBox are built on it, and stack by chaining.',
     problem:
       'Six tools need to sit on the agent\'s tool path. Without a shared core, each re-implements MCP framing, request matching, cancellation and pass-through, and the six proxies may interfere when stacked.',
     steps: [
@@ -719,78 +719,78 @@ export const OPEN_AREA_PROJECTS = [
     name: 'ThreatDiff',
     area: 'VII',
     repo: repo('threatdiff'),
-    summary: 'Threat model as code, diffed on every PR',
-    description: 'Maps agent configs (prompts, tools, MCP servers, data sources) to attack paths labeled with OWASP Agentic Top 10 and MITRE ATLAS, and gates PRs that open new paths from untrusted input to dangerous actions.',
+    summary: 'Threat models generated from agent configuration, checked on every pull request',
+    description: 'Reads what an agent can see and do (system prompt, tools, MCP servers, data sources and triggers), builds a capability graph, and finds paths from untrusted input to dangerous actions. On a pull request it reports only the attack paths the PR opens and closes.',
   },
   {
     name: 'OATC',
     area: 'VII',
     repo: repo('oatc'),
     summary: 'Open AI Threat Catalog',
-    description: 'OWASP LLM and Agentic Top 10 and MITRE ATLAS merged and cross-mapped in machine-readable JSON, with each threat mapped to OCBC controls.',
+    description: 'Merges the OWASP Top 10 for LLM Applications, the OWASP Top 10 for Agentic Applications and MITRE ATLAS into one cross-mapped JSON catalog, and maps each threat to the NIST SP 800-53 controls that mitigate it, using OCBC.',
   },
   {
     name: 'AgentRisk',
     area: 'VII',
     repo: repo('agentrisk'),
-    summary: 'EPSS-style risk score for agent deployments',
-    description: 'One score per agent from its untrusted inputs, tool sensitivity, autonomy and reversibility, so a fleet can be ranked by risk.',
+    summary: 'One risk score per AI agent',
+    description: 'Scores an agent deployment on how much untrusted input reaches it, how sensitive its tools are, how much it does without a human, and how much of it can be undone, so a fleet can be ranked. The score comes with an explanation you can act on.',
   },
   {
-    name: 'IntentLock',
+    name: 'AgentLock',
     area: 'VIII',
-    repo: repo('intentlock'),
-    summary: 'Tool calls bound to what the user asked for',
-    description: 'Compiles the user\'s request into a capability envelope of allowed tools, arguments and recipients, and enforces it at an MCP proxy.',
+    repo: repo('agentlock'),
+    summary: 'Tool calls limited to what the user asked for',
+    description: 'Turns the user\'s request into a capability envelope (the tools the agent may call, the argument values they may take, the recipients and paths they may touch) and enforces it at an MCP proxy, so a prompt injection that tries to widen the task is blocked before the call runs.',
   },
   {
-    name: 'Taintline',
+    name: 'AgentTaint',
     area: 'VIII',
-    repo: repo('taintline'),
-    summary: 'Taint tracking for agent context',
-    description: 'Labels every span of context by origin and blocks untrusted spans from flowing into sensitive tool-call arguments such as shell commands, URLs and recipients.',
+    repo: repo('agenttaint'),
+    summary: 'Taint tracking for AI agents',
+    description: 'Labels every piece of an agent\'s context by where it came from (the user, the system prompt, a web page, an email, a tool output) and follows those labels into tool-call arguments. Untrusted text that reaches a shell command, URL or email recipient is blocked or sent to a human.',
   },
   {
-    name: 'Airlock',
+    name: 'AgentBox',
     area: 'VIII',
-    repo: repo('airlock'),
-    summary: 'Disposable sandboxes per tool call',
-    description: 'Runs each risky tool call in a short-lived microVM or WASM sandbox with no network by default, and checks results against policy before merging them back.',
+    repo: repo('agentbox'),
+    summary: 'A disposable sandbox for every risky tool call',
+    description: 'Runs each risky tool call (shell commands, code execution, file edits, package installs) in a short-lived microVM or WebAssembly sandbox with no network by default and a scratch filesystem, and checks the results against policy before anything is copied back.',
   },
   {
     name: 'Tripwire',
     area: 'IX',
     repo: repo('tripwire'),
     summary: 'Canary documents for RAG',
-    description: 'Plants unique synthetic records per permission boundary in vector stores, and reports which boundary failed when one shows up in an output, log or egress.',
+    description: 'Plants unique synthetic records in vector stores, one per permission boundary, tenant or retrieval path. When a canary shows up where it shouldn\'t (the wrong user\'s answer, a log, a trace, outbound traffic), you know a boundary failed, and which one.',
   },
   {
     name: 'ACLDrift',
     area: 'IX',
     repo: repo('acldrift'),
-    summary: 'Vector index vs. source permissions',
-    description: 'Checks every indexed chunk against the access list of its source document and flags chunks retrievable beyond their original permissions.',
+    summary: 'Permission drift detection for RAG indexes',
+    description: 'Compares every indexed chunk with the access list of its source document (Google Drive, Confluence, SharePoint, GitHub and similar) and reports chunks that more people can retrieve than could ever read the original.',
   },
   {
     name: 'HubScan',
     area: 'IX',
     repo: repo('hubscan'),
-    summary: 'RAG poisoning detection by embedding shape',
-    description: 'Finds documents that rank highly for far more queries than they should, plus chunks with embedded instructions, without needing attack signatures.',
+    summary: 'Find poisoned documents in RAG corpora by geometry',
+    description: 'Poisoned documents are written to be retrieved for as many queries as possible, which makes them hubs in embedding space. HubScan finds documents that rank highly for far more queries than they should, plus chunks with hidden instructions, without needing to know what the attack says.',
   },
   {
-    name: 'Rewind',
+    name: 'AgentRewind',
     area: 'X',
-    repo: repo('rewind'),
-    summary: 'Undo log for agent actions',
-    description: 'Records a compensating action for every agent action and rolls back whole sessions across files, git, cloud APIs and SaaS, flagging irreversible actions before they run.',
+    repo: repo('agentrewind'),
+    summary: 'An undo log for AI agents',
+    description: 'Records the action that would undo each agent action (delete the bucket it created, revert the commit it pushed), then rolls back a whole agent session in one command across the filesystem, git, cloud APIs and SaaS tools, newest action first.',
   },
   {
-    name: 'Fuse',
+    name: 'AgentFuse',
     area: 'X',
-    repo: repo('fuse'),
-    summary: 'Circuit breakers and kill switch for agent fleets',
-    description: 'Rate, spend and blast-radius limits per agent and per fleet; a tripped limit revokes AgentID credentials in one step and halts dependent agents.',
+    repo: repo('agentfuse'),
+    summary: 'Circuit breakers and a kill switch for AI agent fleets',
+    description: 'Sets per-agent and per-fleet limits on actions per minute, spend, distinct resources touched and error rate. When an agent trips one, AgentFuse revokes its credentials in one step and pauses the agents that depend on it, so one misbehaving agent doesn\'t take down the rest.',
   },
 ]
 
@@ -860,18 +860,23 @@ export function repoDocs(url) {
   }
 }
 
-// One row per shipped framework (category order), then one per lab project.
-export function openSourceRows() {
-  const shipped = frameworksByCategory().flatMap(({ category, frameworks: list }) =>
-    list.map((f) => ({ name: f.name, to: `/${f.slug}`, numeral: category.numeral, lab: false, ...repoDocs(f.links.github) })))
-  const lab = labProjects().map((p) => ({
-    name: p.name,
-    to: p.to,
-    numeral: getCategory(p.category).numeral,
-    lab: true,
-    ...(p.repo && repoDocs(p.repo)),
-  }))
-  return [...shipped, ...lab]
+// One group per category, I to X: its shipped frameworks (by number), then its
+// lab projects. Categories with neither are left out.
+export function openSourceGroups() {
+  const lab = labProjects()
+  return categories
+    .map((category) => ({
+      category,
+      rows: [
+        ...shippedFrameworks()
+          .filter((f) => f.category === category.id)
+          .map((f) => ({ name: f.name, to: `/${f.slug}`, lab: false, ...repoDocs(f.links.github) })),
+        ...lab
+          .filter((p) => p.category === category.id)
+          .map((p) => ({ name: p.name, to: p.to, lab: true, ...(p.repo && repoDocs(p.repo)) })),
+      ],
+    }))
+    .filter((g) => g.rows.length > 0)
 }
 
 // ───────────── Research agenda ─────────────

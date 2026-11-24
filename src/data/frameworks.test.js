@@ -1,5 +1,5 @@
 import {
-  categories, frameworks, getFramework, frameworksByCategory, shippedFrameworks, labProjects, activeLabGroups, LAB_GROUPS, OPEN_AREA_PROJECTS, repoDocs, openSourceRows,
+  categories, frameworks, getFramework, frameworksByCategory, shippedFrameworks, labProjects, activeLabGroups, LAB_GROUPS, OPEN_AREA_PROJECTS, repoDocs, openSourceGroups,
   doiUrl, citationText, bibtex, agenda,
 } from './frameworks'
 
@@ -188,9 +188,9 @@ describe('install commands match what is actually published', () => {
 describe('In the lab', () => {
   const OPEN_AREA = [
     'ThreatDiff', 'OATC', 'AgentRisk',
-    'IntentLock', 'Taintline', 'Airlock',
+    'AgentLock', 'AgentTaint', 'AgentBox',
     'Tripwire', 'ACLDrift', 'HubScan',
-    'Rewind', 'Fuse',
+    'AgentRewind', 'AgentFuse',
   ]
 
   it('holds the 11 open-area projects, in area order', () => {
@@ -240,9 +240,9 @@ describe('research agenda', () => {
   it('lists lab projects under VII to X by area', () => {
     const [, , , , , , vii, viii, ix, x] = agenda()
     expect(vii.lab.map((p) => p.name)).toEqual(['ThreatDiff', 'OATC', 'AgentRisk'])
-    expect(viii.lab.map((p) => p.name)).toEqual(['IntentLock', 'Taintline', 'Airlock'])
+    expect(viii.lab.map((p) => p.name)).toEqual(['AgentLock', 'AgentTaint', 'AgentBox'])
     expect(ix.lab.map((p) => p.name)).toEqual(['Tripwire', 'ACLDrift', 'HubScan'])
-    expect(x.lab.map((p) => p.name)).toEqual(['Rewind', 'Fuse'])
+    expect(x.lab.map((p) => p.name)).toEqual(['AgentRewind', 'AgentFuse'])
     expect(agenda().slice(6).map((a) => a.shipped.map((f) => f.name))).toEqual([[], ['switchyard'], [], ['AgentChaos']])
   })
 
@@ -280,8 +280,14 @@ describe('repo docs', () => {
       .toBe('https://github.com/sadayamuthu/zero-egress/blob/main/LICENSE.txt')
   })
 
-  it('has one row per shipped framework, then one per lab project with no links', () => {
-    const rows = openSourceRows()
+  it('groups projects by category I to X, shipped first, lab projects with no links', () => {
+    const groups = openSourceGroups()
+    expect(groups.map((g) => g.category.numeral)).toEqual(['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'])
+    expect(groups.find((g) => g.category.id === 'runtime').rows.map((r) => r.name))
+      .toEqual(['switchyard', 'AgentLock', 'AgentTaint', 'AgentBox'])
+    expect(groups.find((g) => g.category.id === 'resilience').rows.map((r) => r.name))
+      .toEqual(['AgentChaos', 'AgentRewind', 'AgentFuse'])
+    const rows = groups.flatMap((g) => g.rows)
     expect(rows).toHaveLength(shippedFrameworks().length + labProjects().length)
     rows.filter((r) => r.lab).forEach((r) => expect(r.code).toBeUndefined())
     rows.filter((r) => !r.lab).forEach((r) => expect(r.code).toBeTruthy())

@@ -21,13 +21,13 @@ describe('Lab page', () => {
   it('presents the runtime tools in order', () => {
     renderAt()
     const runtime = within(screen.getByRole('region', { name: /Runtime Security/ }))
-    expect(runtime.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual(['IntentLock', 'Taintline', 'Airlock'])
+    expect(runtime.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual(['AgentLock', 'AgentTaint', 'AgentBox'])
   })
 
   it('filters by group', () => {
     renderAt()
     fireEvent.click(screen.getByRole('button', { name: 'Resilience & Recovery' }))
-    expect(names()).toEqual(['Rewind', 'Fuse'])
+    expect(names()).toEqual(['AgentRewind', 'AgentFuse'])
   })
 
   it('treats an unknown or paused group as All', () => {

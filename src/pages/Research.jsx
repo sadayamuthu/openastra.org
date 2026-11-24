@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import Citation from '../components/Citation'
 import { OpenSourceTable } from '../components/ProjectDocs'
 import { ComingSoon, Eyebrow, Pill } from '../components/ui'
-import { agenda, citedFrameworks, frameworksByCategory, openSourceRows, shippedFrameworks } from '../data/frameworks'
+import { agenda, citedFrameworks, frameworksByCategory, openSourceGroups, shippedFrameworks } from '../data/frameworks'
 
 // Areas with shipped work link to their /frameworks filter; lab-only areas to their /lab group.
 function areaLink(a) {
@@ -109,7 +109,7 @@ export default function Research() {
           Each project's code, thesis, roadmap and how to contribute, straight from its GitHub repo.
           Lab repos open when their first release ships.
         </p>
-        <OpenSourceTable rows={openSourceRows()} />
+        <OpenSourceTable groups={openSourceGroups()} />
       </section>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-14">

@@ -35,6 +35,7 @@ export function DocLinks({ repo }) {
 const COLUMNS = [{ id: 'code', label: 'Code' }, ...DOC_KINDS, { id: 'license', label: 'License' }]
 
 function cellFor(row, col) {
+  if (!row.code) return null
   if (col.id === 'code') return { url: row.code, text: '↗' }
   if (col.id === 'license') return { url: row.license.url, text: `${row.license.label} ↗` }
   const doc = row.docs.find((d) => d.id === col.id)
@@ -51,70 +52,82 @@ function Name({ row }) {
   return row.to ? <Link to={row.to} className="font-medium hover:text-rust">{label}</Link> : <span className="font-medium">{label}</span>
 }
 
-const Private = () => <span className="text-xs text-ink-muted">Repo opens soon</span>
+const Dash = () => <span className="text-ink-muted" aria-label="Not yet">–</span>
 
-// Every project's repo docs: a table on wide screens, a card per project on phones.
-export function OpenSourceTable({ rows }) {
+function Row({ row }) {
+  return (
+    <tr className="border-b border-rule">
+      <th scope="row" className="py-2 pr-4 pl-4 text-left font-normal"><Name row={row} /></th>
+      {COLUMNS.map((c) => {
+        const cell = cellFor(row, c)
+        return (
+          <td key={c.id} className="py-2 px-2">
+            {cell ? (
+              <External href={cell.url} className="text-rust hover:text-ink" label={`${row.name} ${c.label}`}>{cell.text}</External>
+            ) : (
+              <Dash />
+            )}
+          </td>
+        )
+      })}
+    </tr>
+  )
+}
+
+const groupTitle = (c) => `${c.numeral}. ${c.name}`
+
+// Every project's repo docs, grouped by category: a table on wide screens, a card
+// per project on phones.
+export function OpenSourceTable({ groups }) {
   return (
     <>
       <div className="hidden md:block mt-6">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-[11px] tracking-[0.1em] uppercase text-ink-muted border-b border-ink">
-              <th scope="col" className="py-2 pr-2 font-medium w-10"><span className="sr-only">Area</span></th>
               <th scope="col" className="py-2 pr-4 font-medium">Project</th>
               {COLUMNS.map((c) => <th key={c.id} scope="col" className="py-2 px-2 font-medium">{c.label}</th>)}
             </tr>
           </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row.name} className="border-b border-rule">
-                <td className="py-2 pr-2 font-serif italic text-ink-muted">{row.numeral}</td>
-                <th scope="row" className="py-2 pr-4 text-left font-normal"><Name row={row} /></th>
-                {row.code ? (
-                  COLUMNS.map((c) => {
-                    const cell = cellFor(row, c)
-                    return (
-                      <td key={c.id} className="py-2 px-2">
-                        {cell ? (
-                          <External href={cell.url} className="text-rust hover:text-ink" label={`${row.name} ${c.label}`}>{cell.text}</External>
-                        ) : (
-                          <span className="text-ink-muted" aria-label="Not yet">–</span>
-                        )}
-                      </td>
-                    )
-                  })
-                ) : (
-                  <td colSpan={COLUMNS.length} className="py-2 px-2"><Private /></td>
-                )}
+          {groups.map(({ category, rows }) => (
+            <tbody key={category.id} aria-label={groupTitle(category)}>
+              <tr>
+                <th scope="colgroup" colSpan={COLUMNS.length + 1} className="pt-6 pb-1 text-left font-serif italic font-normal text-xl">
+                  {groupTitle(category)}
+                </th>
               </tr>
-            ))}
-          </tbody>
+              {rows.map((row) => <Row key={row.name} row={row} />)}
+            </tbody>
+          ))}
         </table>
       </div>
 
-      <ul className="md:hidden mt-6" data-testid="open-source-cards">
-        {rows.map((row) => (
-          <li key={row.name} className="py-4 border-b border-rule">
-            <p>
-              <span className="font-serif italic text-ink-muted mr-2">{row.numeral}</span>
-              <Name row={row} />
-            </p>
-            {row.code ? (
-              <p className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-sm">
-                {COLUMNS.map((c) => {
-                  const cell = cellFor(row, c)
-                  if (!cell) return null
-                  const text = c.id === 'license' ? `License · ${row.license.label}` : c.label
-                  return <External key={c.id} href={cell.url} className="text-rust hover:text-ink">{text} ↗</External>
-                })}
-              </p>
-            ) : (
-              <p className="mt-1"><Private /></p>
-            )}
-          </li>
+      <div className="md:hidden mt-6" data-testid="open-source-cards">
+        {groups.map(({ category, rows }) => (
+          <div key={category.id}>
+            <h4 className="font-serif italic text-xl mt-6 mb-1">{groupTitle(category)}</h4>
+            <ul>
+              {rows.map((row) => (
+                <li key={row.name} className="py-4 border-b border-rule">
+                  <p><Name row={row} /></p>
+                  {row.code ? (
+                    <p className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-sm">
+                      {COLUMNS.map((c) => {
+                        const cell = cellFor(row, c)
+                        if (!cell) return null
+                        const text = c.id === 'license' ? `License · ${row.license.label}` : c.label
+                        return <External key={c.id} href={cell.url} className="text-rust hover:text-ink">{text} ↗</External>
+                      })}
+                    </p>
+                  ) : (
+                    <p className="mt-1"><Dash /></p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ul>
+      </div>
     </>
   )
 }
