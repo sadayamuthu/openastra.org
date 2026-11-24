@@ -48,8 +48,8 @@ describe('Research agenda', () => {
     const region = within(screen.getByRole('region', { name: 'Research agenda' }))
     expect(region.getByRole('link', { name: 'MergeLock' })).toHaveAttribute('href', '/mergelock')
     expect(region.getByRole('link', { name: 'OpenGPL' })).toHaveAttribute('href', '/opengpl')
-    expect(region.getByText('Taintline (lab)')).toBeInTheDocument()
-    expect(region.queryByRole('link', { name: /Taintline/ })).toBeNull()
+    expect(region.getByText('AgentTaint (lab)')).toBeInTheDocument()
+    expect(region.queryByRole('link', { name: /AgentTaint/ })).toBeNull()
     expect(region.queryByText(/CyberLake|AgentID/)).toBeNull()
   })
 
@@ -84,8 +84,20 @@ describe('Research open source section', () => {
       .toHaveAttribute('href', 'https://github.com/sadayamuthu/switchyard/blob/main/THESIS.md')
     expect(region.getAllByRole('link', { name: 'MergeLock License' })[0])
       .toHaveAttribute('href', 'https://github.com/sadayamuthu/mergelock/blob/main/LICENSE')
-    expect(region.getAllByText('Repo opens soon').length).toBeGreaterThan(0)
-    expect(region.queryByRole('link', { name: /Taintline (Code|Thesis)/ })).toBeNull()
+    expect(region.queryByText('Repo opens soon')).toBeNull()
+    const agenttaint = region.getByRole('rowheader', { name: 'AgentTaint (lab)' }).closest('tr')
+    expect(within(agenttaint).getAllByText('–')).toHaveLength(8)
+    expect(region.queryByRole('link', { name: /AgentTaint (Code|Thesis)/ })).toBeNull()
+  })
+
+  it('lists projects under their category, with no Area column', () => {
+    renderResearch()
+    const region = within(screen.getByRole('region', { name: 'Open source' }))
+    const runtime = within(region.getByRole('rowgroup', { name: 'VIII. Runtime Security' }))
+    expect(runtime.getAllByRole('rowheader').map((h) => h.textContent)).toEqual([
+      'switchyard', 'AgentLock (lab)', 'AgentTaint (lab)', 'AgentBox (lab)',
+    ])
+    expect(region.queryByRole('columnheader', { name: 'Area' })).toBeNull()
   })
 
   it('is reachable from the section links', () => {
